@@ -1,0 +1,1 @@
+{"version":3,"file":"tags.d.ts","sourceRoot":"","sources":["../../src/resources/tags.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,iBAAiB,EAAE,MAAM,cAAc,CAAC;AAEtD,OAAO,KAAK,EAAE,qBAAqB,EAAE,eAAe,EAAE,MAAM,aAAa,CAAC;AAW1E,qBAAa,YAAY;IACX,OAAO,CAAC,QAAQ,CAAC,IAAI;gBAAJ,IAAI,EAAE,iBAAiB;IAEpD,IAAI,CAAC,MAAM,GAAE,qBAA0B,GAAG,OAAO,CAAC,eAAe,CAAC;CAWnE"}

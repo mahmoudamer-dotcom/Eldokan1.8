@@ -1,0 +1,241 @@
+'use client'
+
+import Image from 'next/image'
+import Link from 'next/link'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { CiHeart, CiUser } from 'react-icons/ci'
+import { Moon, Sun } from 'lucide-react'
+import { IoLanguageOutline } from 'react-icons/io5'
+import { PiShoppingCartLight } from 'react-icons/pi'
+import { EldokanClientError, type CustomerAccount } from '@eldokan/customer-api-client'
+import { useLocale } from '@/components/i18n/LocaleProvider'
+import { useWishlist } from '@/components/wishlist/WishlistProvider'
+import { useCart } from '@/components/cart/CartProvider'
+import type { Locale } from '@/lib/i18n'
+import { createEldokanApi } from '@/lib/eldokan-api'
+import AnnouncementTopBar from './AnnouncementTopBar'
+
+type SearchResult = {
+  id?: string | number
+  name?: string
+  title?: string
+  slug?: string
+  image?: { url?: string }
+  pricing?: {
+    on_sale?: boolean
+    sale_price?: { formatted?: string }
+    regular_price?: { formatted?: string }
+  }
+}
+
+export default function Navbar() {
+  const router = useRouter()
+  const { locale, setLocale, theme, setTheme, t } = useLocale()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const urlQuery = searchParams.get('q') ?? ''
+  const [query, setQuery] = useState(urlQuery)
+  const [results, setResults] = useState<SearchResult[]>([])
+  const [isSearching, setIsSearching] = useState(false)
+  const [hasSearched, setHasSearched] = useState(false)
+  const [isNavigatingToSearch, setIsNavigatingToSearch] = useState(false)
+  const [customer, setCustomer] = useState<CustomerAccount | null>(null)
+  const { products: wishlistProducts } = useWishlist()
+  const { itemCount: cartItemCount } = useCart()
+  const wishlistCount = wishlistProducts.length
+
+  useEffect(() => {
+    let active = true
+    const api = createEldokanApi(locale)
+    const loadSession = () => {
+      api.auth.session()
+        .then((response) => {
+          if (active) setCustomer(response.data.customer)
+        })
+        .catch((cause: unknown) => {
+          if (active && cause instanceof EldokanClientError && cause.status === 401) {
+            setCustomer(null)
+          }
+        })
+    }
+
+    loadSession()
+    window.addEventListener('eldokan:session-changed', loadSession)
+    return () => {
+      active = false
+      window.removeEventListener('eldokan:session-changed', loadSession)
+    }
+  }, [locale])
+
+  useEffect(() => {
+    setQuery(urlQuery)
+    setIsNavigatingToSearch(false)
+  }, [urlQuery])
+
+  useEffect(() => {
+    setIsNavigatingToSearch(false)
+  }, [pathname])
+
+  useEffect(() => {
+    const searchTerm = query.trim()
+    let isCurrentSearch = true
+    const controller = new AbortController()
+
+    if (searchTerm.length < 2) {
+      setResults([])
+      setHasSearched(false)
+      setIsSearching(false)
+      return
+    }
+
+    setIsSearching(true)
+    const timeout = window.setTimeout(async () => {
+      try {
+        const searchUrl = `/api/search?q=${encodeURIComponent(searchTerm)}&lang=${locale}`
+        const searchResponse = await fetch(searchUrl, { signal: controller.signal })
+        if (!searchResponse.ok) throw new Error('Search request failed')
+        const response = await searchResponse.json()
+        if (isCurrentSearch) {
+          setResults(Array.isArray(response?.data) ? response.data : [])
+          setHasSearched(true)
+        }
+      } catch {
+        if (isCurrentSearch) {
+          setResults([])
+          setHasSearched(true)
+        }
+      } finally {
+        if (isCurrentSearch) setIsSearching(false)
+      }
+    }, 150)
+
+    return () => {
+      isCurrentSearch = false
+      window.clearTimeout(timeout)
+      controller.abort()
+    }
+  }, [query, locale])
+
+  function handleSearchSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const searchTerm = query.trim()
+    if (searchTerm.length < 2) return
+
+    setResults([])
+    setHasSearched(false)
+    setIsNavigatingToSearch(true)
+    router.push(`/search?q=${encodeURIComponent(searchTerm)}`)
+  }
+
+  function handleLanguageChange() {
+    const nextLocale: Locale = locale === 'en' ? 'ar' : 'en'
+    setLocale(nextLocale)
+    router.refresh()
+  }
+
+  return (
+    <div className="bg-white">
+      <AnnouncementTopBar
+        announcements={[
+          { text: t('Welcome to Eldokan') },
+          { text: t('Great deals on your favorite products') },
+          { text: t('Shop with us today') },
+        ]}
+      />
+      <div className="border-b border-gray-200 shadow-sm">
+          <nav aria-label={t('Main navigation')} className="mx-auto grid max-w-7xl grid-cols-[1fr_auto] items-center gap-x-4 gap-y-3 px-4 py-3 sm:px-6 lg:grid-cols-[auto_minmax(16rem,1fr)_auto] lg:gap-10 lg:px-8">
+          <Link href="/" className="flex w-fit items-center" aria-label={t('Eldokan home')}>
+            <Image src="/image/Eldokan-logo.webp" alt="Eldokan" width={132} height={72} priority className="h-12 w-auto object-contain sm:h-14 dark:mix-blend-screen dark:invert" />
+          </Link>
+
+          <form onSubmit={handleSearchSubmit} className="relative col-span-2 row-start-2 w-full lg:col-span-1 lg:row-start-auto">
+            <label htmlFor="navbar-product-search" className="sr-only">{t('Search products')}</label>
+            <input
+              id="navbar-product-search"
+              type="search"
+              placeholder={t('Search for products...')}
+              aria-expanded={query.trim() !== ''}
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              className="h-11 w-full rounded-full border border-gray-300 bg-gray-50 py-2 pl-4 pr-24 text-sm outline-none transition focus:border-[#C58A36] focus:bg-white focus:ring-2 focus:ring-[#C58A36]/20"
+            />
+            <button type="submit" className="absolute right-1 top-1 h-9 rounded-full bg-[#222222] px-5 text-sm font-medium text-white transition hover:bg-[#3b3b3b] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C58A36]">
+              {t('Search')}
+            </button>
+
+            {query.trim() !== '' && pathname !== '/search' && !isNavigatingToSearch && (
+              <div className="absolute z-50 mt-2 max-h-[70vh] w-full overflow-y-auto rounded-2xl border border-gray-200 bg-white shadow-xl">
+              {query.trim().length < 2 ? (
+                <p className="p-3 text-sm text-gray-500">{t('Type at least 2 characters to search.')}</p>
+              ) : isSearching ? (
+                <p className="p-3 text-sm text-gray-500">{t('Searching products...')}</p>
+              ) : results.length > 0 ? (
+                <ul>
+                  {results.map((result, index) => {
+                    const name = result.name ?? result.title ?? t('Product')
+                    const price = result.pricing?.on_sale
+                      ? result.pricing.sale_price?.formatted
+                      : result.pricing?.regular_price?.formatted
+
+                    return (
+                      <li key={result.id ?? result.slug ?? index} className="border-b last:border-0">
+                        {result.id ? (
+                          <Link
+                            href={`/product/${result.id}`}
+                            className="flex items-center gap-3 p-3 hover:bg-gray-50"
+                            onClick={() => setQuery('')}
+                          >
+                            {result.image?.url && (
+                              <Image src={result.image.url} alt="" width={48} height={48} className="h-12 w-12 rounded object-cover" />
+                            )}
+                            <span className="min-w-0 flex-1 truncate">{name}</span>
+                            {price && <span className="text-sm text-gray-600">{price}</span>}
+                          </Link>
+                        ) : (
+                          <span className="block p-3">{name}</span>
+                        )}
+                      </li>
+                    )
+                  })}
+                </ul>
+              ) : hasSearched ? (
+                <p className="p-3 text-sm text-gray-500">{t('No matching products found.')}</p>
+              ) : null}
+              </div>
+            )}
+          </form>
+
+          <div className="col-start-2 row-start-1 flex items-center justify-end gap-1 sm:gap-2 lg:col-start-auto lg:row-start-auto">
+            <button type="button" onClick={handleLanguageChange} aria-label={t('Change language')} title={t(locale === 'en' ? 'Switch to Arabic' : 'Switch to English')} className="flex h-10 items-center justify-center gap-1 rounded-full px-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-100">
+              <IoLanguageOutline /><span>{locale === 'en' ? 'عربي' : 'EN'}</span>
+            </button>
+            <button type="button" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} aria-label={t(theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode')} title={t(theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode')} className="flex h-10 w-10 items-center justify-center rounded-full text-gray-700 transition hover:bg-gray-100">
+              {theme === 'dark' ? <Sun className="size-5" /> : <Moon className="size-5" />}
+            </button>
+            <Link href="/wishlist" aria-label={`${t('Favorites')}${wishlistCount ? ` (${wishlistCount})` : ''}`} title={t('Favorites')} className="flex h-10 w-10 items-center justify-center rounded-full text-2xl text-gray-700 transition hover:bg-gray-100 hover:text-[#C58A36]">
+              <span className="relative"><CiHeart /><CountBadge count={wishlistCount} /></span>
+            </Link>
+            <button type="button" aria-label={`${t('Shopping cart')}${cartItemCount ? ` (${cartItemCount})` : ''}`} title={t('Shopping cart')} className="flex h-10 w-10 items-center justify-center rounded-full text-2xl text-gray-700 transition hover:bg-gray-100 hover:text-[#C58A36]">
+              <span className="relative"><PiShoppingCartLight /><CountBadge count={cartItemCount} /></span>
+            </button>
+            <Link href={customer ? '/account' : '/login'} aria-label={customer ? customer.display_name || customer.email : t('Account')} className="flex h-10 max-w-36 items-center justify-center gap-1 rounded-full px-2 text-gray-700 transition hover:bg-gray-100 hover:text-[#C58A36]">
+              {customer
+                ? <span className="max-w-28 truncate text-sm font-semibold">{customer.display_name || customer.first_name || customer.email}</span>
+                : <CiUser className="text-2xl" />}
+            </Link>
+          </div>
+        </nav>
+      </div>
+    </div>
+  )
+}
+
+function CountBadge({ count }: { count: number }) {
+  if (!count) return null
+  return (
+    <span aria-hidden="true" className="absolute -right-2 -top-1 grid min-h-4 min-w-4 place-items-center rounded-full bg-rose-600 px-1 text-[10px] font-bold leading-4 text-white">
+      {count > 99 ? '99+' : count}
+    </span>
+  )
+}

@@ -1,0 +1,1 @@
+{"version":3,"file":"brands.d.ts","sourceRoot":"","sources":["../../src/resources/brands.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,iBAAiB,EAAE,MAAM,cAAc,CAAC;AAEtD,OAAO,KAAK,EAAE,iBAAiB,EAAE,qBAAqB,EAAE,MAAM,aAAa,CAAC;AAW5E,qBAAa,cAAc;IACb,OAAO,CAAC,QAAQ,CAAC,IAAI;gBAAJ,IAAI,EAAE,iBAAiB;IAEpD,IAAI,CAAC,MAAM,GAAE,qBAA0B,GAAG,OAAO,CAAC,iBAAiB,CAAC;CAWrE"}

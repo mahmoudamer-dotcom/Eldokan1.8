@@ -1,0 +1,3623 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "ElDokan Customer API",
+    "version": "1.0.0",
+    "description": "Implemented catalog plus customer Identity, Account and Wishlist on WordPress; the api.eldokan.com hostname is a future target. Adapter release 0.5.2. Monetary query bounds are major currency units; Money.amount uses minor units."
+  },
+  "servers": [
+    {
+      "url": "https://www.eldokan.com/wp-json/eldokan-customer/v1",
+      "description": "Current WordPress adapter (verify deployment version)"
+    },
+    {
+      "url": "https://api.eldokan.com/v1/customer",
+      "description": "Planned hostname; not deployed by this release"
+    }
+  ],
+  "tags": [
+    {
+      "name": "System"
+    },
+    {
+      "name": "Authentication"
+    },
+    {
+      "name": "Account"
+    },
+    {
+      "name": "Wishlist"
+    },
+    {
+      "name": "Home"
+    },
+    {
+      "name": "Products"
+    },
+    {
+      "name": "Categories"
+    },
+    {
+      "name": "Catalog Terms"
+    },
+    {
+      "name": "Sellers"
+    },
+    {
+      "name": "Search"
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Register a customer and start a session",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterRequest"
+              },
+              "example": {
+                "email": "customer@example.com",
+                "password": "correct-horse-battery-staple",
+                "first_name": "Mahmoud",
+                "last_name": "Ahmed"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Customer created; the response sets the HttpOnly customer session cookie.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthSessionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "409": {
+            "$ref": "#/components/responses/Error"
+          },
+          "422": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Log in a customer and start a fresh session",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              },
+              "example": {
+                "email": "customer@example.com",
+                "password": "correct-horse-battery-staple"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authenticated; the response sets the HttpOnly customer session cookie.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthSessionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "422": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/auth/session": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Restore the current customer session and refresh CSRF",
+        "security": [
+          {
+            "CustomerSession": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current authenticated customer and a fresh session-bound CSRF token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthSessionResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Invalidate the active customer session",
+        "security": [
+          {
+            "CustomerSession": [],
+            "CsrfToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Active session invalidated and cookie cleared.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogoutResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/me": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Get the current customer account",
+        "security": [
+          {
+            "CustomerSession": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Minimal private customer projection.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerAccountResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Update customer names",
+        "security": [
+          {
+            "CustomerSession": [],
+            "CsrfToken": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated customer account.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerAccountResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error"
+          },
+          "422": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/wishlist": {
+      "get": {
+        "tags": [
+          "Wishlist"
+        ],
+        "summary": "Get the current customer's Wishlist",
+        "security": [
+          {
+            "CustomerSession": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Lang"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Private visible ProductCard collection.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WishlistResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/wishlist/items": {
+      "post": {
+        "tags": [
+          "Wishlist"
+        ],
+        "summary": "Add a visible parent product to Wishlist",
+        "security": [
+          {
+            "CustomerSession": [],
+            "CsrfToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Lang"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WishlistItemRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Current Wishlist; changed is false when the item already existed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WishlistMutationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error"
+          },
+          "422": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/wishlist/items/{product_id}": {
+      "delete": {
+        "tags": [
+          "Wishlist"
+        ],
+        "summary": "Remove a product from Wishlist",
+        "description": "Removing an item that is not present succeeds with changed=false.",
+        "security": [
+          {
+            "CustomerSession": [],
+            "CsrfToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Lang"
+          },
+          {
+            "name": "product_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^prd_[1-9][0-9]*$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current Wishlist and deterministic changed flag.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WishlistMutationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "tags": [
+          "System"
+        ],
+        "summary": "Health check",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            },
+            "headers": {
+              "X-ElDokan-API-Version": {
+                "$ref": "#/components/headers/ApiVersion"
+              },
+              "X-ElDokan-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              },
+              "X-ElDokan-Cache": {
+                "$ref": "#/components/headers/CacheStatus"
+              },
+              "X-ElDokan-Cache-TTL": {
+                "$ref": "#/components/headers/CacheTtl"
+              },
+              "X-ElDokan-Cache-Generation": {
+                "$ref": "#/components/headers/CacheGeneration"
+              },
+              "X-ElDokan-Cache-Key": {
+                "$ref": "#/components/headers/CacheKey"
+              },
+              "X-ElDokan-Cache-Backend": {
+                "$ref": "#/components/headers/CacheBackend"
+              },
+              "X-ElDokan-Cache-Store": {
+                "$ref": "#/components/headers/CacheStore"
+              },
+              "Server-Timing": {
+                "$ref": "#/components/headers/ServerTiming"
+              },
+              "Cache-Control": {
+                "$ref": "#/components/headers/CacheControl"
+              },
+              "Content-Language": {
+                "$ref": "#/components/headers/ContentLanguage"
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error"
+          },
+          "422": {
+            "$ref": "#/components/responses/Error"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/home": {
+      "get": {
+        "tags": [
+          "Home"
+        ],
+        "summary": "Homepage read model",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Lang"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HomeResponse"
+                }
+              }
+            },
+            "headers": {
+              "X-ElDokan-API-Version": {
+                "$ref": "#/components/headers/ApiVersion"
+              },
+              "X-ElDokan-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              },
+              "X-ElDokan-Cache": {
+                "$ref": "#/components/headers/CacheStatus"
+              },
+              "X-ElDokan-Cache-TTL": {
+                "$ref": "#/components/headers/CacheTtl"
+              },
+              "X-ElDokan-Cache-Generation": {
+                "$ref": "#/components/headers/CacheGeneration"
+              },
+              "X-ElDokan-Cache-Key": {
+                "$ref": "#/components/headers/CacheKey"
+              },
+              "X-ElDokan-Cache-Backend": {
+                "$ref": "#/components/headers/CacheBackend"
+              },
+              "X-ElDokan-Cache-Store": {
+                "$ref": "#/components/headers/CacheStore"
+              },
+              "Server-Timing": {
+                "$ref": "#/components/headers/ServerTiming"
+              },
+              "Cache-Control": {
+                "$ref": "#/components/headers/CacheControl"
+              },
+              "Content-Language": {
+                "$ref": "#/components/headers/ContentLanguage"
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error"
+          },
+          "422": {
+            "$ref": "#/components/responses/Error"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error"
+          }
+        },
+        "description": "Ordered bilingual Home sections. Editorial hero/banner records are active, scheduled and configured in ElDokan Admin."
+      }
+    },
+    "/products": {
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "List, search and filter products",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Lang"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 48,
+              "default": 24
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "brand",
+            "in": "query",
+            "description": "Public brand slug from GET /brands.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tag",
+            "in": "query",
+            "description": "Public product-tag slug from GET /tags.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "min_price",
+            "in": "query",
+            "schema": {
+              "type": "number"
+            },
+            "description": "Major currency units (for example 600.00 EGP); matches parent Woo price including variable starting price."
+          },
+          {
+            "name": "max_price",
+            "in": "query",
+            "schema": {
+              "type": "number"
+            },
+            "description": "Major currency units (for example 600.00 EGP); matches parent Woo price including variable starting price."
+          },
+          {
+            "name": "stock_status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "in_stock",
+                "out_of_stock",
+                "on_backorder"
+              ]
+            }
+          },
+          {
+            "name": "on_sale",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "featured",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "newest",
+                "price_asc",
+                "price_desc",
+                "best_selling",
+                "rating",
+                "relevance"
+              ],
+              "default": "newest"
+            }
+          },
+          {
+            "name": "attributes",
+            "in": "query",
+            "description": "Requires category slug. att_ID:atr_ID,atr_ID;att_ID:atr_ID. OR within group, AND across groups. At most 5 groups and 10 choices per group. IDs from category filters.",
+            "schema": {
+              "type": "string",
+              "example": "att_1:atr_12,atr_13;att_2:atr_31"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductListResponse"
+                }
+              }
+            },
+            "headers": {
+              "X-ElDokan-API-Version": {
+                "$ref": "#/components/headers/ApiVersion"
+              },
+              "X-ElDokan-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              },
+              "X-ElDokan-Cache": {
+                "$ref": "#/components/headers/CacheStatus"
+              },
+              "X-ElDokan-Cache-TTL": {
+                "$ref": "#/components/headers/CacheTtl"
+              },
+              "X-ElDokan-Cache-Generation": {
+                "$ref": "#/components/headers/CacheGeneration"
+              },
+              "X-ElDokan-Cache-Key": {
+                "$ref": "#/components/headers/CacheKey"
+              },
+              "X-ElDokan-Cache-Backend": {
+                "$ref": "#/components/headers/CacheBackend"
+              },
+              "X-ElDokan-Cache-Store": {
+                "$ref": "#/components/headers/CacheStore"
+              },
+              "Server-Timing": {
+                "$ref": "#/components/headers/ServerTiming"
+              },
+              "Cache-Control": {
+                "$ref": "#/components/headers/CacheControl"
+              },
+              "Content-Language": {
+                "$ref": "#/components/headers/ContentLanguage"
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error"
+          },
+          "422": {
+            "$ref": "#/components/responses/Error"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/products/{product_id}": {
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Get product detail by stable ElDokan public ID",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Lang"
+          },
+          {
+            "name": "product_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^prd_[0-9]+$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductDetailResponse"
+                }
+              }
+            },
+            "headers": {
+              "X-ElDokan-API-Version": {
+                "$ref": "#/components/headers/ApiVersion"
+              },
+              "X-ElDokan-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              },
+              "X-ElDokan-Cache": {
+                "$ref": "#/components/headers/CacheStatus"
+              },
+              "X-ElDokan-Cache-TTL": {
+                "$ref": "#/components/headers/CacheTtl"
+              },
+              "X-ElDokan-Cache-Generation": {
+                "$ref": "#/components/headers/CacheGeneration"
+              },
+              "X-ElDokan-Cache-Key": {
+                "$ref": "#/components/headers/CacheKey"
+              },
+              "X-ElDokan-Cache-Backend": {
+                "$ref": "#/components/headers/CacheBackend"
+              },
+              "X-ElDokan-Cache-Store": {
+                "$ref": "#/components/headers/CacheStore"
+              },
+              "Server-Timing": {
+                "$ref": "#/components/headers/ServerTiming"
+              },
+              "Cache-Control": {
+                "$ref": "#/components/headers/CacheControl"
+              },
+              "Content-Language": {
+                "$ref": "#/components/headers/ContentLanguage"
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error"
+          },
+          "422": {
+            "$ref": "#/components/responses/Error"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error"
+          }
+        },
+        "description": "A translated product may have a different public ID per language; ?lang selects its translated ID when WPML is active."
+      }
+    },
+    "/products/lookup": {
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Lookup product by slug",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Lang"
+          },
+          {
+            "name": "slug",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductDetailResponse"
+                }
+              }
+            },
+            "headers": {
+              "X-ElDokan-API-Version": {
+                "$ref": "#/components/headers/ApiVersion"
+              },
+              "X-ElDokan-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              },
+              "X-ElDokan-Cache": {
+                "$ref": "#/components/headers/CacheStatus"
+              },
+              "X-ElDokan-Cache-TTL": {
+                "$ref": "#/components/headers/CacheTtl"
+              },
+              "X-ElDokan-Cache-Generation": {
+                "$ref": "#/components/headers/CacheGeneration"
+              },
+              "X-ElDokan-Cache-Key": {
+                "$ref": "#/components/headers/CacheKey"
+              },
+              "X-ElDokan-Cache-Backend": {
+                "$ref": "#/components/headers/CacheBackend"
+              },
+              "X-ElDokan-Cache-Store": {
+                "$ref": "#/components/headers/CacheStore"
+              },
+              "Server-Timing": {
+                "$ref": "#/components/headers/ServerTiming"
+              },
+              "Cache-Control": {
+                "$ref": "#/components/headers/CacheControl"
+              },
+              "Content-Language": {
+                "$ref": "#/components/headers/ContentLanguage"
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error"
+          },
+          "422": {
+            "$ref": "#/components/responses/Error"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/categories": {
+      "get": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "List categories",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Lang"
+          },
+          {
+            "name": "parent",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryListResponse"
+                }
+              }
+            },
+            "headers": {
+              "X-ElDokan-API-Version": {
+                "$ref": "#/components/headers/ApiVersion"
+              },
+              "X-ElDokan-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              },
+              "X-ElDokan-Cache": {
+                "$ref": "#/components/headers/CacheStatus"
+              },
+              "X-ElDokan-Cache-TTL": {
+                "$ref": "#/components/headers/CacheTtl"
+              },
+              "X-ElDokan-Cache-Generation": {
+                "$ref": "#/components/headers/CacheGeneration"
+              },
+              "X-ElDokan-Cache-Key": {
+                "$ref": "#/components/headers/CacheKey"
+              },
+              "X-ElDokan-Cache-Backend": {
+                "$ref": "#/components/headers/CacheBackend"
+              },
+              "X-ElDokan-Cache-Store": {
+                "$ref": "#/components/headers/CacheStore"
+              },
+              "Server-Timing": {
+                "$ref": "#/components/headers/ServerTiming"
+              },
+              "Cache-Control": {
+                "$ref": "#/components/headers/CacheControl"
+              },
+              "Content-Language": {
+                "$ref": "#/components/headers/ContentLanguage"
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error"
+          },
+          "422": {
+            "$ref": "#/components/responses/Error"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/categories/{slug}": {
+      "get": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "Category detail",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Lang"
+          },
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Percent-encode Arabic slugs in the URL."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryDetailResponse"
+                }
+              }
+            },
+            "headers": {
+              "X-ElDokan-API-Version": {
+                "$ref": "#/components/headers/ApiVersion"
+              },
+              "X-ElDokan-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              },
+              "X-ElDokan-Cache": {
+                "$ref": "#/components/headers/CacheStatus"
+              },
+              "X-ElDokan-Cache-TTL": {
+                "$ref": "#/components/headers/CacheTtl"
+              },
+              "X-ElDokan-Cache-Generation": {
+                "$ref": "#/components/headers/CacheGeneration"
+              },
+              "X-ElDokan-Cache-Key": {
+                "$ref": "#/components/headers/CacheKey"
+              },
+              "X-ElDokan-Cache-Backend": {
+                "$ref": "#/components/headers/CacheBackend"
+              },
+              "X-ElDokan-Cache-Store": {
+                "$ref": "#/components/headers/CacheStore"
+              },
+              "Server-Timing": {
+                "$ref": "#/components/headers/ServerTiming"
+              },
+              "Cache-Control": {
+                "$ref": "#/components/headers/CacheControl"
+              },
+              "Content-Language": {
+                "$ref": "#/components/headers/ContentLanguage"
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error"
+          },
+          "422": {
+            "$ref": "#/components/responses/Error"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/categories/{slug}/filters": {
+      "get": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "Category-specific filter definitions",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Lang"
+          },
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Percent-encode Arabic slugs in the URL."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryFiltersResponse"
+                }
+              }
+            },
+            "headers": {
+              "X-ElDokan-API-Version": {
+                "$ref": "#/components/headers/ApiVersion"
+              },
+              "X-ElDokan-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              },
+              "X-ElDokan-Cache": {
+                "$ref": "#/components/headers/CacheStatus"
+              },
+              "X-ElDokan-Cache-TTL": {
+                "$ref": "#/components/headers/CacheTtl"
+              },
+              "X-ElDokan-Cache-Generation": {
+                "$ref": "#/components/headers/CacheGeneration"
+              },
+              "X-ElDokan-Cache-Key": {
+                "$ref": "#/components/headers/CacheKey"
+              },
+              "X-ElDokan-Cache-Backend": {
+                "$ref": "#/components/headers/CacheBackend"
+              },
+              "X-ElDokan-Cache-Store": {
+                "$ref": "#/components/headers/CacheStore"
+              },
+              "Server-Timing": {
+                "$ref": "#/components/headers/ServerTiming"
+              },
+              "Cache-Control": {
+                "$ref": "#/components/headers/CacheControl"
+              },
+              "Content-Language": {
+                "$ref": "#/components/headers/ContentLanguage"
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error"
+          },
+          "422": {
+            "$ref": "#/components/responses/Error"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/brands": {
+      "get": {
+        "tags": [
+          "Catalog Terms"
+        ],
+        "summary": "List all non-empty product brands",
+        "description": "Names and slugs follow the effective ar/en language. Results are alphabetic and paginated.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Lang"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated brand collection",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BrandListResponse"
+                },
+                "example": {
+                  "success": true,
+                  "data": [
+                    {
+                      "id": "brd_12",
+                      "name": "Apple",
+                      "slug": "apple",
+                      "image": {
+                        "url": "https://www.eldokan.com/wp-content/uploads/brands/apple.webp",
+                        "alt": "Apple"
+                      }
+                    }
+                  ],
+                  "meta": {
+                    "request_id": "req_example",
+                    "page": 1,
+                    "per_page": 50,
+                    "total": 1,
+                    "total_pages": 1
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "422": {
+            "$ref": "#/components/responses/Error"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/tags": {
+      "get": {
+        "tags": [
+          "Catalog Terms"
+        ],
+        "summary": "List all non-empty product tags",
+        "description": "Names and slugs follow the effective ar/en language. Results are alphabetic and paginated.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Lang"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated tag collection",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TagListResponse"
+                },
+                "example": {
+                  "success": true,
+                  "data": [
+                    {
+                      "id": "tag_7",
+                      "name": "New",
+                      "slug": "new"
+                    }
+                  ],
+                  "meta": {
+                    "request_id": "req_example",
+                    "page": 1,
+                    "per_page": 50,
+                    "total": 1,
+                    "total_pages": 1
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "422": {
+            "$ref": "#/components/responses/Error"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/sellers/{seller_id}": {
+      "get": {
+        "tags": [
+          "Sellers"
+        ],
+        "summary": "Get public seller/store information",
+        "description": "Public storefront identity only. This endpoint does not expose an authenticated Seller account.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Lang"
+          },
+          {
+            "name": "seller_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^sel_[1-9][0-9]*$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Public seller",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SellerPublicResponse"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "id": "sel_42",
+                    "name": "Example Store",
+                    "slug": "example-store",
+                    "rating": null,
+                    "rating_count": null
+                  },
+                  "meta": {
+                    "request_id": "req_example"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error"
+          },
+          "422": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/search/suggestions": {
+      "get": {
+        "tags": [
+          "Search"
+        ],
+        "summary": "Product autocomplete suggestions",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Lang"
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 2
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 20,
+              "default": 8
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuggestionListResponse"
+                }
+              }
+            },
+            "headers": {
+              "X-ElDokan-API-Version": {
+                "$ref": "#/components/headers/ApiVersion"
+              },
+              "X-ElDokan-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              },
+              "X-ElDokan-Cache": {
+                "$ref": "#/components/headers/CacheStatus"
+              },
+              "X-ElDokan-Cache-TTL": {
+                "$ref": "#/components/headers/CacheTtl"
+              },
+              "X-ElDokan-Cache-Generation": {
+                "$ref": "#/components/headers/CacheGeneration"
+              },
+              "X-ElDokan-Cache-Key": {
+                "$ref": "#/components/headers/CacheKey"
+              },
+              "X-ElDokan-Cache-Backend": {
+                "$ref": "#/components/headers/CacheBackend"
+              },
+              "X-ElDokan-Cache-Store": {
+                "$ref": "#/components/headers/CacheStore"
+              },
+              "Server-Timing": {
+                "$ref": "#/components/headers/ServerTiming"
+              },
+              "Cache-Control": {
+                "$ref": "#/components/headers/CacheControl"
+              },
+              "Content-Language": {
+                "$ref": "#/components/headers/ContentLanguage"
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error"
+          },
+          "422": {
+            "$ref": "#/components/responses/Error"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "CustomerSession": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "wordpress_logged_in_[site-hash]",
+        "description": "WordPress-native Secure/HttpOnly customer session cookie. The concrete cookie name is site-specific and is managed by the browser, never frontend JavaScript."
+      },
+      "CsrfToken": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-ElDokan-CSRF",
+        "description": "Session-bound CSRF value returned by register, login or session restoration. Required only for authenticated mutations."
+      }
+    },
+    "parameters": {
+      "Lang": {
+        "name": "lang",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "ar",
+            "en"
+          ]
+        }
+      }
+    },
+    "schemas": {
+      "Money": {
+        "type": "object",
+        "required": [
+          "amount",
+          "currency",
+          "decimals",
+          "formatted"
+        ],
+        "properties": {
+          "amount": {
+            "type": "integer",
+            "description": "Minor units; 60000 = 600.00 EGP"
+          },
+          "currency": {
+            "type": "string",
+            "example": "EGP"
+          },
+          "decimals": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 6
+          },
+          "formatted": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Image": {
+        "type": "object",
+        "required": [
+          "url",
+          "alt"
+        ],
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "alt": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Brand": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "slug",
+          "image"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^brd_[1-9][0-9]*$"
+          },
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "image": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Image"
+              }
+            ],
+            "nullable": true,
+            "description": "Normalized existing Brand taxonomy Thumbnail; null when no valid thumbnail is managed."
+          }
+        },
+        "additionalProperties": false
+      },
+      "Tag": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "slug"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^tag_[1-9][0-9]*$"
+          },
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Stock": {
+        "type": "object",
+        "required": [
+          "status",
+          "quantity",
+          "backorders_allowed"
+        ],
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "in_stock",
+              "out_of_stock",
+              "on_backorder"
+            ]
+          },
+          "quantity": {
+            "type": "integer",
+            "nullable": true
+          },
+          "backorders_allowed": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SellerPublic": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "slug",
+          "rating",
+          "rating_count"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^sel_[1-9][0-9]*$"
+          },
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "rating": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 5,
+            "nullable": true,
+            "description": "Customer-facing seller rating; null until the Phase 2 rating system is implemented."
+          },
+          "rating_count": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Customer-facing seller rating count; null until the Phase 2 rating system is implemented."
+          }
+        },
+        "additionalProperties": false
+      },
+      "Pricing": {
+        "type": "object",
+        "required": [
+          "price",
+          "min_price",
+          "max_price",
+          "regular_price",
+          "sale_price",
+          "on_sale",
+          "discount_percent"
+        ],
+        "properties": {
+          "price": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Money"
+              }
+            ],
+            "nullable": true
+          },
+          "min_price": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Money"
+              }
+            ],
+            "nullable": true
+          },
+          "max_price": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Money"
+              }
+            ],
+            "nullable": true
+          },
+          "regular_price": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Money"
+              }
+            ],
+            "nullable": true
+          },
+          "sale_price": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Money"
+              }
+            ],
+            "nullable": true
+          },
+          "on_sale": {
+            "type": "boolean"
+          },
+          "discount_percent": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProductCard": {
+        "type": "object",
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "type",
+          "brand",
+          "pricing",
+          "stock",
+          "image",
+          "average_rating",
+          "rating_count",
+          "seller"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^prd_[1-9][0-9]*$"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "simple",
+              "variable",
+              "grouped",
+              "external",
+              "other"
+            ]
+          },
+          "brand": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Brand"
+              }
+            ],
+            "nullable": true
+          },
+          "pricing": {
+            "$ref": "#/components/schemas/Pricing"
+          },
+          "stock": {
+            "$ref": "#/components/schemas/Stock"
+          },
+          "image": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Image"
+              }
+            ],
+            "nullable": true
+          },
+          "average_rating": {
+            "type": "number"
+          },
+          "rating_count": {
+            "type": "integer"
+          },
+          "seller": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SellerPublic"
+              }
+            ],
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CategorySummary": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "slug"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^cat_[1-9][0-9]*$"
+          },
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Category": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "slug",
+          "description",
+          "count",
+          "parent_id",
+          "image"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^cat_[1-9][0-9]*$"
+          },
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer"
+          },
+          "parent_id": {
+            "type": "string",
+            "nullable": true,
+            "pattern": "^cat_[1-9][0-9]*$"
+          },
+          "image": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Image"
+              }
+            ],
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CategoryDetail": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "slug",
+          "description",
+          "count",
+          "parent_id",
+          "image",
+          "children"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^cat_[1-9][0-9]*$"
+          },
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer"
+          },
+          "parent_id": {
+            "type": "string",
+            "nullable": true,
+            "pattern": "^cat_[1-9][0-9]*$"
+          },
+          "image": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Image"
+              }
+            ],
+            "nullable": true
+          },
+          "children": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Category"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "AttributeOption": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "slug"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true,
+            "pattern": "^atr_[1-9][0-9]*$"
+          },
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Attribute": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "slug",
+          "visible",
+          "variation",
+          "options"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true,
+            "pattern": "^att_[1-9][0-9]*$"
+          },
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "visible": {
+            "type": "boolean"
+          },
+          "variation": {
+            "type": "boolean"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AttributeOption"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "FilterAttribute": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "slug",
+          "options"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^att_[1-9][0-9]*$"
+          },
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AttributeOption"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "CategoryFilters": {
+        "type": "object",
+        "required": [
+          "category_id",
+          "source",
+          "attributes"
+        ],
+        "properties": {
+          "category_id": {
+            "type": "string",
+            "pattern": "^cat_[1-9][0-9]*$"
+          },
+          "source": {
+            "type": "object",
+            "required": [
+              "mode",
+              "category_id"
+            ],
+            "properties": {
+              "mode": {
+                "type": "string",
+                "enum": [
+                  "unavailable",
+                  "none",
+                  "inferred_from_products",
+                  "configured",
+                  "inherited"
+                ]
+              },
+              "category_id": {
+                "type": "string",
+                "nullable": true,
+                "pattern": "^cat_[1-9][0-9]*$"
+              }
+            },
+            "additionalProperties": false
+          },
+          "attributes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterAttribute"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "VariationSelection": {
+        "type": "object",
+        "required": [
+          "attribute_id",
+          "attribute_slug",
+          "option_id",
+          "option_slug"
+        ],
+        "properties": {
+          "attribute_id": {
+            "type": "string",
+            "nullable": true,
+            "pattern": "^att_[1-9][0-9]*$"
+          },
+          "attribute_slug": {
+            "type": "string"
+          },
+          "option_id": {
+            "type": "string",
+            "nullable": true,
+            "pattern": "^atr_[1-9][0-9]*$"
+          },
+          "option_slug": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Variation": {
+        "type": "object",
+        "required": [
+          "id",
+          "attributes",
+          "purchasable",
+          "pricing",
+          "stock",
+          "image"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^var_[1-9][0-9]*$"
+          },
+          "attributes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VariationSelection"
+            }
+          },
+          "purchasable": {
+            "type": "boolean"
+          },
+          "pricing": {
+            "$ref": "#/components/schemas/Pricing"
+          },
+          "stock": {
+            "$ref": "#/components/schemas/Stock"
+          },
+          "image": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Image"
+              }
+            ],
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProductDetail": {
+        "type": "object",
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "type",
+          "brand",
+          "pricing",
+          "stock",
+          "image",
+          "average_rating",
+          "rating_count",
+          "seller",
+          "sku",
+          "categories",
+          "delivery",
+          "warranty",
+          "images",
+          "attributes",
+          "variations",
+          "short_description_html",
+          "description_html"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^prd_[1-9][0-9]*$"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "simple",
+              "variable",
+              "grouped",
+              "external",
+              "other"
+            ]
+          },
+          "brand": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Brand"
+              }
+            ],
+            "nullable": true
+          },
+          "pricing": {
+            "$ref": "#/components/schemas/Pricing"
+          },
+          "stock": {
+            "$ref": "#/components/schemas/Stock"
+          },
+          "image": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Image"
+              }
+            ],
+            "nullable": true
+          },
+          "average_rating": {
+            "type": "number"
+          },
+          "rating_count": {
+            "type": "integer"
+          },
+          "seller": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SellerPublic"
+              }
+            ],
+            "nullable": true
+          },
+          "sku": {
+            "type": "string",
+            "nullable": true
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CategorySummary"
+            }
+          },
+          "delivery": {
+            "type": "object",
+            "required": [
+              "label",
+              "min_days",
+              "max_days"
+            ],
+            "properties": {
+              "label": {
+                "type": "string",
+                "nullable": true
+              },
+              "min_days": {
+                "type": "integer",
+                "nullable": true
+              },
+              "max_days": {
+                "type": "integer",
+                "nullable": true
+              }
+            },
+            "additionalProperties": false
+          },
+          "warranty": {
+            "type": "object",
+            "required": [
+              "label",
+              "duration",
+              "unit",
+              "type"
+            ],
+            "properties": {
+              "label": {
+                "type": "string",
+                "nullable": true
+              },
+              "duration": {
+                "type": "integer",
+                "nullable": true
+              },
+              "unit": {
+                "type": "string",
+                "nullable": true
+              },
+              "type": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "additionalProperties": false
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Image"
+            }
+          },
+          "attributes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Attribute"
+            }
+          },
+          "variations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Variation"
+            }
+          },
+          "short_description_html": {
+            "type": "string"
+          },
+          "description_html": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "HomeSection": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/HeroSliderSection"
+          },
+          {
+            "$ref": "#/components/schemas/BannerGridSection"
+          },
+          {
+            "$ref": "#/components/schemas/CategoryGridSection"
+          },
+          {
+            "$ref": "#/components/schemas/ProductCarouselSection"
+          },
+          {
+            "$ref": "#/components/schemas/BrandGridSection"
+          }
+        ]
+      },
+      "HeroSliderSection": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "enabled",
+          "order",
+          "title",
+          "items"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "enum": [
+              "hero_slider"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "hero_slider"
+            ]
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "order": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HeroSlide"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "BannerGridSection": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "enabled",
+          "order",
+          "title",
+          "items"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "enum": [
+              "banner_grid"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "banner_grid"
+            ]
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "order": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PromoBanner"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "CategoryGridSection": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "enabled",
+          "order",
+          "title",
+          "items"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "enum": [
+              "categories"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "category_grid"
+            ]
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "order": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Category"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProductCarouselSection": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "enabled",
+          "order",
+          "title",
+          "items"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "enum": [
+              "featured_deals",
+              "best_sellers",
+              "new_arrivals"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "product_carousel"
+            ]
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "order": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductCard"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "BrandGridSection": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "enabled",
+          "order",
+          "title",
+          "items"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "enum": [
+              "brands"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "brand_grid"
+            ]
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "order": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Brand"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "HomeCta": {
+        "type": "object",
+        "required": [
+          "text",
+          "type",
+          "value"
+        ],
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "url",
+              "product",
+              "category",
+              "search"
+            ]
+          },
+          "value": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "HeroSlide": {
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "title",
+          "subtitle",
+          "desktop_image",
+          "mobile_image",
+          "cta"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^hsl_[1-9][0-9]*$"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "hero"
+            ]
+          },
+          "title": {
+            "type": "string"
+          },
+          "subtitle": {
+            "type": "string"
+          },
+          "desktop_image": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Image"
+              }
+            ],
+            "nullable": true
+          },
+          "mobile_image": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Image"
+              }
+            ],
+            "nullable": true
+          },
+          "cta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/HomeCta"
+              }
+            ],
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PromoBanner": {
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "title",
+          "subtitle",
+          "desktop_image",
+          "mobile_image",
+          "cta"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^hbn_[1-9][0-9]*$"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "banner"
+            ]
+          },
+          "title": {
+            "type": "string"
+          },
+          "subtitle": {
+            "type": "string"
+          },
+          "desktop_image": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Image"
+              }
+            ],
+            "nullable": true
+          },
+          "mobile_image": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Image"
+              }
+            ],
+            "nullable": true
+          },
+          "cta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/HomeCta"
+              }
+            ],
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Home": {
+        "type": "object",
+        "required": [
+          "sections"
+        ],
+        "properties": {
+          "sections": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HomeSection"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "Suggestion": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "slug",
+          "price",
+          "image"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^prd_[1-9][0-9]*$"
+          },
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "price": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Money"
+              }
+            ],
+            "nullable": true
+          },
+          "image": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Image"
+              }
+            ],
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Health": {
+        "type": "object",
+        "required": [
+          "service",
+          "version",
+          "status",
+          "ready"
+        ],
+        "properties": {
+          "service": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "degraded"
+            ]
+          },
+          "ready": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Pagination": {
+        "type": "object",
+        "required": [
+          "page",
+          "per_page",
+          "total",
+          "total_pages"
+        ],
+        "properties": {
+          "page": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "per_page": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 48
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "total_pages": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "additionalProperties": false
+      },
+      "Meta": {
+        "type": "object",
+        "required": [
+          "request_id"
+        ],
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "pattern": "^req_"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Error": {
+        "type": "object",
+        "required": [
+          "code",
+          "message"
+        ],
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ErrorEnvelope": {
+        "type": "object",
+        "required": [
+          "success",
+          "error",
+          "meta"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              false
+            ]
+          },
+          "error": {
+            "$ref": "#/components/schemas/Error"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          }
+        },
+        "additionalProperties": false
+      },
+      "HealthResponse": {
+        "type": "object",
+        "required": [
+          "success",
+          "data",
+          "meta"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "$ref": "#/components/schemas/Health"
+          },
+          "meta": {
+            "type": "object",
+            "required": [
+              "request_id"
+            ],
+            "properties": {
+              "request_id": {
+                "type": "string",
+                "pattern": "^req_"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "HomeResponse": {
+        "type": "object",
+        "required": [
+          "success",
+          "data",
+          "meta"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "$ref": "#/components/schemas/Home"
+          },
+          "meta": {
+            "type": "object",
+            "required": [
+              "request_id"
+            ],
+            "properties": {
+              "request_id": {
+                "type": "string",
+                "pattern": "^req_"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProductListResponse": {
+        "type": "object",
+        "required": [
+          "success",
+          "data",
+          "meta"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductCard"
+            }
+          },
+          "meta": {
+            "type": "object",
+            "required": [
+              "request_id",
+              "page",
+              "per_page",
+              "total",
+              "total_pages"
+            ],
+            "properties": {
+              "request_id": {
+                "type": "string",
+                "pattern": "^req_"
+              },
+              "page": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "per_page": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 48
+              },
+              "total": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "total_pages": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProductDetailResponse": {
+        "type": "object",
+        "required": [
+          "success",
+          "data",
+          "meta"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "$ref": "#/components/schemas/ProductDetail"
+          },
+          "meta": {
+            "type": "object",
+            "required": [
+              "request_id"
+            ],
+            "properties": {
+              "request_id": {
+                "type": "string",
+                "pattern": "^req_"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "CategoryListResponse": {
+        "type": "object",
+        "required": [
+          "success",
+          "data",
+          "meta"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Category"
+            }
+          },
+          "meta": {
+            "type": "object",
+            "required": [
+              "request_id"
+            ],
+            "properties": {
+              "request_id": {
+                "type": "string",
+                "pattern": "^req_"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "CategoryDetailResponse": {
+        "type": "object",
+        "required": [
+          "success",
+          "data",
+          "meta"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "$ref": "#/components/schemas/CategoryDetail"
+          },
+          "meta": {
+            "type": "object",
+            "required": [
+              "request_id"
+            ],
+            "properties": {
+              "request_id": {
+                "type": "string",
+                "pattern": "^req_"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "CategoryFiltersResponse": {
+        "type": "object",
+        "required": [
+          "success",
+          "data",
+          "meta"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "$ref": "#/components/schemas/CategoryFilters"
+          },
+          "meta": {
+            "type": "object",
+            "required": [
+              "request_id"
+            ],
+            "properties": {
+              "request_id": {
+                "type": "string",
+                "pattern": "^req_"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "SuggestionListResponse": {
+        "type": "object",
+        "required": [
+          "success",
+          "data",
+          "meta"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Suggestion"
+            }
+          },
+          "meta": {
+            "type": "object",
+            "required": [
+              "request_id"
+            ],
+            "properties": {
+              "request_id": {
+                "type": "string",
+                "pattern": "^req_"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "CatalogTermListMeta": {
+        "type": "object",
+        "required": [
+          "request_id",
+          "page",
+          "per_page",
+          "total",
+          "total_pages"
+        ],
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "pattern": "^req_"
+          },
+          "page": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "per_page": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "total_pages": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "additionalProperties": false
+      },
+      "BrandListResponse": {
+        "type": "object",
+        "required": [
+          "success",
+          "data",
+          "meta"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Brand"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/CatalogTermListMeta"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TagListResponse": {
+        "type": "object",
+        "required": [
+          "success",
+          "data",
+          "meta"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Tag"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/CatalogTermListMeta"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SellerPublicResponse": {
+        "type": "object",
+        "required": [
+          "success",
+          "data",
+          "meta"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "$ref": "#/components/schemas/SellerPublic"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CustomerAccount": {
+        "type": "object",
+        "required": [
+          "id",
+          "first_name",
+          "last_name",
+          "display_name",
+          "email"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^cus_[a-f0-9]{32}$",
+            "description": "Random stable customer identifier; never a WordPress numeric user ID."
+          },
+          "first_name": {
+            "type": "string"
+          },
+          "last_name": {
+            "type": "string"
+          },
+          "display_name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RegisterRequest": {
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "minLength": 10,
+            "maxLength": 128,
+            "writeOnly": true
+          },
+          "first_name": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "last_name": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "display_name": {
+            "type": "string",
+            "maxLength": 250
+          }
+        },
+        "additionalProperties": false
+      },
+      "LoginRequest": {
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "writeOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AuthSession": {
+        "type": "object",
+        "required": [
+          "customer",
+          "csrf_token"
+        ],
+        "properties": {
+          "customer": {
+            "$ref": "#/components/schemas/CustomerAccount"
+          },
+          "csrf_token": {
+            "type": "string",
+            "description": "Session-bound CSRF value; keep in memory and send as X-ElDokan-CSRF for mutations."
+          }
+        },
+        "additionalProperties": false
+      },
+      "AuthSessionResponse": {
+        "type": "object",
+        "required": [
+          "success",
+          "data",
+          "meta"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "$ref": "#/components/schemas/AuthSession"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LogoutResult": {
+        "type": "object",
+        "required": [
+          "logged_out"
+        ],
+        "properties": {
+          "logged_out": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "LogoutResponse": {
+        "type": "object",
+        "required": [
+          "success",
+          "data",
+          "meta"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "$ref": "#/components/schemas/LogoutResult"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AccountUpdateRequest": {
+        "type": "object",
+        "minProperties": 1,
+        "maxProperties": 3,
+        "properties": {
+          "first_name": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "last_name": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "display_name": {
+            "type": "string",
+            "maxLength": 250
+          }
+        },
+        "additionalProperties": false
+      },
+      "CustomerAccountResponse": {
+        "type": "object",
+        "required": [
+          "success",
+          "data",
+          "meta"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "$ref": "#/components/schemas/CustomerAccount"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Wishlist": {
+        "type": "object",
+        "required": [
+          "items",
+          "count"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductCard"
+            }
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "additionalProperties": false
+      },
+      "WishlistMutation": {
+        "type": "object",
+        "required": [
+          "items",
+          "count",
+          "changed"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductCard"
+            }
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "changed": {
+            "type": "boolean",
+            "description": "False for a duplicate add or removal of an item that was not present."
+          }
+        },
+        "additionalProperties": false
+      },
+      "WishlistItemRequest": {
+        "type": "object",
+        "required": [
+          "product_id"
+        ],
+        "properties": {
+          "product_id": {
+            "type": "string",
+            "pattern": "^prd_[1-9][0-9]*$"
+          }
+        },
+        "additionalProperties": false
+      },
+      "WishlistResponse": {
+        "type": "object",
+        "required": [
+          "success",
+          "data",
+          "meta"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "$ref": "#/components/schemas/Wishlist"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          }
+        },
+        "additionalProperties": false
+      },
+      "WishlistMutationResponse": {
+        "type": "object",
+        "required": [
+          "success",
+          "data",
+          "meta"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "$ref": "#/components/schemas/WishlistMutation"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "responses": {
+      "Error": {
+        "description": "API error (WP validation errors in this namespace included)",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorEnvelope"
+            }
+          }
+        },
+        "headers": {
+          "X-ElDokan-API-Version": {
+            "$ref": "#/components/headers/ApiVersion"
+          },
+          "X-ElDokan-Request-ID": {
+            "$ref": "#/components/headers/RequestId"
+          },
+          "X-ElDokan-Cache": {
+            "$ref": "#/components/headers/CacheStatus"
+          },
+          "X-ElDokan-Cache-TTL": {
+            "$ref": "#/components/headers/CacheTtl"
+          },
+          "X-ElDokan-Cache-Generation": {
+            "$ref": "#/components/headers/CacheGeneration"
+          },
+          "X-ElDokan-Cache-Key": {
+            "$ref": "#/components/headers/CacheKey"
+          },
+          "X-ElDokan-Cache-Backend": {
+            "$ref": "#/components/headers/CacheBackend"
+          },
+          "X-ElDokan-Cache-Store": {
+            "$ref": "#/components/headers/CacheStore"
+          },
+          "Server-Timing": {
+            "$ref": "#/components/headers/ServerTiming"
+          },
+          "Cache-Control": {
+            "$ref": "#/components/headers/CacheControl"
+          },
+          "Content-Language": {
+            "$ref": "#/components/headers/ContentLanguage"
+          }
+        }
+      }
+    },
+    "headers": {
+      "ApiVersion": {
+        "schema": {
+          "type": "string"
+        }
+      },
+      "RequestId": {
+        "schema": {
+          "type": "string"
+        }
+      },
+      "CacheStatus": {
+        "schema": {
+          "type": "string",
+          "enum": [
+            "HIT",
+            "MISS",
+            "BYPASS"
+          ]
+        }
+      },
+      "CacheTtl": {
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "CacheGeneration": {
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "CacheKey": {
+        "schema": {
+          "type": "string"
+        }
+      },
+      "CacheBackend": {
+        "schema": {
+          "type": "string"
+        }
+      },
+      "CacheStore": {
+        "schema": {
+          "type": "string"
+        }
+      },
+      "ServerTiming": {
+        "schema": {
+          "type": "string"
+        }
+      },
+      "CacheControl": {
+        "schema": {
+          "type": "string",
+          "example": "private, no-store"
+        }
+      },
+      "ContentLanguage": {
+        "description": "Effective response language after translation fallback.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "ar",
+            "en"
+          ]
+        }
+      }
+    }
+  }
+}
