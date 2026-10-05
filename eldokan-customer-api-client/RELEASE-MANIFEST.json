@@ -1,17 +1,17 @@
 {
-  "release": "ElDokan Customer API Client 0.4.1",
+  "release": "ElDokan Customer API Client 0.5.0",
   "date": "2026-10-01",
   "package": "@eldokan/customer-api-client",
   "contract": "ElDokan Customer API v1",
-  "source_adapter": "0.5.2",
-  "source_portal": "1.6.2",
-  "openapi_sha256": "bcd7fa63bec70f51270d9be23984205b0b72a3c6ac807569c410e9906ca4e412",
+  "source_adapter": "0.6.0",
+  "source_portal": "1.7.0",
+  "openapi_sha256": "c2a201e6f526a2f7edc0655a499afc8ceefa5a69e6eb57c1b5b9814555a29ff2",
   "verification": {
-    "generated_schemas": 60,
-    "contract_paths": 20,
+    "generated_schemas": 68,
+    "contract_paths": 23,
     "typescript_typecheck": "PASS",
     "typescript_build": "PASS",
-    "unit_tests": "15/15 PASS",
+    "unit_tests": "17/17 PASS",
     "package_verifier": "PASS",
     "npm_pack_dry_run": "PASS"
   }

@@ -30,7 +30,6 @@ export class WishlistResource {
   get(options: LanguageOptions = {}): Promise<WishlistResponse> {
     return this.http.get<WishlistResponse>('/wishlist', {
       lang: options.lang,
-      includeLanguage: options.lang !== undefined,
       credentials: 'include',
     });
   }
@@ -39,7 +38,6 @@ export class WishlistResource {
     return this.http.post<WishlistMutationResponse>('/wishlist/items', {
       body: { product_id: productIdOrThrow(productId) },
       lang: options.lang,
-      includeLanguage: options.lang !== undefined,
       credentials: 'include',
       csrfToken: this.sessionState.requireCsrfToken(),
     });
@@ -50,7 +48,6 @@ export class WishlistResource {
       `/wishlist/items/${encodeURIComponent(productIdOrThrow(productId))}`,
       {
         lang: options.lang,
-        includeLanguage: options.lang !== undefined,
         credentials: 'include',
         csrfToken: this.sessionState.requireCsrfToken(),
       },

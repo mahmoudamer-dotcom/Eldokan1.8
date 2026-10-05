@@ -1,4 +1,5 @@
 import { createHmac, timingSafeEqual } from 'node:crypto'
+import { inflateRawSync } from 'node:zlib'
 import { NextResponse } from 'next/server'
 import { ProductsDetails } from '@/services/productdetails'
 
@@ -15,17 +16,30 @@ type PaymentRecord = {
   order?: { id?: number; merchant_order_id?: string; created_at?: string }
   billing_data?: Record<string, unknown>
 }
+type SignedLine = { productId: string; variationId: string | null; quantity: number; unitAmountCents: number }
 
 function verifyReference(reference: string, signingSecret: string) {
-  const match = /^eldokan\.([A-Za-z0-9_-]{1,500})\.([a-f0-9]{64})$/.exec(reference)
+  const match = /^eldokan\.([A-Za-z0-9_-]{1,3000})\.([a-f0-9]{64})$/.exec(reference)
   if (!match) return null
   const expected = createHmac('sha256', signingSecret).update(match[1]).digest()
   const supplied = Buffer.from(match[2], 'hex')
   if (expected.length !== supplied.length || !timingSafeEqual(expected, supplied)) return null
   try {
-    const decoded: unknown = JSON.parse(Buffer.from(match[1], 'base64url').toString('utf8'))
-    if (!decoded || typeof decoded !== 'object' || !('productId' in decoded) || typeof decoded.productId !== 'string' || !('amountCents' in decoded) || typeof decoded.amountCents !== 'number' || !Number.isSafeInteger(decoded.amountCents) || decoded.amountCents < 1) return null
-    return { productId: decoded.productId, amountCents: decoded.amountCents }
+    const decoded: unknown = JSON.parse(inflateRawSync(Buffer.from(match[1], 'base64url'), { maxOutputLength: 16_384 }).toString('utf8'))
+    if (!decoded || typeof decoded !== 'object' || !('amountCents' in decoded) || typeof decoded.amountCents !== 'number' || !Number.isSafeInteger(decoded.amountCents) || decoded.amountCents < 1 || !('lines' in decoded) || !Array.isArray(decoded.lines) || decoded.lines.length < 1 || decoded.lines.length > 50) return null
+    const lines: SignedLine[] = []
+    for (const value of decoded.lines) {
+      if (!Array.isArray(value) || value.length !== 4) return null
+      const [productId, variationId, quantity, unitAmountCents] = value
+      if (typeof productId !== 'string' || !/^prd_[1-9][0-9]*$/.test(productId)) return null
+      if (variationId !== null && (typeof variationId !== 'string' || !/^var_[1-9][0-9]*$/.test(variationId))) return null
+      if (typeof quantity !== 'number' || !Number.isInteger(quantity) || quantity < 1 || quantity > 999) return null
+      if (typeof unitAmountCents !== 'number' || !Number.isSafeInteger(unitAmountCents) || unitAmountCents < 1) return null
+      lines.push({ productId, variationId, quantity, unitAmountCents })
+    }
+    const calculatedTotal = lines.reduce((total, line) => total + line.quantity * line.unitAmountCents, 0)
+    if (calculatedTotal !== decoded.amountCents || !Number.isSafeInteger(calculatedTotal)) return null
+    return { lines, amountCents: decoded.amountCents }
   } catch { return null }
 }
 
@@ -61,9 +75,21 @@ export async function GET(request: Request) {
       return NextResponse.json({ status: 'failed' })
     }
 
-    const productResponse = await ProductsDetails(order.productId)
-    const product = productResponse.data
-    if (!product?.id) throw new Error('Product record not found')
+    const products = await Promise.all(order.lines.map(async (line) => {
+      const productResponse = await ProductsDetails(line.productId)
+      const product = productResponse.data
+      if (!product?.id) throw new Error('Product record not found')
+      return {
+        id: product.id,
+        name: product.name,
+        sku: product.sku,
+        imageUrl: product.images[0]?.url,
+        variationId: line.variationId,
+        quantity: line.quantity,
+        unitAmountCents: line.unitAmountCents,
+        lineAmountCents: line.unitAmountCents * line.quantity,
+      }
+    }))
     return NextResponse.json({
       status: 'paid',
       invoice: {
@@ -72,7 +98,7 @@ export async function GET(request: Request) {
         paidAt: record.paid_at || record.created_at || record.order?.created_at,
         amountCents: record.amount_cents,
         currency: record.currency,
-        product: { id: product.id, name: product.name, sku: product.sku, imageUrl: product.images[0]?.url, quantity: 1 },
+        items: products,
         customer: record.billing_data ?? {},
       },
     })

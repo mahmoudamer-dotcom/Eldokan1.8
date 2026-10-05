@@ -1,4 +1,4 @@
-# Architecture — API Client 0.4.1
+# Architecture — API Client 0.5.0
 
 ## Boundary
 

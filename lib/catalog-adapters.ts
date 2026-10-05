@@ -2,10 +2,10 @@ import type { ProductCard as ApiProductCard, ProductDetail as ApiProductDetail, 
 import type { ProductDetailData } from '@/types/product'
 import type { StoreProduct } from '@/components/productCard/ProductCard'
 
-type ApiMoney = { formatted: string; amount: number } | null
+type ApiMoney = { formatted: string; amount: number; currency?: string; decimals?: number } | null
 
 function money(value: ApiMoney) {
-  return value ? { formatted: value.formatted, amount: value.amount } : null
+  return value ? { formatted: value.formatted, amount: value.amount, currency: value.currency, decimals: value.decimals } : null
 }
 
 export function toStoreProduct(product: ApiProductCard | ApiProductDetail): StoreProduct {

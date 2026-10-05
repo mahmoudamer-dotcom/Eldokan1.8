@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import { useLocale } from '@/components/i18n/LocaleProvider'
+import { rememberVerifiedOrder } from '@/lib/order-history'
 
 type Invoice = {
   transactionId?: number
@@ -9,7 +10,7 @@ type Invoice = {
   paidAt?: string
   amountCents: number
   currency: string
-  product: { id: string | number; name: string; sku?: string; imageUrl?: string; quantity: number }
+  items: Array<{ id: string | number; name: string; sku?: string; imageUrl?: string; variationId: string | null; quantity: number; unitAmountCents: number; lineAmountCents: number }>
   customer: Record<string, unknown>
 }
 type Result = { status?: 'paid' | 'pending' | 'failed'; error?: string; invoice?: Invoice }
@@ -31,12 +32,13 @@ export default function InvoiceResult({ reference }: { reference: string }) {
       const body = await response.json() as Result
       if (!response.ok) throw new Error(body.error || t('Unable to verify payment.', 'تعذر التحقق من الدفع.'))
       setResult(body)
+      if (body.status === 'paid') rememberVerifiedOrder(reference)
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : t('Unable to verify payment.', 'تعذر التحقق من الدفع.'))
     } finally { setLoading(false) }
   }, [reference, t])
 
-  useEffect(() => { void verify() }, [verify])
+  useEffect(() => { queueMicrotask(() => { void verify() }) }, [verify])
 
   const invoice = result?.invoice
   const customer = invoice?.customer ?? {}
@@ -56,11 +58,13 @@ export default function InvoiceResult({ reference }: { reference: string }) {
       <div><dt className="text-gray-500">{t('Payment date', 'تاريخ الدفع')}</dt><dd className="font-semibold">{paidAt}</dd></div>
       <div><dt className="text-gray-500">{t('Payment status', 'حالة الدفع')}</dt><dd className="font-semibold text-emerald-700">{t('Paid', 'مدفوع')}</dd></div>
     </dl>
-    <h2 className="mt-7 border-b border-gray-100 pb-2 text-lg font-bold">{t('Product', 'المنتج')}</h2>
-    <div className="flex items-center gap-4 py-4">
-      {invoice.product.imageUrl && <img src={invoice.product.imageUrl} alt="" className="size-20 rounded-lg bg-gray-50 object-contain" />}
-      <div className="flex-1"><p className="font-semibold">{invoice.product.name}</p>{invoice.product.sku && <p className="mt-1 text-sm text-gray-500">SKU: {invoice.product.sku}</p>}<p className="mt-1 text-sm text-gray-600">{t('Quantity', 'الكمية')}: {invoice.product.quantity}</p></div>
-      <p className="font-bold">{(invoice.amountCents / 100).toLocaleString(ar ? 'ar-EG' : 'en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {invoice.currency}</p>
+    <h2 className="mt-7 border-b border-gray-100 pb-2 text-lg font-bold">{t('Products', 'المنتجات')}</h2>
+    <div className="divide-y divide-gray-100">
+      {invoice.items.map((item, index) => <div key={`${item.id}-${item.variationId ?? 'simple'}-${index}`} className="flex items-center gap-4 py-4">
+        {item.imageUrl && <img src={item.imageUrl} alt="" className="size-20 rounded-lg bg-gray-50 object-contain" />}
+        <div className="flex-1"><p className="font-semibold">{item.name}</p>{item.sku && <p className="mt-1 text-sm text-gray-500">SKU: {item.sku}</p>}{item.variationId && <p className="mt-1 text-sm text-gray-500">{t('Variation', 'الاختيار')}: {item.variationId}</p>}<p className="mt-1 text-sm text-gray-600">{t('Quantity', 'الكمية')}: {item.quantity}</p></div>
+        <p className="font-bold">{(item.lineAmountCents / 100).toLocaleString(ar ? 'ar-EG' : 'en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {invoice.currency}</p>
+      </div>)}
     </div>
     <div className="flex justify-between border-t border-gray-100 pt-4 text-lg font-bold"><span>{t('Total paid', 'الإجمالي المدفوع')}</span><span>{(invoice.amountCents / 100).toLocaleString(ar ? 'ar-EG' : 'en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {invoice.currency}</span></div>
     <h2 className="mt-7 border-b border-gray-100 pb-2 text-lg font-bold">{t('Customer and delivery details', 'بيانات العميل والتوصيل')}</h2>

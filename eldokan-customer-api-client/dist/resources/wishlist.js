@@ -20,7 +20,6 @@ export class WishlistResource {
     get(options = {}) {
         return this.http.get('/wishlist', {
             lang: options.lang,
-            includeLanguage: options.lang !== undefined,
             credentials: 'include',
         });
     }
@@ -28,16 +27,14 @@ export class WishlistResource {
         return this.http.post('/wishlist/items', {
             body: { product_id: productIdOrThrow(productId) },
             lang: options.lang,
-            includeLanguage: options.lang !== undefined,
             credentials: 'include',
             csrfToken: this.sessionState.requireCsrfToken(),
         });
     }
     remove(productId, options = {}) {
         return this.http.delete(`/wishlist/items/${encodeURIComponent(productIdOrThrow(productId))}`, {
-                lang: options.lang,
-                includeLanguage: options.lang !== undefined,
-                credentials: 'include',
+            lang: options.lang,
+            credentials: 'include',
             csrfToken: this.sessionState.requireCsrfToken(),
         });
     }

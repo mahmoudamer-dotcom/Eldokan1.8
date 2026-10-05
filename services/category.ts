@@ -72,3 +72,12 @@ export async function fetchCategoryBySlug(slug: string) {
     return null
   }
 }
+
+export async function fetchCategoryFilters(slug: string) {
+  try {
+    const api = createEldokanApi(await getLocale())
+    return await retryApiRead(() => api.categories.filters(slug))
+  } catch {
+    return null
+  }
+}

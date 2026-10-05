@@ -122,7 +122,9 @@ export class EldokanHttpClient {
             };
             if (options.body !== undefined)
                 init.body = JSON.stringify(options.body);
-            // Preserve the global receiver required by browser Fetch implementations.
+            // Browser fetch is a Web IDL method and must keep its global receiver.
+            // Injected fetch implementations (such as the Next.js proxy wrapper) are
+            // ordinary functions and safely ignore this binding when they are arrows.
             const response = await Reflect.apply(this.fetchImpl, globalThis, [url, init]);
             const context = contextFrom(response, url.toString());
             try {

@@ -1,13 +1,13 @@
-# Engineering Handoff — ElDokan Customer API Client 0.4.1
+# Engineering Handoff — ElDokan Customer API Client 0.5.0
 
 ## Source of truth
 
 - API Contract: v1
-- Customer API Adapter: 0.5.2
-- Developer Portal: 1.6.2
-- Client: 0.4.1
-- Bundled OpenAPI schemas: 60
-- Bundled API paths: 20
+- Customer API Adapter: 0.6.0
+- Developer Portal: 1.7.0
+- Client: 0.5.0
+- Bundled OpenAPI schemas: 68
+- Bundled API paths: 23
 
 ## Current live acceptance already observed
 
@@ -76,7 +76,6 @@ Only configuration should change when the target hostname is activated.
 
 ## Do not add yet
 
-- Cart/guest session.
 - Checkout.
 - Orders, product review submission and seller rating submission.
 - Payment calls.

@@ -77,6 +77,7 @@ export default function AccountPage() {
       <h1 className="text-2xl font-bold">My account</h1>
       {customer ? <>
         <p className="mt-2 text-gray-600">Signed in as {customer.display_name || customer.email}</p>
+        <Link href="/orders" className="mt-4 inline-flex rounded-lg border border-gray-300 px-4 py-2 font-semibold hover:bg-gray-50 dark:border-gray-600">My orders</Link>
         {editing ? <form action={updateAccount} className="mt-7 space-y-4 rounded-xl border border-gray-200 p-4 dark:border-gray-700">
           <label className="block text-sm font-medium">First name<input name="first_name" defaultValue={customer.first_name} autoComplete="given-name" className="mt-1 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 font-normal dark:border-gray-600" /></label>
           <label className="block text-sm font-medium">Last name<input name="last_name" defaultValue={customer.last_name} autoComplete="family-name" className="mt-1 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 font-normal dark:border-gray-600" /></label>

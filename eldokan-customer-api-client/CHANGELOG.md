@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.0 — 2026-10-01
+
+- Added typed `cart.get/add/update/remove` methods for Phase 2B.
+- Added automatic guest Cart bootstrap/CSRF restoration in Client memory.
+- Added typed Cart schemas from Contract v1 while preserving every existing resource.
+- Checkout and Orders remain unavailable.
+
 ## 0.4.1 — 2026-10-01
 
 - Added typed `Brand.image: Image | null` from Customer API 0.5.2.

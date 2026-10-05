@@ -205,6 +205,82 @@ test('brands expose the normalized nullable thumbnail through the typed client',
   assert.equal(result.data[1].image, null);
 });
 
+test('cart bootstraps guest CSRF in memory then uses credentialed mutations', async () => {
+  const seen = [];
+  const itemId = `cit_${'a'.repeat(32)}`;
+  const client = makeClient(async (url, init) => {
+    seen.push({ url: String(url), init });
+    if (String(url).includes('/cart/items')) {
+      return success({
+        success: true,
+        data: { items: [], count: 0, valid: true, owner_type: 'guest', csrf_token: 'guest-csrf', changed: true },
+        meta: { request_id: 'req_cart_mutation' },
+      });
+    }
+    return success({
+      success: true,
+      data: { items: [], count: 0, valid: true, owner_type: 'guest', csrf_token: 'guest-csrf' },
+      meta: { request_id: 'req_cart' },
+    });
+  });
+
+  await client.cart.add({ productId: 'prd_10', quantity: 1 });
+  await client.cart.update(itemId, { quantity: 2 });
+  await client.cart.remove(itemId);
+
+  assert.equal(seen[0].url.endsWith('/cart?lang=en'), true);
+  assert.equal(seen[0].init.credentials, 'include');
+  assert.equal(new Headers(seen[1].init.headers).get('X-ElDokan-CSRF'), 'guest-csrf');
+  assert.equal(seen[1].init.credentials, 'include');
+  assert.equal(JSON.parse(seen[1].init.body).product_id, 'prd_10');
+  assert.equal(Object.hasOwn(JSON.parse(seen[1].init.body), 'variation_id'), false);
+  assert.equal(seen.filter((entry) => entry.url.endsWith('/cart?lang=en')).length, 1);
+});
+
+test('cart sends variation_id only when a variation is selected', async () => {
+  let body;
+  const client = makeClient(async (url, init) => {
+    if (String(url).includes('/cart/items')) body = JSON.parse(init.body);
+    return success({ success: true, data: { items: [], count: 0, valid: true, owner_type: 'guest', csrf_token: 'guest-csrf', changed: true }, meta: { request_id: 'req_cart' } });
+  });
+
+  await client.cart.add({ productId: 'prd_10', variationId: 'var_20', quantity: 1 });
+  assert.equal(body.variation_id, 'var_20');
+});
+
+test('cart shares an in-flight session bootstrap with an add request', async () => {
+  const calls = [];
+  let resolveCart;
+  const client = makeClient(async (url) => {
+    if (String(url).includes('/cart/items')) {
+      calls.push('add');
+      return success({ success: true, data: { items: [], count: 0, valid: true, owner_type: 'guest', csrf_token: 'guest-csrf', changed: true }, meta: { request_id: 'req_cart_add' } });
+    }
+    calls.push('get');
+    return new Promise((resolve) => {
+      resolveCart = () => resolve(success({ success: true, data: { items: [], count: 0, valid: true, owner_type: 'guest', csrf_token: 'guest-csrf' }, meta: { request_id: 'req_cart' } }));
+    });
+  });
+
+  const initialLoad = client.cart.get();
+  const add = client.cart.add({ productId: 'prd_10', quantity: 1 });
+  await Promise.resolve();
+  assert.deepEqual(calls, ['get']);
+  resolveCart();
+  await Promise.all([initialLoad, add]);
+  assert.deepEqual(calls, ['get', 'add']);
+});
+
+test('cart rejects zero quantity before transport', async () => {
+  let called = false;
+  const client = makeClient(async () => { called = true; throw new Error('transport must not run'); });
+  await assert.rejects(
+    () => client.cart.add({ productId: 'prd_10', quantity: 0 }),
+    (error) => error instanceof EldokanClientError && error.code === 'invalid_quantity',
+  );
+  assert.equal(called, false);
+});
+
 test('seller public resource uses the stable public seller ID and has no auth behavior', async () => {
   let seenUrl = '';
   const client = makeClient(async (url) => {

@@ -3,7 +3,7 @@
   "info": {
     "title": "ElDokan Customer API",
     "version": "1.0.0",
-    "description": "Implemented catalog plus customer Identity, Account and Wishlist on WordPress; the api.eldokan.com hostname is a future target. Adapter release 0.5.2. Monetary query bounds are major currency units; Money.amount uses minor units."
+    "description": "Implemented catalog plus customer Identity, Account, Wishlist and Phase 2B Cart on WordPress; the api.eldokan.com hostname is a future target. Adapter release 0.6.0. Monetary query bounds are major currency units; Money.amount uses minor units."
   },
   "servers": [
     {
@@ -27,6 +27,9 @@
     },
     {
       "name": "Wishlist"
+    },
+    {
+      "name": "Cart"
     },
     {
       "name": "Home"
@@ -72,7 +75,7 @@
         },
         "responses": {
           "201": {
-            "description": "Customer created; the response sets the HttpOnly customer session cookie.",
+            "description": "Customer created; the response sets the HttpOnly customer session cookie and atomically merges any valid guest Cart.",
             "content": {
               "application/json": {
                 "schema": {
@@ -118,7 +121,7 @@
         },
         "responses": {
           "200": {
-            "description": "Authenticated; the response sets the HttpOnly customer session cookie.",
+            "description": "Authenticated; the response sets the HttpOnly customer session cookie and atomically merges any valid guest Cart.",
             "content": {
               "application/json": {
                 "schema": {
@@ -407,6 +410,233 @@
             "$ref": "#/components/responses/Error"
           },
           "403": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/cart": {
+      "get": {
+        "tags": [
+          "Cart"
+        ],
+        "summary": "Restore or create the private guest/customer Cart",
+        "description": "Creates an opaque HttpOnly guest Cart session when no customer session exists. Membership is language-independent; prices and stock are recalculated by the server on every response.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Lang"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current Cart plus an in-memory CSRF token for Cart mutations.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CartResponse"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "items": [],
+                    "count": 0,
+                    "valid": true,
+                    "owner_type": "guest",
+                    "csrf_token": "7f1d8f35a1c9f6e9"
+                  },
+                  "meta": {
+                    "request_id": "req_cart"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/cart/items": {
+      "post": {
+        "tags": [
+          "Cart"
+        ],
+        "summary": "Add one simple product or exact public variation selection",
+        "description": "Duplicate exact selections are retry-safe and return changed=false. Use PATCH to change quantity.",
+        "security": [
+          {
+            "CustomerSession": [],
+            "CsrfToken": []
+          },
+          {
+            "GuestCartSession": [],
+            "CsrfToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Lang"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CartItemRequest"
+              },
+              "example": {
+                "product_id": "prd_21417",
+                "variation_id": "var_21419",
+                "quantity": 1
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Current Cart and deterministic changed flag.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CartMutationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error"
+          },
+          "422": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/cart/items/{item_id}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/Lang"
+        },
+        {
+          "name": "item_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^cit_[a-f0-9]{32}$"
+          }
+        }
+      ],
+      "patch": {
+        "tags": [
+          "Cart"
+        ],
+        "summary": "Set an exact positive Cart item quantity",
+        "security": [
+          {
+            "CustomerSession": [],
+            "CsrfToken": []
+          },
+          {
+            "GuestCartSession": [],
+            "CsrfToken": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CartItemUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated current Cart.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CartMutationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error"
+          },
+          "422": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Cart"
+        ],
+        "summary": "Remove a Cart item",
+        "description": "Removing an absent item is deterministic and returns changed=false.",
+        "security": [
+          {
+            "CustomerSession": [],
+            "CsrfToken": []
+          },
+          {
+            "GuestCartSession": [],
+            "CsrfToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current Cart and deterministic changed flag.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CartMutationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
             "$ref": "#/components/responses/Error"
           }
         }
@@ -1461,11 +1691,17 @@
         "name": "wordpress_logged_in_[site-hash]",
         "description": "WordPress-native Secure/HttpOnly customer session cookie. The concrete cookie name is site-specific and is managed by the browser, never frontend JavaScript."
       },
+      "GuestCartSession": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "eldokan_guest_cart",
+        "description": "Opaque Secure/HttpOnly guest Cart ownership cookie. Its value is never exposed to frontend JavaScript or response bodies."
+      },
       "CsrfToken": {
         "type": "apiKey",
         "in": "header",
         "name": "X-ElDokan-CSRF",
-        "description": "Session-bound CSRF value returned by register, login or session restoration. Required only for authenticated mutations."
+        "description": "Session-bound CSRF value returned by customer auth/session or GET /cart. Keep it in memory; required for private mutations."
       }
     },
     "parameters": {
@@ -3392,6 +3628,261 @@
           },
           "data": {
             "$ref": "#/components/schemas/CustomerAccount"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CartIssue": {
+        "type": "object",
+        "required": [
+          "code",
+          "message"
+        ],
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": [
+              "not_purchasable",
+              "out_of_stock",
+              "insufficient_stock",
+              "purchase_quantity_limit"
+            ]
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CartItem": {
+        "type": "object",
+        "required": [
+          "id",
+          "product_id",
+          "variation_id",
+          "name",
+          "image",
+          "selected_attributes",
+          "quantity",
+          "unit_price",
+          "line_subtotal",
+          "stock",
+          "seller",
+          "valid",
+          "issues"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^cit_[a-f0-9]{32}$"
+          },
+          "product_id": {
+            "type": "string",
+            "pattern": "^prd_[1-9][0-9]*$"
+          },
+          "variation_id": {
+            "type": "string",
+            "pattern": "^var_[1-9][0-9]*$",
+            "nullable": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "image": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Image"
+              }
+            ],
+            "nullable": true
+          },
+          "selected_attributes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VariationSelection"
+            }
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 999
+          },
+          "unit_price": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Money"
+              }
+            ],
+            "nullable": true
+          },
+          "line_subtotal": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Money"
+              }
+            ],
+            "nullable": true
+          },
+          "stock": {
+            "$ref": "#/components/schemas/Stock"
+          },
+          "seller": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SellerPublic"
+              }
+            ],
+            "nullable": true
+          },
+          "valid": {
+            "type": "boolean"
+          },
+          "issues": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CartIssue"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "Cart": {
+        "type": "object",
+        "required": [
+          "items",
+          "count",
+          "valid",
+          "owner_type",
+          "csrf_token"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CartItem"
+            }
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "valid": {
+            "type": "boolean",
+            "description": "False when current price/stock/purchasability validation leaves any line not checkout-ready. Cart never reserves stock."
+          },
+          "owner_type": {
+            "type": "string",
+            "enum": [
+              "guest",
+              "customer"
+            ]
+          },
+          "csrf_token": {
+            "type": "string",
+            "description": "Session-bound Cart mutation token; keep in memory and never localStorage."
+          }
+        },
+        "additionalProperties": false
+      },
+      "CartMutation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Cart"
+          },
+          {
+            "type": "object",
+            "required": [
+              "changed"
+            ],
+            "properties": {
+              "changed": {
+                "type": "boolean",
+                "description": "False for a retry-safe duplicate add or removal of an absent item."
+              }
+            }
+          }
+        ]
+      },
+      "CartItemRequest": {
+        "type": "object",
+        "required": [
+          "product_id",
+          "quantity"
+        ],
+        "properties": {
+          "product_id": {
+            "type": "string",
+            "pattern": "^prd_[1-9][0-9]*$"
+          },
+          "variation_id": {
+            "type": "string",
+            "pattern": "^var_[1-9][0-9]*$",
+            "nullable": true
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 999
+          }
+        },
+        "additionalProperties": false
+      },
+      "CartItemUpdateRequest": {
+        "type": "object",
+        "required": [
+          "quantity"
+        ],
+        "properties": {
+          "quantity": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 999
+          }
+        },
+        "additionalProperties": false
+      },
+      "CartResponse": {
+        "type": "object",
+        "required": [
+          "success",
+          "data",
+          "meta"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "$ref": "#/components/schemas/Cart"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CartMutationResponse": {
+        "type": "object",
+        "required": [
+          "success",
+          "data",
+          "meta"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "$ref": "#/components/schemas/CartMutation"
           },
           "meta": {
             "$ref": "#/components/schemas/Meta"

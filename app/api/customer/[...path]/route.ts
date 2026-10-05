@@ -1,4 +1,5 @@
 import { createEldokanCustomerApiClient, EldokanClientError } from '@eldokan/customer-api-client'
+import type { CartItemId, ProductId, ProductListParams, VariationId } from '@eldokan/customer-api-client'
 import type { NextRequest } from 'next/server'
 
 const DEFAULT_API_BASE_URL = 'https://www.eldokan.com/wp-json/eldokan-customer/v1'
@@ -45,22 +46,57 @@ async function proxy(request: NextRequest, context: RouteContext) {
   }
 
   const cookies: string[] = []
+  let upstreamCookie = request.headers.get('cookie') ?? ''
   const api = createEldokanCustomerApiClient({
     baseUrl: process.env.ELDOKAN_API_BASE_URL?.trim() || DEFAULT_API_BASE_URL,
     fetch: async (input, init) => {
       const headers = new Headers(init?.headers)
-      const cookie = request.headers.get('cookie')
-      if (cookie) headers.set('cookie', cookie)
+      if (upstreamCookie) headers.set('cookie', upstreamCookie)
 
       const response = await fetch(input, { ...init, headers, cache: 'no-store' })
-      cookies.push(...response.headers.getSetCookie())
+      const responseCookies = response.headers.getSetCookie()
+      cookies.push(...responseCookies)
+      if (responseCookies.length) {
+        const cookiePairs = responseCookies.map((value) => value.split(';', 1)[0]).filter(Boolean)
+        upstreamCookie = [upstreamCookie, ...cookiePairs].filter(Boolean).join('; ')
+      }
       return response
     },
   })
 
   try {
     let result: unknown
-    if (endpoint === 'auth/register' && method === 'POST') {
+    if (endpoint === 'products' && method === 'GET') {
+      const params = request.nextUrl.searchParams
+      const lang = params.get('lang')
+      const optionalNumber = (key: string) => {
+        const value = params.get(key)
+        return value === null || value === '' ? undefined : Number(value)
+      }
+      const query: ProductListParams = {
+        page: optionalNumber('page'),
+        perPage: optionalNumber('per_page'),
+        search: params.get('search') ?? undefined,
+        category: params.get('category') ?? undefined,
+        brand: params.get('brand') ?? undefined,
+        minPrice: optionalNumber('min_price'),
+        maxPrice: optionalNumber('max_price'),
+        stockStatus: (params.get('stock_status') ?? undefined) as ProductListParams['stockStatus'],
+        onSale: params.has('on_sale') ? params.get('on_sale') === 'true' : undefined,
+        featured: params.has('featured') ? params.get('featured') === 'true' : undefined,
+        sort: (params.get('sort') ?? undefined) as ProductListParams['sort'],
+        attributes: params.get('attributes') ?? undefined,
+        lang: lang === 'ar' || lang === 'en' ? lang : undefined,
+      }
+      result = await api.products.list(query)
+    } else if (endpoint.startsWith('products/') && method === 'GET') {
+      const productId = decodeURIComponent(endpoint.slice('products/'.length))
+      result = await api.products.get(productId as ProductId)
+    } else if (endpoint.startsWith('categories/') && endpoint.endsWith('/filters') && method === 'GET') {
+      const slug = decodeURIComponent(endpoint.slice('categories/'.length, -'/filters'.length))
+      const lang = request.nextUrl.searchParams.get('lang')
+      result = await api.categories.filters(slug, { lang: lang === 'ar' || lang === 'en' ? lang : undefined })
+    } else if (endpoint === 'auth/register' && method === 'POST') {
       result = await api.auth.register(await request.json())
     } else if (endpoint === 'auth/login' && method === 'POST') {
       result = await api.auth.login(await request.json())
@@ -99,6 +135,26 @@ async function proxy(request: NextRequest, context: RouteContext) {
       const productId = decodeURIComponent(endpoint.slice('wishlist/items/'.length))
       const lang = request.nextUrl.searchParams.get('lang')
       result = await api.wishlist.remove(productId as `prd_${number}`, { lang: lang === 'ar' || lang === 'en' ? lang : undefined })
+    } else if (endpoint === 'cart' && method === 'GET') {
+      const lang = request.nextUrl.searchParams.get('lang')
+      result = await api.cart.get({ lang: lang === 'ar' || lang === 'en' ? lang : undefined })
+    } else if (endpoint === 'cart/items' && method === 'POST') {
+      const body = await request.json() as { product_id?: string; variation_id?: string | null; quantity?: number }
+      const lang = request.nextUrl.searchParams.get('lang')
+      result = await api.cart.add({
+        productId: body.product_id as ProductId,
+        variationId: body.variation_id as VariationId | null | undefined,
+        quantity: body.quantity as number,
+      }, { lang: lang === 'ar' || lang === 'en' ? lang : undefined })
+    } else if (endpoint.startsWith('cart/items/') && method === 'PATCH') {
+      const body = await request.json() as { quantity?: number }
+      const cartItemId = decodeURIComponent(endpoint.slice('cart/items/'.length))
+      const lang = request.nextUrl.searchParams.get('lang')
+      result = await api.cart.update(cartItemId as CartItemId, { quantity: body.quantity as number }, { lang: lang === 'ar' || lang === 'en' ? lang : undefined })
+    } else if (endpoint.startsWith('cart/items/') && method === 'DELETE') {
+      const cartItemId = decodeURIComponent(endpoint.slice('cart/items/'.length))
+      const lang = request.nextUrl.searchParams.get('lang')
+      result = await api.cart.remove(cartItemId as CartItemId, { lang: lang === 'ar' || lang === 'en' ? lang : undefined })
     } else {
       return Response.json({ success: false, error: { code: 'not_found', message: 'Customer API endpoint not found.' }, meta: { request_id: null } }, { status: 404 })
     }

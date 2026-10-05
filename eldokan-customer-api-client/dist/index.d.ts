@@ -10,6 +10,7 @@ import { SellersResource } from './resources/sellers.js';
 import { AuthResource } from './resources/auth.js';
 import { AccountResource } from './resources/account.js';
 import { WishlistResource } from './resources/wishlist.js';
+import { CartResource } from './resources/cart.js';
 export * from './config.js';
 export * from './errors.js';
 export * from './filters.js';
@@ -30,6 +31,7 @@ export declare class EldokanCustomerApiClient {
     readonly auth: AuthResource;
     readonly account: AccountResource;
     readonly wishlist: WishlistResource;
+    readonly cart: CartResource;
     constructor(config: EldokanClientConfig);
 }
 export declare function createEldokanCustomerApiClient(config: EldokanClientConfig): EldokanCustomerApiClient;

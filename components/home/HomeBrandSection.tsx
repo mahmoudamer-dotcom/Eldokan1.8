@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Store } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useState, useSyncExternalStore } from 'react'
 import type { HomeBrand } from '@/types/home'
 import { useLocale } from '@/components/i18n/LocaleProvider'
 
@@ -54,11 +54,7 @@ function BrandLogo({ name, images, mounted }: { name: string; images: string[]; 
 
 export default function HomeBrandSection({ brands: brandItems, title }: { brands: HomeBrand[]; title?: string }) {
   const { t } = useLocale()
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
+  const mounted = useSyncExternalStore(() => () => {}, () => true, () => false)
 
   const brands = brandItems
     .map((brand) => ({ brand, images: getBrandImages(brand) }))

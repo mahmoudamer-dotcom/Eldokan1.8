@@ -52,7 +52,7 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   useEffect(() => {
-    void load()
+    queueMicrotask(() => { void load() })
     const handleSessionChange = () => { void load() }
     window.addEventListener('eldokan:session-changed', handleSessionChange)
     return () => window.removeEventListener('eldokan:session-changed', handleSessionChange)

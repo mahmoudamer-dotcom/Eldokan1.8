@@ -9,6 +9,7 @@ export type SellerId = `sel_${number}`;
 export type BrandId = `brd_${number}`;
 export type TagId = `tag_${number}`;
 export type VariationId = `var_${number}`;
+export type CartItemId = `cit_${string}`;
 export type AttributeId = `att_${number}`;
 export type AttributeOptionId = `atr_${number}`;
 export interface LanguageOptions {
@@ -49,6 +50,14 @@ export interface CatalogTermListParams extends LanguageOptions {
 }
 export interface SearchSuggestionParams extends LanguageOptions {
     limit?: number;
+}
+export interface CartAddInput {
+    productId: ProductId;
+    variationId?: VariationId | null;
+    quantity: number;
+}
+export interface CartQuantityInput {
+    quantity: number;
 }
 export interface EldokanResponseContext {
     url: string;

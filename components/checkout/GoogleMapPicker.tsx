@@ -38,8 +38,10 @@ export default function GoogleMapPicker({ apiKey, point, onChange, locale }: Pro
   useEffect(() => { pointRef.current = point }, [point])
 
   useEffect(() => {
-    setManualLat(point ? String(point.lat) : '')
-    setManualLng(point ? String(point.lng) : '')
+    queueMicrotask(() => {
+      setManualLat(point ? String(point.lat) : '')
+      setManualLng(point ? String(point.lng) : '')
+    })
   }, [point])
 
   useEffect(() => {
@@ -82,7 +84,6 @@ export default function GoogleMapPicker({ apiKey, point, onChange, locale }: Pro
     document.head.appendChild(script)
     return () => { cancelled = true; script.onload = null; script.onerror = null }
     // Map is created once; selection updates flow through refs.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiKey, ar])
 
   useEffect(() => {

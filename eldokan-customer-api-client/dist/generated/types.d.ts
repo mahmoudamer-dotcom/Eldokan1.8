@@ -397,6 +397,59 @@ export interface CustomerAccountResponse {
     data: CustomerAccount;
     meta: Meta;
 }
+export interface CartIssue {
+    code: "not_purchasable" | "out_of_stock" | "insufficient_stock" | "purchase_quantity_limit";
+    message: string;
+}
+export interface CartItem {
+    id: string;
+    product_id: `prd_${number}`;
+    variation_id: `var_${number}` | null;
+    name: string;
+    image: Image | null;
+    selected_attributes: Array<VariationSelection>;
+    quantity: number;
+    unit_price: Money | null;
+    line_subtotal: Money | null;
+    stock: Stock;
+    seller: SellerPublic | null;
+    valid: boolean;
+    issues: Array<CartIssue>;
+}
+export interface Cart {
+    items: Array<CartItem>;
+    count: number;
+    /**
+     * False when current price/stock/purchasability validation leaves any line not checkout-ready. Cart never reserves stock.
+     */
+    valid: boolean;
+    owner_type: "guest" | "customer";
+    /**
+     * Session-bound Cart mutation token; keep in memory and never localStorage.
+     */
+    csrf_token: string;
+}
+export type CartMutation = Cart & {
+    changed: boolean;
+};
+export interface CartItemRequest {
+    product_id: `prd_${number}`;
+    variation_id?: `var_${number}` | null;
+    quantity: number;
+}
+export interface CartItemUpdateRequest {
+    quantity: number;
+}
+export interface CartResponse {
+    success: true;
+    data: Cart;
+    meta: Meta;
+}
+export interface CartMutationResponse {
+    success: true;
+    data: CartMutation;
+    meta: Meta;
+}
 export interface Wishlist {
     items: Array<ProductCard>;
     count: number;

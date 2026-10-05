@@ -91,6 +91,7 @@ const arabicTranslations: Record<string, string> = {
   'Switch to light mode': 'التبديل إلى الوضع الفاتح',
   Favorites: 'المفضلة',
   'Shopping cart': 'سلة التسوق',
+  'My orders': 'طلباتي',
   Account: 'حسابي',
   'Shop by category': 'تسوق حسب الفئة',
   'Find your next favorite': 'اعثر على منتجك المفضل',
@@ -311,6 +312,28 @@ const additionalTranslations: Record<string, string> = {
   'Once your return is received and inspected, we will send you an email to notify you of the approval or rejection of your refund. Approved refunds will be automatically applied to your original method of payment.': 'بعد استلام المنتج المرتجع وفحصه، سنرسل إليك بريدًا إلكترونيًا لإبلاغك بقبول طلب الاسترداد أو رفضه. ستُعاد المبالغ المعتمدة تلقائيًا إلى طريقة الدفع الأصلية.',
   'If you haven’t received a refund yet, check your bank account again, then contact your credit card company or bank as processing times may vary. If you still need help, contact us at': 'إذا لم يصلك المبلغ المسترد، فتحقق من حسابك البنكي ثم تواصل مع جهة إصدار البطاقة أو البنك، فقد تختلف مدة المعالجة. وإذا احتجت إلى مساعدة، راسلنا على',
 }
+
+additionalTranslations['Filter and sort'] = 'تصفية وترتيب'
+additionalTranslations['Sort by price'] = 'ترتيب حسب السعر'
+additionalTranslations['Recommended'] = 'موصى به'
+additionalTranslations['Price: low to high'] = 'السعر: من الأقل إلى الأعلى'
+additionalTranslations['Price: high to low'] = 'السعر: من الأعلى إلى الأقل'
+additionalTranslations['Brand'] = 'العلامة التجارية'
+additionalTranslations['All brands'] = 'كل العلامات التجارية'
+additionalTranslations['All sellers'] = 'كل البائعين'
+additionalTranslations['Price range'] = 'نطاق السعر'
+additionalTranslations['Minimum price'] = 'الحد الأدنى للسعر'
+additionalTranslations['Maximum price'] = 'الحد الأقصى للسعر'
+additionalTranslations['Clear filters'] = 'مسح الفلاتر'
+additionalTranslations['No products match these filters'] = 'لا توجد منتجات تطابق هذه الفلاتر'
+additionalTranslations['Filters'] = 'الفلاتر'
+additionalTranslations['Min'] = 'من'
+additionalTranslations['Max'] = 'إلى'
+additionalTranslations['Updating products'] = 'جارٍ تحديث المنتجات'
+additionalTranslations['Loading more products'] = 'جارٍ تحميل المزيد من المنتجات'
+additionalTranslations['Unable to load more products'] = 'تعذر تحميل المزيد من المنتجات. حاول التمرير مرة أخرى.'
+additionalTranslations['Unable to load products'] = 'تعذر تحميل المنتجات. حاول مرة أخرى.'
+additionalTranslations['Try again'] = 'حاول مرة أخرى'
 
 export function translate(text: string, locale: Locale): string {
   return locale === 'ar' ? arabicTranslations[text] ?? additionalTranslations[text] ?? text : text

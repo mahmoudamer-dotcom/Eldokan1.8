@@ -11,7 +11,7 @@ import { createEldokanApi } from '@/lib/eldokan-api'
 
 export default function AuthForm({ mode }: { mode: 'login' | 'register' }) {
   const router = useRouter()
-  const { locale } = useLocale()
+  const { locale, t } = useLocale()
   const [serverError, setServerError] = useState('')
   const isRegister = mode === 'register'
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<RegisterRequest>({

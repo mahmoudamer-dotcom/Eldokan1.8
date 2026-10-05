@@ -67,7 +67,7 @@ export type HomeProduct = {
   } | null
   average_rating?: number
   rating_count?: number
-  stock?: { status?: string; quantity?: number }
+  stock?: { status?: string; quantity?: number | null; backorders_allowed?: boolean }
   pricing?: {
     on_sale?: boolean
     regular_price?: { formatted?: string; amount?: number } | null

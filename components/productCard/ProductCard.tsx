@@ -14,7 +14,7 @@ export type StoreProduct = {
   image?: { url?: string; alt?: string }
   images?: Array<string | { url?: string; alt?: string }>
   seller?: { id?: string; name?: string } | null
-  stock?: { status?: string }
+  stock?: { status?: string; quantity?: number | null; backorders_allowed?: boolean }
   average_rating?: number
   rating_count?: number
   pricing?: {
@@ -54,6 +54,7 @@ export default function ProductCard({ product }: { product: StoreProduct }) {
           unitPrice: product.pricing?.on_sale
             ? product.pricing.sale_price?.amount ?? product.pricing.regular_price?.amount ?? 0
             : product.pricing?.regular_price?.amount ?? 0,
+          stockQuantity: product.stock?.quantity,
           available: product.stock?.status !== 'out_of_stock',
         } : undefined} />
         {discount !== null && (

@@ -20,10 +20,10 @@ export type ProductDetailData = {
   images: ProductImageData[]
   pricing: {
     on_sale: boolean
-    regular_price: { formatted: string; amount: number }
-    sale_price: { formatted: string; amount: number }
+    regular_price: { formatted: string; amount: number; currency?: string; decimals?: number }
+    sale_price: { formatted: string; amount: number; currency?: string; decimals?: number }
   }
-  stock?: { status?: string }
+  stock?: { status?: string; quantity?: number | null; backorders_allowed?: boolean }
   attributes: Array<{
     name: string
     options: Array<{ name: string }>

@@ -13,7 +13,7 @@ Runs:
 4. Node unit tests with mocked Fetch.
 5. Package verification against the 20-path / 60-schema Contract v1 snapshot.
 
-## Unit coverage in 0.4.1
+## Unit coverage in 0.5.0
 
 - Attribute filter OR/AND serialization.
 - Home language query and managed Hero Slide response shape.
@@ -26,6 +26,7 @@ Runs:
 - Local rejection of invalid attribute use without category.
 - Brand/Tag paginated query mapping and validation.
 - Nullable normalized Brand Thumbnail data.
+- Guest Cart CSRF bootstrap, typed add/update/remove and quantity validation.
 - Product tag filter query mapping.
 - Stable public Seller ID routing and validation.
 - Credentialed register/login/session/logout request behavior.

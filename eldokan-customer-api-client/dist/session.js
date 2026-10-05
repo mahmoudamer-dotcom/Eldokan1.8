@@ -7,6 +7,9 @@ export class CustomerSessionState {
     clear() {
         this.csrfToken = null;
     }
+    getCsrfToken() {
+        return this.csrfToken;
+    }
     requireCsrfToken() {
         if (!this.csrfToken) {
             throw new EldokanClientError({

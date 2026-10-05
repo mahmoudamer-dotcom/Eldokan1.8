@@ -1,4 +1,4 @@
-# START HERE — ElDokan Customer API Client 0.4.1
+# START HERE — ElDokan Customer API Client 0.5.0
 
 هذا المشروع هو **العميل الرسمي TypeScript** لاستهلاك ElDokan Customer API Contract v1 من واجهة العملاء.
 
@@ -16,11 +16,11 @@ ElDokan Customer API v1
 
 ## الحالة الحالية
 
-- Client: `0.4.1`
+- Client: `0.5.0`
 - API Contract: `v1`
-- Current Adapter: Customer API `0.5.2`
-- Developer Portal: `1.6.2`
-- يغطي 20 paths: الـCatalog/Home المقبولة + Customer Auth/Account/Wishlist.
-- لا يوجد Seller Account أو Cart/Checkout في هذا الإصدار.
+- Current Adapter: Customer API `0.6.0`
+- Developer Portal: `1.7.0`
+- يغطي 23 paths: الـCatalog/Home + Customer Auth/Account/Wishlist + Guest Session/Cart.
+- لا يوجد Seller Account أو Checkout/Orders في هذا الإصدار.
 
 ابدأ بـ`README.md`، وللتسليم الهندسي اقرأ `docs/HANDOFF.md`.

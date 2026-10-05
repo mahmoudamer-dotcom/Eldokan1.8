@@ -47,12 +47,14 @@ export default function RecentlyViewed() {
   const [products, setProducts] = useState<StoreProduct[]>([])
 
   useEffect(() => {
-    try {
-      const saved = JSON.parse(window.localStorage.getItem(STORAGE_KEY) ?? '[]')
-      if (Array.isArray(saved)) setProducts(saved.filter(isStoreProduct))
-    } catch {
-      setProducts([])
-    }
+    queueMicrotask(() => {
+      try {
+        const saved = JSON.parse(window.localStorage.getItem(STORAGE_KEY) ?? '[]')
+        if (Array.isArray(saved)) setProducts(saved.filter(isStoreProduct))
+      } catch {
+        setProducts([])
+      }
+    })
   }, [])
 
   if (products.length === 0) return null

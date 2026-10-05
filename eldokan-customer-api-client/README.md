@@ -2,7 +2,7 @@
 
 Official framework-agnostic TypeScript client for **ElDokan Customer API Contract v1**.
 
-Current release: **0.4.1**, synchronized with the nullable normalized Brand Thumbnail in Customer API 0.5.2.
+Current release: **0.5.0**, synchronized with Phase 2B Guest Session and Cart in Customer API 0.6.0.
 
 ## لماذا موجود؟
 
@@ -83,7 +83,17 @@ await eldokanApi.wishlist.remove('prd_17231')
 await eldokanApi.auth.logout()
 ```
 
-Client 0.4.1 adds typed nullable Brand images while preserving the Customer Auth, Account, Wishlist and Catalog/Home behavior from 0.4.0. Render Home sections by their `type`; do not call the backend directly or infer WordPress fields.
+Client 0.5.0 adds typed Cart methods with automatic guest session/CSRF bootstrap while preserving Auth, Account, Wishlist and Catalog/Home behavior.
+
+```ts
+const cart = await eldokanApi.cart.get({ lang: 'en' });
+await eldokanApi.cart.add({ productId: 'prd_21417', quantity: 1 });
+await eldokanApi.cart.add({ productId: 'prd_21417', variationId: 'var_21419', quantity: 1 });
+await eldokanApi.cart.update('cit_0123456789abcdef0123456789abcdef', { quantity: 2 });
+await eldokanApi.cart.remove('cit_0123456789abcdef0123456789abcdef');
+```
+
+لا تحفظ Cart أو CSRF أو أي session identifier في `localStorage`. الـClient يرسل cookies ويحتفظ بقيمة CSRF في الذاكرة فقط.
 
 ## Base URL
 
@@ -118,12 +128,12 @@ NEXT_PUBLIC_ELDOKAN_API_BASE_URL=https://www.eldokan.com/wp-json/eldokan-custome
 - لا توجد Secrets داخل الـClient.
 - لا WooCommerce Consumer Keys.
 - لا WordPress Application Passwords.
-- `credentials: 'omit'` يظل الافتراضي للـCatalog العام؛ Auth/Account/Wishlist تستخدم `include` تلقائيًا.
-- الـClient يحتفظ بـCSRF في الذاكرة فقط بعد register/login/session، ولا يضعه في `localStorage`.
+- `credentials: 'omit'` يظل الافتراضي للـCatalog العام؛ Auth/Account/Wishlist/Cart تستخدم `include` تلقائيًا.
+- الـClient يحتفظ بـCSRF في الذاكرة فقط بعد register/login/session أو Cart bootstrap، ولا يضعه في `localStorage`.
 - في المتصفح استخدم instance واحدة لكل جلسة. في SSR أنشئ instance لكل request ولا تستخدم singleton مشتركًا بين المستخدمين.
 - `cache: 'no-store'` افتراضيًا لمنع Next/browser من إنشاء Cache إضافية تتجاوز سياسة السعر والمخزون الحالية.
 - الـAPI نفسها لديها Application Cache قصيرة العمر، وتم اختبار MISS/HIT حيًا.
-- Cart/Checkout لن تُضاف قبل تصميم Phase 2B.
+- Cart متاحة في Phase 2B؛ Checkout وOrders غير متاحة.
 
 ## Errors
 
