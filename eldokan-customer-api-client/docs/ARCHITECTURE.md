@@ -1,4 +1,4 @@
-# Architecture — API Client 0.5.0
+# Architecture — API Client 0.6.0
 
 ## Boundary
 
@@ -42,4 +42,4 @@ These map exactly to the 12 current read-only endpoints. Category hierarchy stay
 
 ## Future
 
-Cart/Auth/Checkout must be introduced as a new reviewed client capability after the server contracts exist. Do not prebuild speculative session or payment behavior here.
+Checkout and Order payment recovery are implemented only through the reviewed Customer API contract. The client never creates provider requests directly and keeps guest Order capabilities in memory; the application BFF may retain them in protected server-controlled state.

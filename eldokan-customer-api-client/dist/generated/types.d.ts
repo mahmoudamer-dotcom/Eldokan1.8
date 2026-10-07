@@ -1,7 +1,7 @@
 /**
  * AUTO-GENERATED from openapi/eldokan-customer-api-v1.openapi.json.
  * Contract: ElDokan Customer API v1.
- * Do not edit manually. Run: python scripts/generate-types.py
+ * Do not edit manually. Run: npm run generate:types
  */
 export interface Money {
     /**
@@ -255,9 +255,13 @@ export interface Pagination {
 export interface Meta {
     request_id: `req_${string}`;
 }
+/**
+ * Open service code string, including invalid_phone and phone_storage_unavailable; issues retain structured checkout problems. See normalized service symbol reference.
+ */
 export interface Error {
     code: string;
     message: string;
+    issues?: Array<CheckoutIssue>;
 }
 export interface ErrorEnvelope {
     success: false;
@@ -355,6 +359,10 @@ export interface CustomerAccount {
     last_name: string;
     display_name: string;
     email: string;
+    /**
+     * Private canonical billing phone; always string, empty value is "". Independent of address phone.
+     */
+    phone: string;
 }
 export interface RegisterRequest {
     email: string;
@@ -362,6 +370,10 @@ export interface RegisterRequest {
     first_name?: string;
     last_name?: string;
     display_name?: string;
+    /**
+     * Optional; empty string clears. Nonempty ASCII digits, optional leading +, spaces, parentheses, hyphens; at least six digits. Null invalid. Trim surrounding spaces only. No identity/verification semantics.
+     */
+    phone?: string;
 }
 export interface LoginRequest {
     email: string;
@@ -391,6 +403,10 @@ export interface AccountUpdateRequest {
     first_name?: string;
     last_name?: string;
     display_name?: string;
+    /**
+     * Optional; empty string clears. Nonempty ASCII digits, optional leading +, spaces, parentheses, hyphens; at least six digits. Null invalid. Trim surrounding spaces only. No identity/verification semantics.
+     */
+    phone?: string;
 }
 export interface CustomerAccountResponse {
     success: true;
@@ -402,7 +418,7 @@ export interface CartIssue {
     message: string;
 }
 export interface CartItem {
-    id: string;
+    id: `cit_${string}`;
     product_id: `prd_${number}`;
     variation_id: `var_${number}` | null;
     name: string;
@@ -429,9 +445,23 @@ export interface Cart {
      */
     csrf_token: string;
 }
-export type CartMutation = Cart & {
+export interface CartMutation {
+    items: Array<CartItem>;
+    count: number;
+    /**
+     * False when current price/stock/purchasability validation leaves any line not checkout-ready. Cart never reserves stock.
+     */
+    valid: boolean;
+    owner_type: "guest" | "customer";
+    /**
+     * Session-bound Cart mutation token; keep in memory and never localStorage.
+     */
+    csrf_token: string;
+    /**
+     * False for retry-safe duplicate add or removal of an absent item.
+     */
     changed: boolean;
-};
+}
 export interface CartItemRequest {
     product_id: `prd_${number}`;
     variation_id?: `var_${number}` | null;
@@ -473,6 +503,523 @@ export interface WishlistResponse {
 export interface WishlistMutationResponse {
     success: true;
     data: WishlistMutation;
+    meta: Meta;
+}
+export type Customer = CustomerAccount;
+export type Session = AuthSession;
+export interface Issue {
+    code: string;
+    message: string;
+}
+export interface CheckoutIssue {
+    code: string;
+    message: string;
+    blocking: boolean;
+    /**
+     * Opaque string; never parse or convert its suffix.
+     */
+    item_id?: `cit_${string}`;
+}
+export type CartLine = CartItem;
+/**
+ * Opaque string; never parse or convert its suffix.
+ */
+export type PublicCusId = `cus_${string}`;
+/**
+ * Opaque string; never parse or convert its suffix.
+ */
+export type PublicAdrId = `adr_${string}`;
+/**
+ * Opaque string; never parse or convert its suffix.
+ */
+export type PublicCitId = `cit_${string}`;
+/**
+ * Opaque string; never parse or convert its suffix.
+ */
+export type PublicChkId = `chk_${string}`;
+/**
+ * Opaque string; never parse or convert its suffix.
+ */
+export type PublicOrdId = `ord_${string}`;
+/**
+ * Opaque string; never parse or convert its suffix.
+ */
+export type PublicShpId = `shp_${string}`;
+/**
+ * Opaque string; never parse or convert its suffix.
+ */
+export type PublicGokId = `gok_${string}`;
+/**
+ * Opaque catalog string; decimal suffix is never a numeric API identity.
+ */
+export type PublicPrdId = `prd_${number}`;
+/**
+ * Opaque catalog string; decimal suffix is never a numeric API identity.
+ */
+export type PublicVarId = `var_${number}`;
+/**
+ * Opaque catalog string; decimal suffix is never a numeric API identity.
+ */
+export type PublicSelId = `sel_${number}`;
+/**
+ * Opaque catalog string; decimal suffix is never a numeric API identity.
+ */
+export type PublicCatId = `cat_${number}`;
+/**
+ * Opaque catalog string; decimal suffix is never a numeric API identity.
+ */
+export type PublicBrdId = `brd_${number}`;
+/**
+ * Opaque catalog string; decimal suffix is never a numeric API identity.
+ */
+export type PublicTagId = `tag_${number}`;
+/**
+ * Opaque catalog string; decimal suffix is never a numeric API identity.
+ */
+export type PublicAttId = `att_${number}`;
+/**
+ * Opaque catalog string; decimal suffix is never a numeric API identity.
+ */
+export type PublicAtrId = `atr_${number}`;
+/**
+ * Opaque catalog string; decimal suffix is never a numeric API identity.
+ */
+export type PublicHslId = `hsl_${number}`;
+/**
+ * Opaque catalog string; decimal suffix is never a numeric API identity.
+ */
+export type PublicHbnId = `hbn_${number}`;
+export interface CheckoutAddressInput {
+    first_name: string;
+    last_name: string;
+    phone: string;
+    email: string;
+    company?: string | null;
+    country?: "EG";
+    state: string;
+    city: string;
+    street_address: string;
+    address_extra?: string | null;
+}
+export interface CheckoutAddress {
+    first_name: string;
+    last_name: string;
+    phone: string;
+    email: string;
+    company: string | null;
+    country: "EG";
+    state: string;
+    city: string;
+    street_address: string;
+    address_extra: string | null;
+    /**
+     * Opaque string; never parse or convert its suffix.
+     */
+    id?: `adr_${string}`;
+}
+export interface Address {
+    /**
+     * Opaque string; never parse or convert its suffix.
+     */
+    id: `adr_${string}`;
+    first_name: string;
+    last_name: string;
+    phone: string;
+    email: string;
+    company: string | null;
+    country: "EG";
+    state: string;
+    city: string;
+    street_address: string;
+    address_extra: string | null;
+    is_default: boolean;
+}
+export interface AddressCreate {
+    first_name: string;
+    last_name: string;
+    phone: string;
+    email: string;
+    company?: string | null;
+    country: "EG";
+    state: string;
+    city: string;
+    street_address: string;
+    address_extra?: string | null;
+    is_default?: boolean;
+}
+export interface AddressUpdate {
+    first_name?: string;
+    last_name?: string;
+    phone?: string;
+    email?: string;
+    company?: string | null;
+    country?: "EG";
+    state?: string;
+    city?: string;
+    street_address?: string;
+    address_extra?: string | null;
+    is_default?: boolean;
+}
+export interface AddressBook {
+    items: Array<Address>;
+    count: number;
+    /**
+     * Opaque string; never parse or convert its suffix.
+     */
+    default_address_id: `adr_${string}` | null;
+}
+export interface AddressDeleted {
+    deleted: true;
+    /**
+     * Opaque string; never parse or convert its suffix.
+     */
+    id: `adr_${string}`;
+    /**
+     * Opaque string; never parse or convert its suffix.
+     */
+    default_address_id: `adr_${string}` | null;
+}
+export interface ShippingChoice {
+    /**
+     * Opaque string; never parse or convert its suffix.
+     */
+    id: `shp_${string}`;
+    name: string;
+    description: string;
+    amount: Money;
+    available: true;
+    type: "pickup" | "door_delivery";
+}
+export interface PaymentChoice {
+    id: "cod" | "paymob";
+    name: string;
+    description: string;
+    available: true;
+    requires_redirect: boolean;
+}
+export interface CheckoutTotals {
+    subtotal: Money | null;
+    shipping: Money | null;
+    tax: Money | null;
+    fees: Money | null;
+    discount: Money | null;
+    total: Money | null;
+    taxes_enabled: boolean;
+    calculable: boolean;
+}
+export interface CheckoutCartItem {
+    id: `cit_${string}`;
+    product_id: `prd_${number}`;
+    variation_id: `var_${number}` | null;
+    name: string;
+    image: Image | null;
+    selected_attributes: Array<VariationSelection>;
+    quantity: number;
+    unit_price: Money | null;
+    line_subtotal: Money | null;
+    stock: Stock;
+    seller: SellerPublic | null;
+    valid: boolean;
+    issues: Array<CheckoutIssue>;
+}
+export interface CheckoutCart {
+    items: Array<CheckoutCartItem>;
+    count: number;
+    /**
+     * False when current price/stock/purchasability validation leaves any line not checkout-ready. Cart never reserves stock.
+     */
+    valid: boolean;
+    owner_type: "guest" | "customer";
+    /**
+     * Session-bound Cart mutation token; keep in memory and never localStorage.
+     */
+    csrf_token: string;
+}
+export interface Checkout {
+    cart: CheckoutCart;
+    ready: boolean;
+    issues: Array<CheckoutIssue>;
+    address: CheckoutAddress | null;
+    address_requirements: {
+        country: "EG";
+        required_fields: Array<string>;
+        state_codes: Array<string>;
+        required: true;
+    };
+    saved_addresses: AddressBook;
+    shipping_required: boolean;
+    shipping_calculable: boolean;
+    shipping_methods: Array<ShippingChoice>;
+    selected_shipping_method: ShippingChoice | null;
+    payment_methods: Array<PaymentChoice>;
+    payment_availability_calculable: boolean;
+    payment_required: boolean | null;
+    totals: CheckoutTotals;
+    stock_reserved: false;
+}
+export type QuoteInput = {
+    address_id: `adr_${string}`;
+    shipping_method_id?: `shp_${string}`;
+} | {
+    address: CheckoutAddressInput;
+    shipping_method_id?: `shp_${string}`;
+};
+export type PurchaseInput = {
+    address_id: `adr_${string}`;
+    shipping_method_id: `shp_${string}` | null;
+    payment_method: "cod" | "paymob";
+    order_notes?: string;
+} | {
+    address: CheckoutAddressInput;
+    shipping_method_id: `shp_${string}` | null;
+    payment_method: "cod" | "paymob";
+    order_notes?: string;
+};
+export type PlacementInput = {
+    address_id: `adr_${string}`;
+    shipping_method_id: `shp_${string}` | null;
+    payment_method: "cod" | "paymob";
+    order_notes?: string;
+    checkout_attempt_id: `chk_${string}`;
+} | {
+    address: CheckoutAddressInput;
+    shipping_method_id: `shp_${string}` | null;
+    payment_method: "cod" | "paymob";
+    order_notes?: string;
+    checkout_attempt_id: `chk_${string}`;
+};
+export interface CheckoutAttempt {
+    /**
+     * Opaque string; never parse or convert its suffix.
+     */
+    checkout_attempt_id: `chk_${string}`;
+    state: "prepared";
+    stock_reserved: false;
+}
+export interface GuestAccess {
+    /**
+     * Sensitive capability for exactly one Guest Order. Header only. Never log, URL-encode, share or put in analytics.
+     */
+    credential: `gok_${string}`;
+    /**
+     * Dedicated Guest Order mutation token; independent of account/Cart CSRF.
+     */
+    csrf_token: string;
+    header: "X-ElDokan-Order-Access";
+}
+/**
+ * Authoritative normalized live Woo state. completed/custom native states require explicitly verified mapping; otherwise order_read_unavailable. Never infer delivery from completed.
+ */
+export type OrderStatus = "pending_payment" | "processing" | "awaiting_pickup" | "shipped" | "delivered" | "cancelled" | "failed" | "refunded";
+export type PaymentStatus = "unpaid" | "pending" | "paid" | "failed" | "cancelled" | "refunded";
+export interface OrderSeller {
+    id: `sel_${number}`;
+    name: string;
+}
+export interface Fulfillment {
+    seller: OrderSeller;
+    /**
+     * Independent trusted mapping; no invented aggregate delivery inference.
+     */
+    status: "pending" | "pending_payment" | "processing" | "awaiting_pickup" | "shipped" | "delivered" | "cancelled" | "failed" | "refunded";
+}
+export interface PlacementLine {
+    name: string;
+    quantity: number;
+    subtotal: Money;
+    total: Money;
+    seller: OrderSeller;
+}
+export interface Payment {
+    /**
+     * Opaque string; never parse or convert its suffix.
+     */
+    order_id: `ord_${string}`;
+    order_status: OrderStatus;
+    payment_status: PaymentStatus;
+    payment_method: "paymob";
+    requires_redirect: boolean;
+    /**
+     * Sensitive HTTPS native Paymob hosted session URL. Only use when requires_redirect=true; never log/cache.
+     */
+    redirect_url: string | null;
+    retryable: boolean;
+    generation: number;
+    expires_at: string | null;
+    issue?: Issue;
+}
+export interface PlacementPaymentIssue {
+    /**
+     * Opaque string; never parse or convert its suffix.
+     */
+    order_id: `ord_${string}`;
+    requires_redirect: false;
+    redirect_url: null;
+    retryable: true;
+    issue: Issue;
+}
+export interface Placement {
+    /**
+     * Opaque string; never parse or convert its suffix.
+     */
+    order_id: `ord_${string}`;
+    /**
+     * Opaque string; never parse or convert its suffix.
+     */
+    checkout_attempt_id: `chk_${string}`;
+    /**
+     * Immutable native Woo placement-time status; not normalized live OrderStatus.
+     */
+    status: string;
+    payment_method: {
+        id: "cod" | "paymob";
+        name: string;
+        requires_redirect: boolean;
+    };
+    total: Money;
+    currency: string;
+    lines: Array<PlacementLine>;
+    shipping: ShippingChoice | null;
+    created_at: string;
+    guest_access?: GuestAccess;
+    payment?: Payment | PlacementPaymentIssue;
+}
+export interface OrderSummary {
+    /**
+     * Opaque string; never parse or convert its suffix.
+     */
+    id: `ord_${string}`;
+    created_at: string;
+    updated_at: string | null;
+    status: OrderStatus;
+    payment_status: PaymentStatus;
+    payment_method: "cod" | "paymob" | "unavailable";
+    currency: string;
+    total: Money;
+    /**
+     * Sum of quantities.
+     */
+    item_count: number;
+    shipping: ShippingChoice | null;
+    fulfillments: Array<Fulfillment>;
+}
+export interface OrderLine {
+    product_id: `prd_${number}`;
+    variation_id: `var_${number}` | null;
+    name: string;
+    quantity: number;
+    subtotal: Money;
+    total: Money;
+    tax: Money;
+    seller: OrderSeller;
+}
+export interface OrderFee {
+    name: string;
+    total: Money;
+    tax: Money;
+}
+export interface OrderDetail {
+    /**
+     * Opaque string; never parse or convert its suffix.
+     */
+    id: `ord_${string}`;
+    created_at: string;
+    updated_at: string | null;
+    status: OrderStatus;
+    payment_status: PaymentStatus;
+    payment_method: "cod" | "paymob" | "unavailable";
+    currency: string;
+    total: Money;
+    /**
+     * Sum of quantities.
+     */
+    item_count: number;
+    shipping: ShippingChoice | null;
+    fulfillments: Array<Fulfillment>;
+    subtotal: Money;
+    discount: Money;
+    shipping_total: Money;
+    tax: Money;
+    fees: Array<OrderFee>;
+    address: OrderAddress;
+    lines: Array<OrderLine>;
+    order_notes: string;
+}
+export interface OrderAddress {
+    first_name: string;
+    last_name: string;
+    phone: string;
+    email: string;
+    company: string | null;
+    country: "EG";
+    state: string;
+    city: string;
+    street_address: string;
+    address_extra: string | null;
+}
+export interface OrderPagination {
+    page: number;
+    per_page: number;
+    total: number;
+    total_pages: number;
+}
+export interface OrderList {
+    items: Array<OrderSummary>;
+    pagination: OrderPagination;
+}
+/**
+ * {} recovers current state. Explicit retry=true requires observed expected_generation. No automatic new Order/attempt/generation. Fencing is not provider idempotency or cancellation of older sessions.
+ */
+export type PaymentInput = {
+    retry?: false;
+    expected_generation?: number;
+} | {
+    retry: true;
+    expected_generation: number;
+};
+export interface AddressResponse {
+    success: true;
+    data: Address;
+    meta: Meta;
+}
+export interface AddressBookResponse {
+    success: true;
+    data: AddressBook;
+    meta: Meta;
+}
+export interface AddressDeletedResponse {
+    success: true;
+    data: AddressDeleted;
+    meta: Meta;
+}
+export interface CheckoutResponse {
+    success: true;
+    data: Checkout;
+    meta: Meta;
+}
+export interface CheckoutAttemptResponse {
+    success: true;
+    data: CheckoutAttempt;
+    meta: Meta;
+}
+export interface PlacementResponse {
+    success: true;
+    data: Placement;
+    meta: Meta;
+}
+export interface OrderListResponse {
+    success: true;
+    data: OrderList;
+    meta: Meta;
+}
+export interface OrderDetailResponse {
+    success: true;
+    data: OrderDetail;
+    meta: Meta;
+}
+export interface PaymentResponse {
+    success: true;
+    data: Payment;
     meta: Meta;
 }
 //# sourceMappingURL=types.d.ts.map

@@ -1,4 +1,4 @@
-import type { EldokanResponseContext, ErrorEnvelope } from './types.js';
+import type { CheckoutIssue, EldokanResponseContext, ErrorEnvelope } from './types.js';
 export type EldokanClientErrorKind = 'api' | 'network' | 'timeout' | 'invalid_response' | 'validation';
 export declare class EldokanClientError extends Error {
     readonly kind: EldokanClientErrorKind;
@@ -6,6 +6,7 @@ export declare class EldokanClientError extends Error {
     readonly code: string;
     readonly requestId: string | null;
     readonly context: EldokanResponseContext | null;
+    readonly issues: ReadonlyArray<CheckoutIssue>;
     constructor(options: {
         message: string;
         kind: EldokanClientErrorKind;
@@ -13,6 +14,7 @@ export declare class EldokanClientError extends Error {
         status?: number | null;
         requestId?: string | null;
         context?: EldokanResponseContext | null;
+        issues?: ReadonlyArray<CheckoutIssue>;
         cause?: unknown;
     });
 }

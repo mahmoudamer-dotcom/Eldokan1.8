@@ -1,0 +1,19 @@
+import Link from 'next/link'
+import { getLocale } from '@/lib/server-locale'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = { title: 'Help & support | Eldokan', description: 'Help with shopping, delivery and order payment at Eldokan.' }
+
+export default async function HelpPage() {
+  const ar = await getLocale() === 'ar'
+  const text = (en: string, arabic: string) => ar ? arabic : en
+  const questions = [
+    [text('How do I place an order?', 'إزاي أعمل طلب؟'), text('Choose your product options, add items to your cart, and continue to checkout. Enter your delivery address, review shipping and the total, then select an available payment method.', 'اختار مواصفات المنتج، ضيفه للسلة، وكمل لصفحة الشراء. اكتب عنوانك، راجع الشحن والإجمالي، واختار وسيلة الدفع المتاحة.')],
+    [text('When do I see shipping costs?', 'إمتى تكلفة الشحن بتظهر؟'), text('Shipping options and costs depend on your address and cart. If no option appears at checkout, contact support with the quote reference shown.', 'خيارات وتكلفة الشحن بتعتمد على العنوان والمنتجات في السلة. لو مفيش خيار متاح عند إتمام الشراء، ابعت للدعم رقم مرجع المراجعة الظاهر.')],
+    [text('What if payment is pending?', 'أعمل إيه لو الدفع معلّق؟'), text('Open the order status and refresh it. Use payment recovery for the same order when offered. Do not place another order just because the payment return page is delayed.', 'افتح حالة الطلب وحدّثها، واستخدم استعادة الدفع لنفس الطلب لو الخيار متاح. متعملش طلب جديد لمجرد إن صفحة الرجوع من الدفع اتأخرت.')],
+    [text('Where can I find my orders?', 'ألاقي طلباتي فين؟'), text('Signed-in customers can use My orders. For a guest checkout, use the saved order status in the same browser used to place the order.', 'لو مسجل دخول، افتح طلباتي. لو اشتريت كضيف، افتح حالة الطلب المحفوظ من نفس المتصفح اللي عملت منه الطلب.')],
+    [text('How do temporary product reviews work?', 'التعليقات المؤقتة بتشتغل إزاي؟'), text('Your reviews are saved only in this browser. They are not published to other customers and are removed when browser data is cleared.', 'تعليقاتك محفوظة في المتصفح ده فقط. مش بتتنشر للعملاء الآخرين، وبتتمسح لو مسحت بيانات المتصفح.')],
+    [text('How can I request a return?', 'إزاي أطلب إرجاع؟'), text('Contact customer support with your order reference and the reason for your request. Support will confirm the applicable conditions for the item and seller.', 'تواصل مع الدعم برقم الطلب وسبب طلب الإرجاع. الدعم هيوضح الشروط المطبقة على المنتج والبائع.')],
+  ]
+  return <main dir={ar ? 'rtl' : 'ltr'} className="mx-auto w-full max-w-4xl px-4 py-10 sm:py-16"><p className="text-sm font-semibold text-shop-accent">{text('Eldokan support', 'دعم الدكان')}</p><h1 className="mt-2 text-3xl font-bold">{text('How can we help?', 'نقدر نساعدك إزاي؟')}</h1><div className="mt-6 flex flex-wrap gap-3"><Link href="/orders" className="rounded-xl border bg-card px-5 py-3 font-semibold">{text('My orders', 'طلباتي')}</Link><Link href="/checkout/result" className="rounded-xl border bg-card px-5 py-3 font-semibold">{text('Saved order status', 'حالة الطلب المحفوظ')}</Link><a href="https://wa.me/201006806022" target="_blank" rel="noopener noreferrer" className="rounded-xl bg-[#f5b400] text-primary-foreground px-5 py-3 font-semibold">{text('WhatsApp support', 'الدعم على واتساب')}</a><a href="mailto:wecare@eldokan.com" className="rounded-xl border bg-card px-5 py-3 font-semibold">{text('Email support', 'الدعم بالبريد')}</a></div><section className="mt-10 space-y-3" aria-label={text('Frequently asked questions', 'الأسئلة الشائعة')}>{questions.map(([question, answer]) => <details key={question} className="rounded-xl border border-border bg-card p-5"><summary className="cursor-pointer font-semibold">{question}</summary><p className="mt-3 text-sm leading-7 text-muted-foreground">{answer}</p></details>)}</section></main>
+}

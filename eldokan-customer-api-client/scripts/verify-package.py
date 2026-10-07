@@ -17,7 +17,7 @@ required = [
     'src/resources/categories.ts', 'src/resources/search.ts', 'src/resources/brands.ts',
     'src/resources/tags.ts', 'src/resources/sellers.ts',
     'src/resources/auth.ts', 'src/resources/account.ts', 'src/resources/wishlist.ts', 'src/session.ts',
-    'src/resources/cart.ts',
+    'src/resources/cart.ts', 'src/resources/addresses.ts', 'src/resources/checkout.ts', 'src/resources/orders.ts',
     'src/generated/types.ts', 'openapi/eldokan-customer-api-v1.openapi.json',
     'docs/HANDOFF.md', 'docs/ARCHITECTURE.md', 'docs/SECURITY.md', 'docs/TESTING.md',
 ]
@@ -26,7 +26,7 @@ for rel in required:
 
 package = json.loads((ROOT/'package.json').read_text(encoding='utf-8'))
 if package.get('name') != '@eldokan/customer-api-client': errors.append('package name mismatch')
-if package.get('version') != '0.5.0': errors.append('package version mismatch')
+if package.get('version') != '0.6.0': errors.append('package version mismatch')
 if package.get('private') is not True: errors.append('package must remain private')
 
 spec_path = ROOT/'openapi/eldokan-customer-api-v1.openapi.json'
@@ -37,12 +37,15 @@ expected_paths = {
     '/brands', '/tags', '/sellers/{seller_id}', '/search/suggestions',
     '/auth/register', '/auth/login', '/auth/session', '/auth/logout', '/me',
     '/wishlist', '/wishlist/items', '/wishlist/items/{product_id}',
-    '/cart', '/cart/items', '/cart/items/{item_id}'
+    '/cart', '/cart/items', '/cart/items/{item_id}',
+    '/me/addresses', '/me/addresses/{address_id}', '/checkout', '/checkout/quote',
+    '/checkout/attempts', '/checkout/orders', '/orders', '/orders/{order_id}',
+    '/orders/{order_id}/payment'
 }
 if set(spec.get('paths', {})) != expected_paths:
-    errors.append('OpenAPI path set does not match Customer API 0.6.0')
-if len(spec.get('components', {}).get('schemas', {})) != 68:
-    errors.append('OpenAPI schema count is not 68')
+    errors.append('OpenAPI path set does not match Customer API Contract v1 (32 paths)')
+if len(spec.get('components', {}).get('schemas', {})) != 133:
+    errors.append('OpenAPI schema count is not 133')
 schemas = spec.get('components', {}).get('schemas', {})
 brand = schemas.get('Brand', {})
 if 'image' not in brand.get('required', []): errors.append('Brand image is not required')
@@ -50,20 +53,22 @@ if not brand.get('properties', {}).get('image', {}).get('nullable'): errors.appe
 for schema in ['HomeCta', 'HeroSlide', 'PromoBanner']:
     if schema not in schemas: errors.append(f'missing Home schema: {schema}')
 
-source_text = '\n'.join((ROOT/'src'/p).read_text(encoding='utf-8') for p in ['index.ts','client.ts','resources/products.ts','resources/categories.ts','resources/search.ts','resources/brands.ts','resources/tags.ts','resources/sellers.ts','resources/auth.ts','resources/account.ts','resources/wishlist.ts','resources/cart.ts','session.ts'])
+source_text = '\n'.join((ROOT/'src'/p).read_text(encoding='utf-8') for p in ['index.ts','client.ts','resources/products.ts','resources/categories.ts','resources/search.ts','resources/brands.ts','resources/tags.ts','resources/sellers.ts','resources/auth.ts','resources/account.ts','resources/wishlist.ts','resources/cart.ts','resources/addresses.ts','resources/checkout.ts','resources/orders.ts','session.ts'])
 for raw in ['wp-json', 'woocommerce', 'wpml_', 'consumer_secret', 'application_password']:
     if raw.lower() in source_text.lower():
         errors.append(f'frontend client source leaks forbidden backend detail: {raw}')
 
 # Expected methods/resources exist.
 index = (ROOT/'src/index.ts').read_text(encoding='utf-8')
-for token in ['HealthResource','HomeResource','ProductsResource','CategoriesResource','SearchResource','BrandsResource','TagsResource','SellersResource','AuthResource','AccountResource','WishlistResource','CartResource']:
+for token in ['HealthResource','HomeResource','ProductsResource','CategoriesResource','SearchResource','BrandsResource','TagsResource','SellersResource','AuthResource','AccountResource','WishlistResource','CartResource','AddressesResource','CheckoutResource','OrdersResource']:
     if token not in index: errors.append(f'missing resource: {token}')
 
 for schema in ['CustomerAccount','AuthSessionResponse','WishlistResponse','WishlistMutationResponse']:
     if schema not in schemas: errors.append(f'missing Phase 2A schema: {schema}')
 for schema in ['Cart','CartItem','CartResponse','CartMutationResponse']:
     if schema not in schemas: errors.append(f'missing Phase 2B schema: {schema}')
+for schema in ['Address','AddressCreate','Checkout','CheckoutAttempt','Placement','OrderDetail','PaymentResponse']:
+    if schema not in schemas: errors.append(f'missing Phase 2C schema: {schema}')
 auth_source = (ROOT/'src/resources/auth.ts').read_text(encoding='utf-8')
 account_source = (ROOT/'src/resources/account.ts').read_text(encoding='utf-8')
 wishlist_source = (ROOT/'src/resources/wishlist.ts').read_text(encoding='utf-8')

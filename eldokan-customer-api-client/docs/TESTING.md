@@ -11,9 +11,9 @@ Runs:
 2. Strict TypeScript typecheck.
 3. TypeScript build.
 4. Node unit tests with mocked Fetch.
-5. Package verification against the 20-path / 60-schema Contract v1 snapshot.
+5. Package verification against the 32-path / 133-schema Contract v1 snapshot.
 
-## Unit coverage in 0.5.0
+## Unit coverage in 0.6.0
 
 - Attribute filter OR/AND serialization.
 - Home language query and managed Hero Slide response shape.
@@ -33,6 +33,8 @@ Runs:
 - In-memory CSRF propagation to account and Wishlist mutations.
 - Session restoration and CSRF clearing after logout.
 - Typed account 401 normalization and Wishlist add/remove routing.
+
+The current unit suite still covers the pre-Phase 2C client methods. Address Book, Checkout, Orders and payment recovery compile and pass package contract checks, but need dedicated mocked-transport unit coverage before a client release.
 
 ## Live tests
 

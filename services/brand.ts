@@ -2,17 +2,11 @@ import { createEldokanApi } from '@/lib/eldokan-api'
 import { getLocale } from '@/lib/server-locale'
 import type { Brand, ProductCard } from '@eldokan/customer-api-client'
 import { retryApiRead } from '@/lib/retry-api-read'
+import { fetchCatalogBrands } from '@/lib/catalog-brands'
 
 export async function Brands() {
   try {
-    const api = createEldokanApi(await getLocale())
-    const firstPage = await retryApiRead(() => api.brands.list({ page: 1, perPage: 100 }))
-    const remainingPages = await Promise.all(
-      Array.from({ length: Math.max(0, firstPage.meta.total_pages - 1) }, (_, index) =>
-        retryApiRead(() => api.brands.list({ page: index + 2, perPage: 100 })),
-      ),
-    )
-    return [firstPage.data, ...remainingPages.map((page) => page.data)].flat()
+    return await fetchCatalogBrands(await getLocale())
   } catch {
     return []
   }

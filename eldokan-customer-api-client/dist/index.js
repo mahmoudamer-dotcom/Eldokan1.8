@@ -11,6 +11,9 @@ import { AuthResource } from './resources/auth.js';
 import { AccountResource } from './resources/account.js';
 import { WishlistResource } from './resources/wishlist.js';
 import { CartResource } from './resources/cart.js';
+import { AddressesResource } from './resources/addresses.js';
+import { CheckoutResource } from './resources/checkout.js';
+import { OrdersResource } from './resources/orders.js';
 import { CustomerSessionState } from './session.js';
 export * from './config.js';
 export * from './errors.js';
@@ -33,6 +36,9 @@ export class EldokanCustomerApiClient {
     account;
     wishlist;
     cart;
+    addresses;
+    checkout;
+    orders;
     constructor(config) {
         const http = new EldokanHttpClient(config);
         const customerSession = new CustomerSessionState();
@@ -48,6 +54,9 @@ export class EldokanCustomerApiClient {
         this.account = new AccountResource(http, customerSession);
         this.wishlist = new WishlistResource(http, customerSession);
         this.cart = new CartResource(http, customerSession);
+        this.addresses = new AddressesResource(http, customerSession);
+        this.checkout = new CheckoutResource(http, customerSession);
+        this.orders = new OrdersResource(http, customerSession);
     }
 }
 export function createEldokanCustomerApiClient(config) {

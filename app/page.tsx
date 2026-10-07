@@ -1,8 +1,5 @@
-import Footer from '@/components/footer/Footer'
 import HomeBrandSection from '@/components/home/HomeBrandSection'
-import HomeBudgetFilter from '@/components/home/HomeBudgetFilter'
 import HomeCategoryShelves from '@/components/home/HomeCategoryShelves'
-import HomeCategoryShortcuts from '@/components/home/HomeCategoryShortcuts'
 import HomeDailyOffers from '@/components/home/HomeDailyOffers'
 import type { HomeCategoryProductGroup } from '@/components/home/HomeCategoryShelves'
 import HomeFallbackCategorySection from '@/components/home/HomeFallbackCategorySection'
@@ -101,7 +98,7 @@ export default async function Home() {
           <BannerGrid key={section.id} banners={section.items as HomePromoBanner[]} title={section.title} />
         ))}
 
-        <div className="space-y-10 rounded-3xl bg-gray-50 px-4 py-7 sm:px-6 sm:py-9">
+        <div className="space-y-10 rounded-3xl bg-background px-4 py-7 sm:px-6 sm:py-9">
           {featuredSections.map((section) => <HomeProductCarousel key={section.id} section={section} firstProductSectionId={firstProductSectionId} />)}
           {bestSellerSections.map((section) => <HomeProductCarousel key={section.id} section={section} firstProductSectionId={firstProductSectionId} />)}
         </div>
@@ -128,7 +125,6 @@ export default async function Home() {
           ...homeProducts.map((product) => product.brand?.name ?? ''),
         ]} />
       </main>
-      <Footer />
     </div>
   )
 }

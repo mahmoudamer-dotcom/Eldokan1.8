@@ -1,76 +1,60 @@
 'use client'
 
 import Link from 'next/link'
-import { ReceiptText } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { EldokanClientError, type OrderSummary } from '@eldokan/customer-api-client'
+import { createEldokanApi } from '@/lib/eldokan-api'
 import { useLocale } from '@/components/i18n/LocaleProvider'
-import { readVerifiedOrderReferences } from '@/lib/order-history'
-
-type VerifiedOrder = {
-  status: 'paid'
-  invoice: {
-    orderId?: number
-    transactionId?: number
-    paidAt?: string
-    amountCents: number
-    currency: string
-    items: Array<{ id: string | number; name: string; quantity: number }>
-  }
-}
-type OrderEntry = { reference: string; invoice: VerifiedOrder['invoice'] }
 
 export default function OrderHistory() {
   const { locale } = useLocale()
   const ar = locale === 'ar'
-  const [orders, setOrders] = useState<OrderEntry[]>([])
+  const [orders, setOrders] = useState<OrderSummary[]>([])
   const [loading, setLoading] = useState(true)
+  const [loadingMore, setLoadingMore] = useState(false)
+  const [page, setPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
   const [error, setError] = useState('')
+
+  const loadPage = useCallback(async (nextPage: number, append: boolean) => {
+    if (append) setLoadingMore(true)
+    else setLoading(true)
+    setError('')
+    try {
+      const result = await createEldokanApi(locale).orders.list({ page: nextPage, perPage: 20, lang: locale })
+      setOrders((current) => append ? [...current, ...result.data.items] : result.data.items)
+      setPage(result.data.pagination.page)
+      setTotalPages(result.data.pagination.total_pages)
+    } catch (cause) {
+      if (cause instanceof EldokanClientError && cause.status === 401) setError(ar ? 'سجّل الدخول لعرض طلباتك.' : 'Sign in to view your orders.')
+      else setError(cause instanceof EldokanClientError
+        ? [ar ? 'تعذر تحميل الطلبات حاليًا.' : 'Orders could not be loaded right now.', cause.code, cause.requestId].filter(Boolean).join(' · ')
+        : (ar ? 'تعذر تحميل الطلبات حاليًا.' : 'Orders could not be loaded right now.'))
+    } finally {
+      setLoading(false)
+      setLoadingMore(false)
+    }
+  }, [locale, ar])
 
   useEffect(() => {
     let active = true
-    const references = readVerifiedOrderReferences()
-    Promise.allSettled(references.map(async (reference) => {
-      const response = await fetch(`/api/paymob/verify?reference=${encodeURIComponent(reference)}`, { cache: 'no-store' })
-      if (!response.ok) throw new Error('Unable to load verified orders.')
-      const result = await response.json() as VerifiedOrder
-      return { reference, result }
-    }))
-      .then((results) => {
-        if (active) setOrders(results.flatMap((entry) => entry.status === 'fulfilled' && entry.value.result.status === 'paid' && entry.value.result.invoice
-          ? [{ reference: entry.value.reference, invoice: entry.value.result.invoice }]
-          : []))
-      })
-      .catch(() => { if (active) setError(ar ? 'تعذر تحميل الطلبات الآن.' : 'Orders could not be loaded right now.') })
-      .finally(() => { if (active) setLoading(false) })
-
+    queueMicrotask(() => { if (active) void loadPage(1, false) })
     return () => { active = false }
-  }, [ar])
+  }, [loadPage])
 
-  if (loading) return <p className="rounded-xl border border-gray-200 bg-white p-8 text-center text-gray-600">{ar ? 'جارٍ تحميل الطلبات…' : 'Loading orders…'}</p>
-  if (error) return <p role="alert" className="rounded-xl border border-red-200 bg-red-50 p-5 text-red-800">{error}</p>
-  if (!orders.length) return <section className="rounded-2xl border border-dashed border-gray-300 bg-white p-10 text-center">
-    <p className="text-gray-600">{ar ? 'لا توجد طلبات مدفوعة محفوظة على هذا الجهاز.' : 'No paid orders are saved on this device.'}</p>
-    <Link href="/" className="mt-5 inline-flex rounded-lg bg-[#f5b400] px-5 py-3 font-semibold text-gray-950">{ar ? 'ابدأ التسوق' : 'Start shopping'}</Link>
-  </section>
+  if (loading) return <p className="rounded-xl border bg-card p-8 text-center">{ar ? 'جارٍ تحميل الطلبات…' : 'Loading orders…'}</p>
+  if (error) return <section className="rounded-xl border bg-card p-8 text-center"><p role="alert" className="text-foreground">{error}</p>{error.includes('Sign in') || error.includes('سجّل') ? <Link href="/login" className="mt-4 inline-flex rounded-lg bg-[#f5b400] text-primary-foreground px-5 py-3 font-semibold">{ar ? 'تسجيل الدخول' : 'Sign in'}</Link> : null}</section>
+  if (!orders.length) return <section className="rounded-2xl border border-dashed bg-card p-10 text-center"><p className="text-muted-foreground">{ar ? 'لا توجد طلبات بعد.' : 'You have no orders yet.'}<Link href="/" className="ms-2 font-semibold underline">{ar ? 'ابدأ التسوق' : 'Start shopping'}</Link></p></section>
 
   return <section className="space-y-4">
-    {orders.map(({ invoice, reference }, index) => <article key={`${invoice.transactionId ?? invoice.orderId ?? index}`} className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-      <div className="flex flex-wrap justify-between gap-2 border-b border-gray-100 pb-3">
-        <h2 className="font-bold">{ar ? 'طلب' : 'Order'} #{invoice.orderId ?? invoice.transactionId ?? index + 1}</h2>
-        <span className="font-semibold text-emerald-700">{ar ? 'مدفوع' : 'Paid'}</span>
+    {orders.map((order) => <article key={order.id} className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+      <div className="flex flex-wrap justify-between gap-2 border-b border-border pb-3">
+        <h2 className="font-bold">{ar ? 'طلب' : 'Order'} · <Link href={`/orders/${encodeURIComponent(order.id)}`} className="break-all underline">{order.id}</Link></h2>
+        <span className="font-semibold">{order.status} · {order.payment_status}</span>
       </div>
-      <ul className="divide-y divide-gray-100">
-        {invoice.items.map((item, itemIndex) => <li key={`${item.id}-${itemIndex}`} className="flex justify-between gap-4 py-3 text-sm">
-          <span>{item.name} × {item.quantity}</span>
-        </li>)}
-      </ul>
-      <div className="flex flex-wrap justify-between gap-2 border-t border-gray-100 pt-3 text-sm">
-        <span className="text-gray-500">{invoice.paidAt ? new Date(invoice.paidAt).toLocaleString(ar ? 'ar-EG' : 'en') : (ar ? 'تاريخ الدفع غير متاح' : 'Payment date unavailable')}</span>
-        <strong>{(invoice.amountCents / 100).toLocaleString(ar ? 'ar-EG' : 'en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {invoice.currency}</strong>
-      </div>
-      <Link href={`/checkout/result?reference=${encodeURIComponent(reference)}`} className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#94630f] hover:underline">
-        <ReceiptText className="size-4" aria-hidden="true" />{ar ? 'عرض الفاتورة والتفاصيل' : 'View invoice and details'}
-      </Link>
+      <div className="flex flex-wrap justify-between gap-3 pt-3 text-sm"><span className="text-muted-foreground">{new Date(order.created_at).toLocaleDateString(ar ? 'ar-EG' : 'en')}</span><strong>{order.total.formatted}</strong></div>
+      <p className="mt-2 text-sm text-muted-foreground">{order.item_count} {ar ? 'قطعة' : 'items'} · {order.payment_method}</p>
     </article>)}
+    {page < totalPages && <button type="button" disabled={loadingMore} onClick={() => void loadPage(page + 1, true)} className="w-full rounded-lg border px-5 py-3 font-semibold disabled:opacity-50">{loadingMore ? (ar ? 'جارٍ تحميل المزيد…' : 'Loading more…') : (ar ? 'تحميل المزيد' : 'Load more')}</button>}
   </section>
 }

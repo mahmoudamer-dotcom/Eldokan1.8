@@ -14,6 +14,7 @@ export function toStoreProduct(product: ApiProductCard | ApiProductDetail): Stor
   return {
     id: product.id,
     name: product.name,
+    type: product.type,
     sku: 'sku' in product ? product.sku ?? undefined : undefined,
     brand: product.brand ?? undefined,
     image: product.image ?? undefined,
@@ -36,6 +37,7 @@ export function toProductDetail(product: ApiProductDetail): ProductDetailData {
   return {
     id: product.id,
     name: product.name,
+    type: product.type,
     sku: product.sku ?? undefined,
     brand: product.brand ? { name: product.brand.name } : undefined,
     seller: product.seller,
@@ -50,9 +52,14 @@ export function toProductDetail(product: ApiProductDetail): ProductDetailData {
     },
     stock: product.stock,
     attributes: product.attributes.map((attribute) => ({
+      id: attribute.id,
+      slug: attribute.slug,
+      visible: attribute.visible,
+      variation: attribute.variation,
       name: attribute.name,
-      options: attribute.options.map((option) => ({ name: option.name })),
+      options: attribute.options.map((option) => ({ id: option.id, name: option.name, slug: option.slug })),
     })),
+    variations: product.variations,
     description_html: product.description_html,
     short_description_html: product.short_description_html,
   }

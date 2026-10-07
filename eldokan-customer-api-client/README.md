@@ -2,7 +2,7 @@
 
 Official framework-agnostic TypeScript client for **ElDokan Customer API Contract v1**.
 
-Current release: **0.5.0**, synchronized with Phase 2B Guest Session and Cart in Customer API 0.6.0.
+Current release: **0.6.0**, synchronized with the additive Customer API Contract v1 snapshot (32 paths, 133 schemas).
 
 ## لماذا موجود؟
 
@@ -83,7 +83,7 @@ await eldokanApi.wishlist.remove('prd_17231')
 await eldokanApi.auth.logout()
 ```
 
-Client 0.5.0 adds typed Cart methods with automatic guest session/CSRF bootstrap while preserving Auth, Account, Wishlist and Catalog/Home behavior.
+Client 0.6.0 adds typed Address Book, Checkout quote/attempt/placement, and Order/payment recovery methods while preserving all Catalog, Auth, Wishlist and Cart behavior.
 
 ```ts
 const cart = await eldokanApi.cart.get({ lang: 'en' });
@@ -92,6 +92,29 @@ await eldokanApi.cart.add({ productId: 'prd_21417', variationId: 'var_21419', qu
 await eldokanApi.cart.update('cit_0123456789abcdef0123456789abcdef', { quantity: 2 });
 await eldokanApi.cart.remove('cit_0123456789abcdef0123456789abcdef');
 ```
+
+Phase 2C adds the Account Address Book, authoritative Checkout quote and placement, plus Account Order reads and same-Order payment recovery:
+
+```ts
+const addresses = await eldokanApi.addresses.list();
+await eldokanApi.addresses.create(addressInput);
+await eldokanApi.addresses.update(addressId, addressChanges);
+await eldokanApi.addresses.remove(addressId);
+
+const checkout = await eldokanApi.checkout.get({ lang: 'en' });
+const quote = await eldokanApi.checkout.quote({ address_id: addresses.data.items[0].id });
+const attempt = await eldokanApi.checkout.createAttempt(purchaseInput);
+const placement = await eldokanApi.checkout.placeOrder({
+  ...purchaseInput,
+  checkout_attempt_id: attempt.data.checkout_attempt_id,
+});
+
+const orders = await eldokanApi.orders.list({ page: 1, perPage: 20 });
+const order = await eldokanApi.orders.get(orders.data.items[0].id);
+const payment = await eldokanApi.orders.payment(order.data.id, {}); // recover current state
+```
+
+For Guest Orders, pass `guestAccess` only to `orders.get/payment`; the credential and dedicated CSRF must stay in protected app state. Reuse the original `chk_*` and purchase input to recover uncertain placement. Payment retries require explicit user confirmation and the latest observed `generation` for the same `ord_*`.
 
 لا تحفظ Cart أو CSRF أو أي session identifier في `localStorage`. الـClient يرسل cookies ويحتفظ بقيمة CSRF في الذاكرة فقط.
 
@@ -133,7 +156,7 @@ NEXT_PUBLIC_ELDOKAN_API_BASE_URL=https://www.eldokan.com/wp-json/eldokan-custome
 - في المتصفح استخدم instance واحدة لكل جلسة. في SSR أنشئ instance لكل request ولا تستخدم singleton مشتركًا بين المستخدمين.
 - `cache: 'no-store'` افتراضيًا لمنع Next/browser من إنشاء Cache إضافية تتجاوز سياسة السعر والمخزون الحالية.
 - الـAPI نفسها لديها Application Cache قصيرة العمر، وتم اختبار MISS/HIT حيًا.
-- Cart متاحة في Phase 2B؛ Checkout وOrders غير متاحة.
+- Cart and Phase 2C Address Book, Checkout, Orders and payment recovery are available through the typed client.
 
 ## Errors
 
@@ -172,7 +195,7 @@ const api = createEldokanCustomerApiClient({
 `src/generated/types.ts` يتولد من OpenAPI snapshot:
 
 ```bash
-python scripts/generate-types.py
+npm run generate:types
 ```
 
 لا تعدل الملف المولد يدويًا.

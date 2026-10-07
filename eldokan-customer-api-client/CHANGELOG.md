@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.0 — 2026-10-07
+
+- Added typed Account Address Book resources.
+- Added checkout quote, attempt, and order placement resources.
+- Added authenticated Order listing, protected Order detail, and fenced Paymob recovery.
+- Synchronized generated types with the additive 32-path / 133-schema Contract v1 snapshot.
+- Added same-origin integration requirements and guest Order capability handling.
+
 ## 0.5.0 — 2026-10-01
 
 - Added typed `cart.get/add/update/remove` methods for Phase 2B.

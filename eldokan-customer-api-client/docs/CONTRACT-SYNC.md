@@ -4,7 +4,7 @@ When Customer API Contract v1 changes:
 
 1. Export/copy the canonical OpenAPI JSON from the approved Developer Portal release.
 2. Replace `openapi/eldokan-customer-api-v1.openapi.json`.
-3. Run `python scripts/generate-types.py`.
+3. Run `npm run generate:types`.
 4. Review compile errors in resources; they indicate contract drift.
 5. Update request parameter mappings only if the wire contract changed.
 6. Run `npm run verify`.

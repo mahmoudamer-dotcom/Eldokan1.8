@@ -7,15 +7,15 @@ export default function HomeQuickSearches({ terms }: { terms: string[] }) {
   if (uniqueTerms.length === 0) return null
 
   return (
-    <section className="rounded-2xl border border-gray-200 bg-white p-4 sm:p-5" aria-labelledby="quick-searches-title">
+    <section className="rounded-2xl border border-border bg-card p-4 sm:p-5" aria-labelledby="quick-searches-title">
       <div className="mb-4 flex items-center gap-2">
-        <Search className="size-4 text-[#a66d00]" aria-hidden="true" />
-        <h2 id="quick-searches-title" className="font-bold text-gray-900"><T text="Explore Eldokan" /></h2>
+        <Search className="size-4 text-shop-accent" aria-hidden="true" />
+        <h2 id="quick-searches-title" className="font-bold text-foreground"><T text="Explore Eldokan" /></h2>
       </div>
       <div className="flex flex-wrap gap-2">
         {uniqueTerms.map((term) => (
-          <Link key={term} href={`/search?q=${encodeURIComponent(term)}`} className="inline-flex items-center gap-1 rounded-full border border-gray-200 bg-gray-50 px-3 py-2 text-xs font-medium text-gray-700 transition hover:border-[#e1b84f] hover:bg-[#fff9e8]">
-            {term}<ArrowUpRight className="size-3 text-gray-400" aria-hidden="true" />
+          <Link key={term} href={`/search?q=${encodeURIComponent(term)}`} className="inline-flex items-center gap-1 rounded-full border border-border bg-background px-3 py-2 text-xs font-medium text-foreground transition hover:border-[#e1b84f] hover:bg-shop-soft">
+            {term}<ArrowUpRight className="size-3 text-muted-foreground" aria-hidden="true" />
           </Link>
         ))}
       </div>

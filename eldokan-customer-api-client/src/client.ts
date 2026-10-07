@@ -154,8 +154,8 @@ export class EldokanHttpClient {
       };
       if (options.body !== undefined) init.body = JSON.stringify(options.body);
       // Browser fetch is a Web IDL method and must keep its global receiver.
-      // Injected fetch implementations (such as the Next.js proxy wrapper) are
-      // ordinary functions and safely ignore this binding when they are arrows.
+      // Injected fetch implementations are ordinary functions and safely ignore
+      // this binding when they are arrows.
       const response = await Reflect.apply(this.fetchImpl, globalThis, [url, init]);
 
       const context = contextFrom(response, url.toString());
@@ -187,7 +187,8 @@ export class EldokanHttpClient {
           kind: 'api',
           code: envelope?.error.code ?? `http_${response.status}`,
           status: response.status,
-          requestId: envelope?.meta.request_id ?? context.requestId,
+          requestId: envelope?.meta?.request_id ?? context.requestId,
+          issues: envelope?.error.issues ?? [],
           context,
         });
       }
@@ -199,11 +200,18 @@ export class EldokanHttpClient {
           kind: 'invalid_response',
           code: maybeError?.error.code ?? 'invalid_success_envelope',
           status: response.status,
-          requestId: maybeError?.meta.request_id ?? context.requestId,
+          requestId: maybeError?.meta?.request_id ?? context.requestId,
+          issues: maybeError?.error.issues ?? [],
           context,
         });
       }
 
+      const envelope = body as { data?: unknown; meta?: unknown };
+      if (!Object.prototype.hasOwnProperty.call(envelope, 'data') || !envelope.meta || typeof envelope.meta !== 'object') {
+        throw new EldokanClientError({ message: 'ElDokan API success response is missing data or metadata.',
+          kind: 'invalid_response', code: 'invalid_success_envelope', status: response.status,
+          requestId: context.requestId, context });
+      }
       return body as T;
     } catch (error) {
       if (error instanceof EldokanClientError) throw error;

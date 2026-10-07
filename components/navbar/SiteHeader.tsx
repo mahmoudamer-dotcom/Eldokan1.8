@@ -3,7 +3,7 @@ import Navbar from '@/components/navbar/Navbar'
 
 export default function SiteHeader() {
   return (
-    <header className="sticky top-0 z-40 w-full bg-white shadow-sm mb-4">
+    <header className="lg:sticky lg:top-0 z-40 w-full bg-card shadow-sm mb-4">
       <Navbar />
       <Category />
     </header>

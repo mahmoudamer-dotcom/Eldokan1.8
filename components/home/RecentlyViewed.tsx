@@ -45,29 +45,14 @@ export function ProductViewTracker({ product }: { product: StoreProduct }) {
 
 export default function RecentlyViewed() {
   const [products, setProducts] = useState<StoreProduct[]>([])
-
   useEffect(() => {
     queueMicrotask(() => {
       try {
         const saved = JSON.parse(window.localStorage.getItem(STORAGE_KEY) ?? '[]')
         if (Array.isArray(saved)) setProducts(saved.filter(isStoreProduct))
-      } catch {
-        setProducts([])
-      }
+      } catch { setProducts([]) }
     })
   }, [])
-
   if (products.length === 0) return null
-
-  return (
-    <section className="space-y-4" aria-labelledby="recently-viewed-title">
-      <div>
-        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#a66d00]"><T text="Pick up where you left off" /></p>
-        <h2 id="recently-viewed-title" className="mt-1 text-xl font-bold text-gray-900 sm:text-2xl"><T text="Recently viewed" /></h2>
-      </div>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4 xl:grid-cols-5">
-        {products.map((product) => <ProductCard key={product.id} product={product} />)}
-      </div>
-    </section>
-  )
+  return <section className="space-y-4" aria-labelledby="recently-viewed-title"><div><p className="text-xs font-semibold uppercase tracking-[0.16em] text-shop-accent"><T text="Pick up where you left off" /></p><h2 id="recently-viewed-title" className="mt-1 text-xl font-bold text-foreground sm:text-2xl"><T text="Recently viewed" /></h2></div><div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4 xl:grid-cols-5">{products.map(product => <ProductCard key={product.id} product={product} />)}</div></section>
 }

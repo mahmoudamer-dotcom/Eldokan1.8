@@ -36,7 +36,7 @@ export default function WishlistButton({ productId, className = '' }: { productI
     aria-label={t(active ? 'Remove from favorites' : 'Add to favorites')}
     aria-pressed={active}
     title={t(active ? 'Remove from favorites' : 'Add to favorites')}
-    className={`rounded-full border border-gray-200 bg-white/95 p-2 text-gray-500 shadow-sm transition hover:border-rose-200 hover:text-rose-600 disabled:cursor-wait disabled:opacity-60 ${active ? 'text-rose-600' : ''} ${className}`}>
+    className={`rounded-full border border-border bg-card/95 p-2 text-muted-foreground shadow-sm transition hover:border-danger-foreground/30 hover:text-danger-foreground disabled:cursor-wait disabled:opacity-60 ${active ? 'text-danger-foreground' : ''} ${className}`}>
     <Heart className={`size-4 ${active ? 'fill-current' : ''}`} aria-hidden="true" />
   </button>
 }

@@ -28,18 +28,18 @@ export default function HomeProductCarousel({
 
   return (
     <section id={section.id === firstProductSectionId ? 'products' : undefined} className="space-y-4 scroll-mt-44" aria-labelledby={`${section.id}-title`}>
-      <div className="flex items-end justify-between gap-4">
+      <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#a66d00]"><T text={eyebrow || (matchesSection(section, ['deal', 'offer', 'discount']) ? 'Limited time offers' : matchesSection(section, ['best']) ? 'Customer favorites' : matchesSection(section, ['new', 'arrival']) ? 'Just added' : 'Picked for you')} /></p>
-          <h2 id={`${section.id}-title`} className="mt-1 text-xl font-bold text-gray-900 sm:text-2xl"><T text={section.title ?? section.id} /></h2>
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-shop-accent"><T text={eyebrow || (matchesSection(section, ['deal', 'offer', 'discount']) ? 'Limited time offers' : matchesSection(section, ['best']) ? 'Customer favorites' : matchesSection(section, ['new', 'arrival']) ? 'Just added' : 'Picked for you')} /></p>
+          <h2 id={`${section.id}-title`} className="mt-1 text-xl font-bold text-foreground sm:text-2xl"><T text={section.title ?? section.id} /></h2>
         </div>
-        {products.length > 5 && <span className="hidden text-sm text-gray-500 sm:inline"><T text="Scroll to explore" /></span>}
+        {products.length > 5 && <span className="hidden text-sm text-muted-foreground sm:inline"><T text="Scroll to explore" /></span>}
       </div>
       <Carousel opts={{ align: 'start' }} className="w-full">
-        <CarouselContent className="-ml-3">
+        <CarouselContent className="-ms-3">
           {products.map((product, index) => (
-            <CarouselItem key={product.id ?? index} className="basis-[68%] pl-3 sm:basis-[42%] md:basis-[30%] lg:basis-[22%] xl:basis-[18%]">
-              <ProductCard product={product} />
+            <CarouselItem key={product.id ?? index} className="basis-[68%] ps-3 sm:basis-[42%] md:basis-[30%] lg:basis-[22%] xl:basis-[18%]">
+              <ProductCard product={product} swipeImages={false} />
             </CarouselItem>
           ))}
         </CarouselContent>

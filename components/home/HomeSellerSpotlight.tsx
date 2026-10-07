@@ -44,7 +44,7 @@ export default function HomeSellerSpotlight({ products }: { products: HomeProduc
           <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[#ffd45f]"><T text="Meet our marketplace sellers" /></p>
           <h2 id="seller-spotlight-title" className="mt-1 text-xl font-bold sm:text-2xl"><T text="Seller spotlight" /></h2>
         </div>
-        <Link href={`/seller/${encodeURIComponent(spotlight.id)}`} className="inline-flex items-center gap-2 rounded-full border border-white/25 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white hover:text-gray-950">
+        <Link href={`/seller/${encodeURIComponent(spotlight.id)}`} className="inline-flex items-center gap-2 rounded-full border border-white/25 px-4 py-2 text-sm font-semibold text-white transition hover:bg-card hover:text-foreground">
           <T text="Visit" /> {spotlight.name}
         </Link>
       </div>

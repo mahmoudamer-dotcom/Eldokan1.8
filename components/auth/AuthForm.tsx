@@ -40,6 +40,7 @@ export default function AuthForm({ mode }: { mode: 'login' | 'register' }) {
           password: values.password,
           first_name: values.first_name?.trim(),
           last_name: values.last_name?.trim(),
+          phone: values.phone?.trim() ?? '',
         }
         await api.auth.register(input)
       } else {
@@ -56,14 +57,14 @@ export default function AuthForm({ mode }: { mode: 'login' | 'register' }) {
     }
   }
 
-  const fieldClass = 'mt-1 h-12 w-full rounded-lg border border-gray-300 bg-white px-3 text-sm outline-none focus:border-[#c58a36] focus:ring-2 focus:ring-[#c58a36]/20 dark:bg-[#202124]'
-  const errorClass = 'mt-1 block text-sm text-red-700'
+  const fieldClass = 'mt-1 h-12 w-full rounded-lg border border-input bg-card px-3 text-sm outline-none focus:border-[#c58a36] focus:ring-2 focus:ring-[#c58a36]/20'
+  const errorClass = 'mt-1 block text-sm text-danger-foreground'
 
   return (
-    <main className="mx-auto flex w-full max-w-md flex-1 items-center px-4 py-12">
-      <section className="w-full rounded-2xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8 dark:bg-[#202124]">
+    <main className="mx-auto flex w-full max-w-md flex-1 items-center px-4 py-7 sm:py-12">
+      <section className="w-full rounded-2xl border border-border bg-card p-4 shadow-sm sm:p-8">
         <h1 className="text-2xl font-bold">{isRegister ? 'Create your account' : 'Welcome back'}</h1>
-        <p className="mt-2 text-sm text-gray-500">{isRegister ? 'Register to shop and manage your account.' : 'Sign in to continue to your account.'}</p>
+        <p className="mt-2 text-sm text-muted-foreground">{isRegister ? 'Register to shop and manage your account.' : 'Sign in to continue to your account.'}</p>
         <form className="mt-7 space-y-4" onSubmit={handleSubmit(submit)} noValidate>
           {isRegister && <>
             <label className="block text-sm font-medium">First name
@@ -74,23 +75,27 @@ export default function AuthForm({ mode }: { mode: 'login' | 'register' }) {
               <input className={fieldClass} autoComplete="family-name" aria-invalid={Boolean(errors.last_name)} {...register('last_name', { required: 'Last name is required.', validate: (value) => Boolean(value?.trim()) || 'Enter your last name.' })} />
               {errors.last_name && <span className={errorClass}>{errors.last_name.message}</span>}
             </label>
+            <label className="block text-sm font-medium">Phone (optional)
+              <input className={fieldClass} type="tel" autoComplete="tel" maxLength={32} aria-invalid={Boolean(errors.phone)} {...register('phone', { validate: (value) => !value || (/^\+?[0-9 ()-]+$/.test(value.trim()) && (value.match(/[0-9]/g)?.length ?? 0) >= 6) || 'Use at least six digits, with only digits, spaces, parentheses, hyphens, and an optional leading +.' })} />
+              {errors.phone && <span className={errorClass}>{errors.phone.message}</span>}
+            </label>
           </>}
           <label className="block text-sm font-medium">Email address
             <input className={fieldClass} type="email" autoComplete="email" aria-invalid={Boolean(errors.email)} {...register('email', { required: 'Email address is required.', validate: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim()) || 'Enter a valid email address.' })} />
             {errors.email && <span className={errorClass}>{errors.email.message}</span>}
           </label>
           <label className="block text-sm font-medium">Password
-            <input className={fieldClass} type="password" autoComplete={isRegister ? 'new-password' : 'current-password'} aria-invalid={Boolean(errors.password)} {...register('password', { required: 'Password is required.', minLength: isRegister ? { value: 8, message: 'Password must be at least 8 characters.' } : undefined })} />
+            <input className={fieldClass} type="password" autoComplete={isRegister ? 'new-password' : 'current-password'} aria-invalid={Boolean(errors.password)} {...register('password', { required: 'Password is required.', minLength: isRegister ? { value: 10, message: 'Password must be at least 10 characters.' } : undefined })} />
             {errors.password && <span className={errorClass}>{errors.password.message}</span>}
           </label>
-          {serverError && <p role="alert" className="rounded-lg bg-red-50 p-3 text-sm text-red-700">{serverError}</p>}
-          <button disabled={isSubmitting} className="h-12 w-full rounded-lg bg-[#f5b400] px-4 font-semibold text-[#222] transition hover:bg-[#e5a900] disabled:cursor-wait disabled:opacity-60">
+          {serverError && <p role="alert" className="rounded-lg bg-danger-soft p-3 text-sm text-danger-foreground">{serverError}</p>}
+          <button disabled={isSubmitting} className="h-12 w-full rounded-lg bg-[#f5b400] px-4 font-semibold text-primary-foreground transition hover:bg-[#e5a900] disabled:cursor-wait disabled:opacity-60">
             {isSubmitting ? 'Please wait…' : isRegister ? 'Create account' : 'Sign in'}
           </button>
         </form>
-        <p className="mt-6 text-center text-sm text-gray-600">
+        <p className="mt-6 text-center text-sm text-muted-foreground">
           {isRegister ? 'Already have an account?' : 'New to Eldokan?'}{' '}
-          <Link className="font-semibold text-[#9a681d] hover:underline" href={isRegister ? '/login' : '/register'}>{isRegister ? 'Sign in' : 'Create an account'}</Link>
+          <Link className="font-semibold text-shop-accent hover:underline" href={isRegister ? '/login' : '/register'}>{isRegister ? 'Sign in' : 'Create an account'}</Link>
         </p>
       </section>
     </main>

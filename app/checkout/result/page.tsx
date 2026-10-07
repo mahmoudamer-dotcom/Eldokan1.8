@@ -1,9 +1,7 @@
-import InvoiceResult from '@/components/checkout/InvoiceResult'
+import OrderResult from '@/components/checkout/OrderResult'
 
-export default async function CheckoutResultPage({ searchParams }: { searchParams: Promise<{ reference?: string | string[] }> }) {
-  const params = await searchParams
-  const reference = Array.isArray(params.reference) ? params.reference[0] : params.reference ?? ''
+export default function CheckoutResultPage() {
   return <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-12 sm:py-16">
-    <InvoiceResult reference={reference} />
+    <OrderResult />
   </main>
 }

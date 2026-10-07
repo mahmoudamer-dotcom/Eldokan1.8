@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { SlidersHorizontal } from 'lucide-react'
-import type { FilterAttribute } from '@eldokan/customer-api-client'
+import type { AttributeOptionId, FilterAttribute } from '@eldokan/customer-api-client'
 import { createEldokanApi } from '@/lib/eldokan-api'
 import { toStoreProduct } from '@/lib/catalog-adapters'
 import ProductCard, { type StoreProduct } from '@/components/productCard/ProductCard'
@@ -29,7 +29,7 @@ export default function CategoryProducts({
 }) {
   const { locale, t } = useLocale()
   const [products, setProducts] = useState(initialProducts)
-  const [selected, setSelected] = useState<Record<string, string[]>>({})
+  const [selected, setSelected] = useState<Record<string, AttributeOptionId[]>>({})
   const [sort, setSort] = useState('')
   const [appliedSort, setAppliedSort] = useState('')
   const [minPrice, setMinPrice] = useState('')
@@ -143,7 +143,7 @@ export default function CategoryProducts({
     })
   }, [products, appliedSort])
 
-  function toggleOption(attributeId: string, optionId: string) {
+  function toggleOption(attributeId: string, optionId: AttributeOptionId) {
     setSelected((current) => {
       const values = current[attributeId] ?? []
       return {
@@ -162,29 +162,29 @@ export default function CategoryProducts({
     setSort('')
   }
 
-  const sidebar = <aside className="h-fit rounded-2xl border border-gray-200 bg-white p-4 shadow-sm sm:p-5 lg:sticky lg:top-36" aria-label="Product filters">
+  const sidebar = <aside className="h-fit rounded-2xl border border-border bg-card p-4 shadow-sm sm:p-5 lg:sticky lg:top-36" aria-label="Product filters">
     <div className="mb-5 flex items-center justify-between gap-2">
-      <h2 className="text-lg font-bold text-gray-900"><T text="Filters" /></h2>
-      <button type="button" onClick={clearFilters} className="text-xs font-semibold text-amber-800 underline underline-offset-4"><T text="Clear filters" /></button>
+      <h2 className="text-lg font-bold text-foreground"><T text="Filters" /></h2>
+      <button type="button" onClick={clearFilters} className="text-xs font-semibold text-shop-accent underline underline-offset-4"><T text="Clear filters" /></button>
     </div>
-    <label className="mb-5 grid gap-2 text-sm font-semibold text-gray-800"><T text="Sort by price" />
-      <select value={sort} onChange={(event) => setSort(event.target.value)} className="h-10 rounded-lg border border-gray-300 bg-white px-3 font-normal">
+    <label className="mb-5 grid gap-2 text-sm font-semibold text-foreground"><T text="Sort by price" />
+      <select value={sort} onChange={(event) => setSort(event.target.value)} className="h-10 rounded-lg border border-input bg-card px-3 font-normal">
         <option value=""><T text="Recommended" /></option>
         <option value="price-asc"><T text="Price: low to high" /></option>
         <option value="price-desc"><T text="Price: high to low" /></option>
       </select>
     </label>
-    <fieldset className="mb-5 border-t border-gray-100 pt-4">
-      <legend className="mb-2 text-sm font-semibold text-gray-800"><T text="Price range" /></legend>
+    <fieldset className="mb-5 border-t border-border pt-4">
+      <legend className="mb-2 text-sm font-semibold text-foreground"><T text="Price range" /></legend>
       <div className="flex gap-2">
-        <input type="number" min="0" value={minPrice} onChange={(event) => setMinPrice(event.target.value)} placeholder={t('Min')} aria-label={t('Minimum price')} className="h-10 min-w-0 w-1/2 rounded-lg border border-gray-300 px-3 text-sm" />
-        <input type="number" min="0" value={maxPrice} onChange={(event) => setMaxPrice(event.target.value)} placeholder={t('Max')} aria-label={t('Maximum price')} className="h-10 min-w-0 w-1/2 rounded-lg border border-gray-300 px-3 text-sm" />
+        <input type="number" min="0" value={minPrice} onChange={(event) => setMinPrice(event.target.value)} placeholder={t('Min')} aria-label={t('Minimum price')} className="h-10 min-w-0 w-1/2 rounded-lg border border-input px-3 text-sm" />
+        <input type="number" min="0" value={maxPrice} onChange={(event) => setMaxPrice(event.target.value)} placeholder={t('Max')} aria-label={t('Maximum price')} className="h-10 min-w-0 w-1/2 rounded-lg border border-input px-3 text-sm" />
       </div>
     </fieldset>
-    {filters.map((filter) => <fieldset key={filter.id} className="border-t border-gray-100 py-4 last:pb-0">
-      <legend className="mb-2 text-sm font-semibold text-gray-800">{filter.name}</legend>
+    {filters.map((filter) => <fieldset key={filter.id} className="border-t border-border py-4 last:pb-0">
+      <legend className="mb-2 text-sm font-semibold text-foreground">{filter.name}</legend>
       <div className="max-h-52 space-y-2 overflow-y-auto">
-        {filter.options.filter((option) => option.id).map((option) => <label key={option.id} className="flex cursor-pointer items-center gap-2 text-sm text-gray-700">
+        {filter.options.filter((option) => option.id).map((option) => <label key={option.id} className="flex cursor-pointer items-center gap-2 text-sm text-foreground">
           <input type="checkbox" checked={(selected[filter.id] ?? []).includes(option.id!)} onChange={() => toggleOption(filter.id, option.id!)} className="size-4 accent-amber-600" />
           <span>{option.name}</span>
         </label>)}
@@ -196,26 +196,26 @@ export default function CategoryProducts({
 
   return <>
     <div className="mt-6 flex items-center justify-between gap-3 lg:hidden">
-      <button type="button" onClick={() => setMobileOpen((open) => !open)} aria-expanded={mobileOpen} className="inline-flex h-10 items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 text-sm font-semibold text-gray-800 shadow-sm">
+      <button type="button" onClick={() => setMobileOpen((open) => !open)} aria-expanded={mobileOpen} className="inline-flex h-10 items-center gap-2 rounded-xl border border-border bg-card px-4 text-sm font-semibold text-foreground shadow-sm">
         <SlidersHorizontal className="size-4" /><T text="Filters" />
       </button>
-      <p className="text-sm text-gray-500">{loading ? <T text="Updating products" /> : <>{displayedProducts.length} <T text="products" /></>}</p>
+      <p className="text-sm text-muted-foreground">{loading ? <T text="Updating products" /> : <>{displayedProducts.length} <T text="products" /></>}</p>
     </div>
     {mobileOpen && <div className="mt-4 lg:hidden">{sidebar}</div>}
     <div dir={locale === 'ar' ? 'rtl' : 'ltr'} className="mt-6 grid items-start gap-5 lg:grid-cols-[250px_minmax(0,1fr)]">
       <div className="hidden lg:block">{sidebar}</div>
       <section aria-label="Category products" aria-busy={loading || loadingMore}>
         <div className="mb-4 hidden items-center justify-between lg:flex">
-          <p className="text-sm text-gray-500">{displayedProducts.length} <T text="products" /></p>
-          {loading && <span className="text-sm text-gray-500"><T text="Updating products" /></span>}
+          <p className="text-sm text-muted-foreground">{displayedProducts.length} <T text="products" /></p>
+          {loading && <span className="text-sm text-muted-foreground"><T text="Updating products" /></span>}
         </div>
         {displayedProducts.length > 0 ? <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 xl:grid-cols-4">
           {displayedProducts.map((product, index) => <ProductCard key={product.id ?? index} product={product} />)}
-        </div> : !loading && <div className="rounded-2xl border border-dashed border-gray-300 bg-white px-6 py-12 text-center"><h2 className="text-lg font-semibold text-gray-900"><T text={requestError ? 'Unable to load products' : 'No products match these filters'} /></h2>{requestError ? <button type="button" onClick={() => setRetryToken((token) => token + 1)} className="mt-3 text-sm font-semibold text-amber-800 underline underline-offset-4"><T text="Try again" /></button> : <button type="button" onClick={clearFilters} className="mt-3 text-sm font-semibold text-amber-800 underline underline-offset-4"><T text="Clear filters" /></button>}</div>}
+        </div> : !loading && <div className="rounded-2xl border border-dashed border-input bg-card px-6 py-12 text-center"><h2 className="text-lg font-semibold text-foreground"><T text={requestError ? 'Unable to load products' : 'No products match these filters'} /></h2>{requestError ? <button type="button" onClick={() => setRetryToken((token) => token + 1)} className="mt-3 text-sm font-semibold text-shop-accent underline underline-offset-4"><T text="Try again" /></button> : <button type="button" onClick={clearFilters} className="mt-3 text-sm font-semibold text-shop-accent underline underline-offset-4"><T text="Clear filters" /></button>}</div>}
         <div ref={sentinelRef} aria-hidden="true" className="h-8" />
-        {(loadingMore || (loading && displayedProducts.length > 0)) && <p role="status" className="py-3 text-center text-sm text-gray-500"><T text="Loading more products" /></p>}
-        {requestError && displayedProducts.length > 0 && <p role="status" className="py-3 text-center text-sm text-gray-500"><T text="Unable to load more products" /></p>}
-        {requestError && hasMore && <div className="text-center"><button type="button" onClick={() => void loadNextPage()} className="text-sm font-semibold text-amber-800 underline underline-offset-4"><T text="Try again" /></button></div>}
+        {(loadingMore || (loading && displayedProducts.length > 0)) && <p role="status" className="py-3 text-center text-sm text-muted-foreground"><T text="Loading more products" /></p>}
+        {requestError && displayedProducts.length > 0 && <p role="status" className="py-3 text-center text-sm text-muted-foreground"><T text="Unable to load more products" /></p>}
+        {requestError && hasMore && <div className="text-center"><button type="button" onClick={() => void loadNextPage()} className="text-sm font-semibold text-shop-accent underline underline-offset-4"><T text="Try again" /></button></div>}
       </section>
     </div>
   </>

@@ -4,6 +4,7 @@ export class EldokanClientError extends Error {
     code;
     requestId;
     context;
+    issues;
     constructor(options) {
         super(options.message, { cause: options.cause });
         this.name = 'EldokanClientError';
@@ -12,6 +13,9 @@ export class EldokanClientError extends Error {
         this.status = options.status ?? null;
         this.requestId = options.requestId ?? null;
         this.context = options.context ?? null;
+        this.issues = Array.isArray(options.issues)
+            ? options.issues.filter((issue) => !!issue && typeof issue.code === 'string' && typeof issue.message === 'string')
+            : [];
     }
 }
 export function isErrorEnvelope(value) {

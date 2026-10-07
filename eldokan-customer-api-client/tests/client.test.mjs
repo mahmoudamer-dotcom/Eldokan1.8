@@ -22,6 +22,36 @@ function makeClient(handler, extra = {}) {
   });
 }
 
+test('checkout quote preserves shipping issues and support request ID', async () => {
+  const issues = [{ code: 'shipping_unavailable', message: 'No supported shipping method covers the complete cart.' }];
+  const client = makeClient(async (url) => {
+    if (new URL(String(url)).pathname.endsWith('/cart')) {
+      return success({ success: true, data: { csrf_token: 'csrf-cart' }, meta: { request_id: 'req_cart' } });
+    }
+    return new Response(JSON.stringify({ success: false,
+      error: { code: 'checkout_not_ready', message: 'Checkout unavailable.', issues },
+      meta: { request_id: 'req_quote_shipping' },
+    }), { status: 422, headers: { 'content-type': 'application/json' } });
+  });
+  await assert.rejects(() => client.checkout.quote({ address_id: 'adr_example' }), (error) => {
+    assert.ok(error instanceof EldokanClientError);
+    assert.equal(error.code, 'checkout_not_ready');
+    assert.equal(error.requestId, 'req_quote_shipping');
+    assert.deepEqual(error.issues, issues);
+    return true;
+  });
+});
+
+test('checkout keeps an unavailable quote authoritative without inventing payment methods', async () => {
+  const data = { ready: false, shipping_required: true, shipping_methods: [], payment_methods: [],
+    totals: { total: null }, issues: [{ code: 'shipping_unavailable', message: 'No supported shipping method covers the complete cart.' }] };
+  const client = makeClient(async (url) => new URL(String(url)).pathname.endsWith('/cart')
+    ? success({ success: true, data: { csrf_token: 'csrf-cart' }, meta: { request_id: 'req_cart' } })
+    : success({ success: true, data, meta: { request_id: 'req_quote' } }));
+  const result = await client.checkout.quote({ address_id: 'adr_example' });
+  assert.deepEqual(result.data, data);
+});
+
 test('serializes AND/OR attribute filters exactly as the API contract', () => {
   assert.equal(
     serializeAttributeFilters([

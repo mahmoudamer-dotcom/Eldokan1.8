@@ -106,11 +106,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const addItem = useCallback(async (product: CartProductInput) => {
     if (product.imageUrl) imageCache.current.set(product.id, { url: product.imageUrl, alt: product.name ?? '' })
     const quantity = product.quantity ?? 1
-    const existing = cart?.items.find((item) => item.product_id === product.id && item.variation_id === (product.variationId ?? null))
-    const nextQuantity = (existing?.quantity ?? 0) + quantity
-    const stockQuantity = product.stockQuantity ?? existing?.stock.quantity ?? null
-    if (stockQuantity !== null && nextQuantity > stockQuantity) {
-      const message = `Only ${Math.max(0, stockQuantity - (existing?.quantity ?? 0))} item(s) are currently in stock.`
+    const stockQuantity = product.stockQuantity ?? null
+    if (stockQuantity !== null && quantity > stockQuantity) {
+      const message = `Only ${stockQuantity} item(s) are currently in stock.`
       setError(message)
       throw new Error(message)
     }
@@ -119,20 +117,18 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     mutationSequence.current += 1
     try {
       const api = createEldokanApi(locale)
-      const response = existing
-        ? await api.cart.update(existing.id as CartItemId, { quantity: nextQuantity }, { lang: locale })
-        : await api.cart.add({
-          productId: product.id as ProductId,
-          variationId: product.variationId as VariationId | undefined,
-          quantity,
-        }, { lang: locale })
+      const response = await api.cart.add({
+        productId: product.id as ProductId,
+        variationId: product.variationId as VariationId | undefined,
+        quantity,
+      }, { lang: locale })
       setCart(await hydrateCartImages(response.data))
       setReady(true)
     } catch (cause) {
       setError(errorMessage(cause))
       throw cause
     } finally { setBusy(false) }
-  }, [cart, locale, hydrateCartImages])
+  }, [locale, hydrateCartImages])
 
   const updateQuantity = useCallback(async (itemId: CartItemId, quantity: number) => {
     const item = cart?.items.find((entry) => entry.id === itemId)

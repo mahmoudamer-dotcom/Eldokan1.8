@@ -1,4 +1,5 @@
 import { createEldokanCustomerApiClient, type Language } from '@eldokan/customer-api-client'
+import { createCustomerApiTransport } from './customer-api-transport'
 
 const DEFAULT_API_BASE_URL = 'https://www.eldokan.com/wp-json/eldokan-customer/v1'
 
@@ -35,15 +36,10 @@ export function createEldokanApi(language: Language = 'en') {
 }
 
 /** Create an isolated server client that forwards this request's HttpOnly API cookies. */
-export function createEldokanApiForRequest(request: Request, language: Language = 'en') {
-  const cookie = request.headers.get('cookie')
+export function createEldokanApiForRequest(request: Request, language: Language = 'en', onCookie?: (cookie: string) => void) {
   return createEldokanCustomerApiClient({
     baseUrl: process.env.ELDOKAN_API_BASE_URL?.trim() || DEFAULT_API_BASE_URL,
     defaultLanguage: language,
-    fetch: async (input, init) => {
-      const headers = new Headers(init?.headers)
-      if (cookie) headers.set('cookie', cookie)
-      return fetch(input, { ...init, headers, cache: 'no-store' })
-    },
+    fetch: createCustomerApiTransport(request, onCookie),
   })
 }

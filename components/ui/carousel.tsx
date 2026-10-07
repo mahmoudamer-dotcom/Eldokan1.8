@@ -9,6 +9,7 @@ import useEmblaCarousel, {
 import { Button } from "@/components/ui/button"
 import { useLocale } from "@/components/i18n/LocaleProvider"
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
+import { ownsCarouselDrag } from "@/lib/use-swipe-carousel"
 
 type CarouselApi = UseEmblaCarouselType[1]
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>
@@ -52,9 +53,13 @@ function Carousel({
   children,
   ...props
 }: React.ComponentProps<"div"> & CarouselProps) {
+  const { locale } = useLocale()
+  const direction = opts?.direction ?? (locale === "ar" ? "rtl" : "ltr")
   const [carouselRef, api] = useEmblaCarousel(
     {
+      watchDrag: ownsCarouselDrag,
       ...opts,
+      direction,
       axis: orientation === "horizontal" ? "x" : "y",
     },
     plugins
@@ -80,13 +85,15 @@ function Carousel({
     (event: React.KeyboardEvent<HTMLDivElement>) => {
       if (event.key === "ArrowLeft") {
         event.preventDefault()
-        scrollPrev()
+        if (direction === "rtl") scrollNext()
+        else scrollPrev()
       } else if (event.key === "ArrowRight") {
         event.preventDefault()
-        scrollNext()
+        if (direction === "rtl") scrollPrev()
+        else scrollNext()
       }
     },
-    [scrollPrev, scrollNext]
+    [direction, scrollPrev, scrollNext]
   )
 
   React.useEffect(() => {
@@ -102,6 +109,7 @@ function Carousel({
 
     return () => {
       api?.off("select", onSelect)
+      api?.off("reInit", onSelect)
     }
   }, [api, onSelect])
 
@@ -121,7 +129,8 @@ function Carousel({
     >
       <div
         onKeyDownCapture={handleKeyDown}
-        className={cn("relative", className)}
+        dir={direction}
+        className={cn("relative min-w-0", className)}
         role="region"
         aria-roledescription="carousel"
         data-slot="carousel"
@@ -139,13 +148,14 @@ function CarouselContent({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       ref={carouselRef}
-      className="overflow-hidden"
+      className={orientation === "horizontal" ? "overflow-hidden touch-pan-y touch-pinch-zoom" : "overflow-hidden touch-pan-x touch-pinch-zoom"}
       data-slot="carousel-content"
+      data-swipe-viewport=""
     >
       <div
         className={cn(
           "flex",
-          orientation === "horizontal" ? "-ml-4" : "-mt-4 flex-col",
+          orientation === "horizontal" ? "-ms-4" : "-mt-4 flex-col",
           className
         )}
         {...props}
@@ -164,7 +174,7 @@ function CarouselItem({ className, ...props }: React.ComponentProps<"div">) {
       data-slot="carousel-item"
       className={cn(
         "min-w-0 shrink-0 grow-0 basis-full",
-        orientation === "horizontal" ? "pl-4" : "pt-4",
+        orientation === "horizontal" ? "ps-4" : "pt-4",
         className
       )}
       {...props}
@@ -189,7 +199,7 @@ function CarouselPrevious({
       className={cn(
         "absolute touch-manipulation rounded-full",
         orientation === "horizontal"
-          ? "inset-y-0 -left-12 my-auto"
+          ? "inset-y-0 start-1 z-10 my-auto rtl:rotate-180"
           : "-top-12 left-1/2 -translate-x-1/2 rotate-90",
         className
       )}
@@ -220,7 +230,7 @@ function CarouselNext({
       className={cn(
         "absolute touch-manipulation rounded-full",
         orientation === "horizontal"
-          ? "inset-y-0 -right-12 my-auto"
+          ? "inset-y-0 end-1 z-10 my-auto rtl:rotate-180"
           : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",
         className
       )}

@@ -1,3 +1,5 @@
+import type { Attribute, Variation } from '@eldokan/customer-api-client'
+
 export type ProductImageData = {
   url: string
 }
@@ -5,6 +7,7 @@ export type ProductImageData = {
 export type ProductDetailData = {
   id?: string | number
   name: string
+  type?: 'simple' | 'variable' | 'grouped' | 'external' | 'other'
   sku?: string
   brand?: { name?: string }
   seller?: {
@@ -24,10 +27,8 @@ export type ProductDetailData = {
     sale_price: { formatted: string; amount: number; currency?: string; decimals?: number }
   }
   stock?: { status?: string; quantity?: number | null; backorders_allowed?: boolean }
-  attributes: Array<{
-    name: string
-    options: Array<{ name: string }>
-  }>
+  attributes: Attribute[]
+  variations: Variation[]
   description_html: string
   short_description_html: string
 }

@@ -6,6 +6,7 @@ import { EldokanClientError, type ProductId } from '@eldokan/customer-api-client
 import { createEldokanApi } from '@/lib/eldokan-api'
 import { toStoreProduct } from '@/lib/catalog-adapters'
 import type { StoreProduct } from '@/components/productCard/ProductCard'
+import { useLocale } from '@/components/i18n/LocaleProvider'
 
 type WishlistContextValue = {
   products: StoreProduct[]
@@ -20,6 +21,7 @@ type WishlistContextValue = {
 const WishlistContext = createContext<WishlistContextValue | null>(null)
 
 export function WishlistProvider({ children }: { children: React.ReactNode }) {
+  const { locale } = useLocale()
   const [products, setProducts] = useState<StoreProduct[]>([])
   const [ready, setReady] = useState(false)
   const [signedIn, setSignedIn] = useState(false)
@@ -28,7 +30,7 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
 
   const load = useCallback(async () => {
     const sequence = ++loadSequence.current
-    const api = createEldokanApi()
+    const api = createEldokanApi(locale)
     try {
       await api.auth.session()
       if (sequence !== loadSequence.current) return
@@ -49,17 +51,20 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
     } finally {
       if (sequence === loadSequence.current) setReady(true)
     }
-  }, [])
+  }, [locale])
 
   useEffect(() => {
     queueMicrotask(() => { void load() })
     const handleSessionChange = () => { void load() }
     window.addEventListener('eldokan:session-changed', handleSessionChange)
-    return () => window.removeEventListener('eldokan:session-changed', handleSessionChange)
+    return () => {
+      loadSequence.current += 1
+      window.removeEventListener('eldokan:session-changed', handleSessionChange)
+    }
   }, [load])
 
   const toggle = useCallback(async (productId: ProductId) => {
-    const api = createEldokanApi()
+    const api = createEldokanApi(locale)
     try {
       const response = products.some((product) => String(product.id) === productId)
         ? await api.wishlist.remove(productId)
@@ -72,12 +77,12 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
       setError('Unable to update your favorites.')
       throw cause
     }
-  }, [products])
+  }, [products, locale])
 
   const remove = useCallback(async (productId: ProductId) => {
-    const response = await createEldokanApi().wishlist.remove(productId)
+    const response = await createEldokanApi(locale).wishlist.remove(productId)
     setProducts(response.data.items.map((product: ApiProductCard) => toStoreProduct(product)))
-  }, [])
+  }, [locale])
 
   const value = useMemo(() => ({
     products,
