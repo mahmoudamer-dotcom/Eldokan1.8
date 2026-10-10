@@ -1,0 +1,313 @@
+.customization-settings-table {
+    width: 90%;
+    /* Reduced width to 80% of the container */
+   /* max-width: 1000px;*/
+    border-collapse: collapse;
+    margin: 0 auto;
+    /* Center the table on the page */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* Optional shadow for depth */
+}
+
+.customization-settings-table th,
+.customization-settings-table td {
+    padding: 8px;
+    /* Increased padding for better spacing */
+    border: 1px solid #ccc;
+    text-align: left;
+}
+
+.customization-title-row th {
+    color: white;
+    text-align: center;
+    font-size: 20px;
+    /*Increased font size for visibility */
+    font-weight: bold;
+    background-color: #3586c2 ;
+    padding: 15px;
+    /* More padding for the title */
+    border-bottom: 2px solid #ccc;
+    /* Added border for separation */
+}
+
+.customization-settings-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+    /* Alternating row colors for readability */
+}
+
+.customization-settings-table input[type="text"],
+.customization-settings-table input[type="number"],
+.customization-settings-table input[type="color"] {
+    width: 100%;
+    /* Make inputs fill the available space */
+    box-sizing: border-box;
+    /* Include padding in width calculation */
+    padding: 5px;
+    /* Padding inside input fields */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    /* Rounded corners for inputs */
+}
+
+.customization-settings-table input[type="text"]:focus,
+.customization-settings-table input[type="number"]:focus,
+.customization-settings-table input[type="color"]:focus {
+    border-color: #66cc99;
+    /* Change border color on focus */
+    outline: none;
+    /* Remove default outline */
+}
+
+/* Basic styling for the Sections */
+/* Basic styling for the ul and li */
+.subsubsub {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 15px; /* Reduced space between items */
+    background-color: #ffffff; /* Set background color of the list to white */
+    border-radius: 8px; /* More rounded corners */
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    transition: all 0.3s ease-in-out; /* Smooth transition for the whole list */
+}
+
+/* Styling for each list item */
+.subsubsub li {
+    display: inline-block;
+    padding: 6px 12px; /* Reduced padding to decrease height */
+    background-color: #ffffff; /* Set background color of the list items to white */
+    border-radius: 6px; /* Rounded corners for individual items */
+    transition: all 0.3s ease;
+    cursor: pointer; /* Pointer cursor on hover */
+    text-align: center; /* Center the text */
+    font-size: 13px; /* Smaller font size */
+}
+
+/* Styling for links */
+.subsubsub a {
+    text-decoration: none;
+    color: #3586c2; /* Link color matches your desired color */
+    font-weight: 600; /* Slightly bolder text for better readability */
+    display: inline-block;
+    transition: color 0.3s ease, transform 0.3s ease;
+    font-size: 13px; /* Smaller font size for links */
+}
+
+/* Hover effects for each list item */
+.subsubsub li:hover {
+    transform: scale(1.05); /* Slight scaling effect */
+    background-color: #e0f4fe; /* Light blue background on hover */
+}
+
+/* Hover effects for links */
+.subsubsub li a:hover {
+    color: #ffffff; /* White text on hover */
+    background-color: #3586c2; /* Match the link color with background */
+    border-radius: 5px; /* Rounded corners for links */
+    padding: 4px 10px; /* Slight padding for the active link effect */
+}
+
+/* Style for the 'current' class to highlight active page */
+.subsubsub li .current {
+    color: #ffffff;
+    background-color: #3586c2; /* Blue background for active item */
+    border-radius: 6px; /* Rounded corners for active item */
+    padding: 6px 12px; /* Maintain consistent padding for the active item */
+    font-weight: 700; /* Bold text for active item */
+}
+
+/* Add an animation for smooth transition of the list */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.subsubsub {
+/*    animation: fadeIn 0.7s ease-out;*/
+}
+
+
+.form-table{
+    background-color: white;
+    margin-right: 5px!important; 
+    border: 15px solid white; /* White border with a thickness of 2px */
+    border-radius: 4px; /* Optional: makes the corners rounded */
+    padding: 4px; /* Optional: adds space inside the border */
+
+}
+
+
+
+button.woocommerce-save-button {
+    color: #ffffff;
+    background-color: #3586c2 !important; /* Blue background for active item */
+    color: #ffffff; /* White text */
+    border: 2px solid #3586c2; /* Slightly darker green border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px 20px; /* Adjust padding */
+    font-size: 16px; /* Larger font size */
+    font-weight: bold; /* Bold text */
+    cursor: pointer; /* Pointer cursor for better UX */
+    transition: all 0.3s ease-in-out; /* Smooth hover effect */
+   
+    
+}
+
+button.woocommerce-save-button:hover {
+    background-color: #3586c2; /* Darker green on hover */
+    border-color: #3586c2; /* Darker border on hover */
+}
+
+/* Style for all buttons with the 'connection_buttons' class */
+.connection_buttons {
+    background: #007bff; /* Blue background */
+    color: #ffffff; /* White text */
+    border: 1px solid #0056b3; /* Darker blue border */
+    border-radius: 5px; /* Slightly rounded corners */
+    padding: 10px 20px; /* Adjust padding */
+    font-size: 14px; /* Adjust font size */
+    font-weight: 600; /* Slightly bold text */
+    cursor: pointer; /* Pointer cursor on hover */
+    text-transform: uppercase; /* Uppercase text */
+    transition: all 0.3s ease; /* Smooth transition */
+    outline: none; /* Remove focus outline */
+}
+
+/* Hover effect for buttons with 'connection_buttons' class */
+.connection_buttons:hover {
+    background: #0056b3; /* Darker blue on hover */
+    border-color: #003366; /* Even darker border */
+    transform: translateY(-2px); /* Lift effect */
+}
+
+/* Active effect for buttons with 'connection_buttons' class */
+.connection_buttons:active {
+    background: #003366; /* Darkest blue for active state */
+    border-color: #001a33; /* Dark border */
+    transform: translateY(2px); /* Button press effect */
+}
+
+/* Add specific style for Manual Setup button */
+.connection_buttons.manual-setup-button {
+    background:  #3586c2; /* Green background */
+    border-color:  #3586c2; /* Green border */
+}
+
+/* Hover effect for Manual Setup button */
+.connection_buttons.manual-setup-button:hover {
+    background:  #3586c2; /* Darker green on hover */
+    border-color:  #3586c2; /* Darker green border */
+}
+
+/* Active effect for Manual Setup button */
+.connection_buttons.manual-setup-button:active {
+    background:  #3586c2; /* Even darker green */
+    border-color:  #3586c2; /* Darker green border */
+}
+.wrap{
+    background-color: white;
+}
+
+
+.select2-container {
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+}
+
+.select2-container .select2-selection--multiple {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    min-height: 38px;
+    padding: 5px;
+}
+
+.select2-container .select2-selection--multiple .select2-selection__choice {
+    background-color: #007cba !important; /* WordPress admin blue */
+    color: #fff;
+    border-radius: 4px;
+    margin: 2px;
+}
+
+.settings-container {
+    display: flex;
+    align-items: center; /* Aligns table and button vertically */
+    justify-content: space-between; /* Ensures proper spacing */
+    gap: 20px; /* Adds space between table and button */
+}
+
+.settings-table {
+    flex: 1; /* Ensures the table takes up most of the space */
+}
+
+.reset-button {
+    background-color: #007cba; /* Stylish blue color */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Space between icon and text */
+    margin-left: 88%;
+}
+
+.reset-button i {
+    font-size: 18px; /* Size of the icon */
+}
+
+
+.reset-button:hover {
+    background-color: #007cba; /* Slightly darker shade on hover */
+    cursor: pointer;
+}
+/* Target submenu item links where href contains section=paymob_pixel */
+.subsubsub li a[href*="section=paymob_pixel"] {
+    display: inline-flex; /* Flexbox to align text and "New" notification horizontally */
+    align-items: center; /* Ensure vertical alignment of text and "New" notification */
+}
+
+/* Create the "New" notification beside the link text */
+.subsubsub li a[href*="section=paymob_pixel"]::after {
+    content: "New"; /* Text to indicate the new feature */
+    display: inline-block;
+    background-color: #e46d29; /* Red color for the notification */
+    color: white;
+    font-weight: bold;
+    font-size: 10px; /* Smaller font size */
+    padding: 2px 6px; /* Adjusted padding for a more compact look */
+    border-radius: 10px; /* Rounded corners for the notification */
+    text-align: center;
+    margin-left: 4px; /* Space between the link text and "New" notification */
+    margin-top: 2px; /* Adjust vertical position if needed */
+}
+
+/* Optional: Hover effect for the "New" text */
+.subsubsub li a[href*="section=paymob_pixel"]:hover::after {
+    background-color: #e46d29; /* Darker red on hover */
+}
+
+.payment-feature-description {
+    background-color: #f0f8ff;
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 8px;
+    font-family: Arial, sans-serif;
+    color: #333;
+}
+
+.payment-feature-description strong {
+    color: #2c3e50;
+}
+.woocommerce table.form-table .select2-container{
+    max-width: 400px !important;
+}

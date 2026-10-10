@@ -18,5 +18,8 @@ export class SellersResource {
     get(sellerId, options = {}) {
         return this.http.get(`/sellers/${encodeURIComponent(idOrThrow(sellerId))}`, { lang: options.lang });
     }
+    products(sellerId, params = {}) {
+        return this.http.get(`/sellers/${encodeURIComponent(idOrThrow(sellerId))}/products`, { query: { page: params.page, per_page: params.perPage, sort: params.sort }, lang: params.lang });
+    }
 }
 //# sourceMappingURL=sellers.js.map

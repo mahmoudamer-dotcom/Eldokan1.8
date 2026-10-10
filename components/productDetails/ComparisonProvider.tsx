@@ -1,15 +1,19 @@
 'use client'
 
+import Money from '@/components/i18n/Money'
 import Image from 'next/image'
 import Link from 'next/link'
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { GitCompareArrows, X, ArrowLeft, Maximize2 } from 'lucide-react'
 import type { ProductDetail } from '@eldokan/customer-api-client'
+import { translate } from '@/lib/i18n'
 import { useLocale } from '@/components/i18n/LocaleProvider'
 import { useProductComparison } from '@/lib/use-product-comparison'
 import { COMPARE_KEY, normalizeComparisonIds } from '@/lib/product-comparison'
 import { createEldokanApi } from '@/lib/eldokan-api'
-import ComparisonTable from './ComparisonTable'
+import dynamic from 'next/dynamic'
+
+const ComparisonTable = dynamic(() => import('./ComparisonTable'))
 
 const Context = createContext<((id?: string) => void) | null>(null)
 
@@ -80,7 +84,7 @@ export function ComparisonProvider({ children }: { children: React.ReactNode }) 
             <ul className="space-y-3">{ids.map((id) => {
               const product = loaded ? products[id] : undefined
               const image = product?.images[0]?.url ?? product?.image?.url
-              return <li key={id} className="rounded-xl border p-4"><div className="flex items-start gap-3">{image ? <Image src={image} alt={product?.name ?? ''} width={80} height={80} className="size-16 shrink-0 rounded-lg bg-background object-contain" /> : <div className="size-16 shrink-0 animate-pulse rounded-lg bg-muted" />}<div className="min-w-0 flex-1"><Link href={`/product/${id}`} onClick={close} className="line-clamp-2 text-sm font-semibold hover:underline">{product?.name ?? (loaded ? id : text('Loading product…', 'جارٍ تحميل المنتج…'))}</Link>{product && <><p className="mt-2 font-bold text-shop-accent">{product.pricing.price?.formatted}</p><p className="mt-1 text-xs text-muted-foreground">{product.brand?.name ?? product.seller?.name}</p></>}{loaded && !product && <p className="mt-2 text-xs text-danger-foreground">{text('Could not load product details.', 'تعذر تحميل تفاصيل المنتج.')}</p>}</div><button type="button" onClick={() => save(ids.filter((item) => item !== id))} aria-label={`${text('Remove', 'إزالة')} ${product?.name ?? id}`} className="rounded p-1.5 text-muted-foreground hover:bg-danger-soft hover:text-danger-foreground"><X className="size-4" aria-hidden="true" /></button></div>{product && <dl className="mt-3 space-y-1 border-t pt-3 text-xs text-muted-foreground">{product.attributes.slice(0, 3).map((a, index) => <div key={`${a.slug}-${index}`} className="flex justify-between gap-3"><dt>{a.name}</dt><dd className="max-w-[65%] text-end">{a.options.map((option) => option.name).join(ar ? '، ' : ', ')}</dd></div>)}{product.warranty.label && <div className="flex justify-between gap-3"><dt>{text('Warranty', 'الضمان')}</dt><dd>{product.warranty.label}</dd></div>}</dl>}</li>
+              return <li key={id} className="rounded-xl border p-4"><div className="flex items-start gap-3">{image ? <Image src={image} alt={product?.name ?? ''} width={80} height={80} className="size-16 shrink-0 rounded-xl bg-background object-contain" /> : <div className="size-16 shrink-0 animate-pulse rounded-xl bg-muted" />}<div className="min-w-0 flex-1"><Link href={`/product/${id}`} onClick={close} className="line-clamp-2 text-sm font-semibold hover:underline">{product?.name ?? (loaded ? id : text('Loading product…', 'جارٍ تحميل المنتج…'))}</Link>{product && <><p className="mt-2 font-bold text-shop-accent"><Money value={product.pricing.price} /></p><p className="mt-1 text-xs text-muted-foreground">{product.brand?.name ?? product.seller?.name}</p></>}{loaded && !product && <p className="mt-2 text-xs text-danger-foreground">{text('Could not load product details.', 'تعذر تحميل تفاصيل المنتج.')}</p>}</div><button type="button" onClick={() => save(ids.filter((item) => item !== id))} aria-label={`${text('Remove', 'إزالة')} ${product?.name ?? id}`} className="rounded p-1.5 text-muted-foreground hover:bg-danger-soft hover:text-danger-foreground"><X className="size-4" aria-hidden="true" /></button></div>{product && <dl className="mt-3 space-y-1 border-t pt-3 text-xs text-muted-foreground">{product.attributes.slice(0, 3).map((a, index) => <div key={`${a.slug}-${index}`} className="flex justify-between gap-3"><dt>{translate(a.name, locale)}</dt><dd className="max-w-[65%] text-end">{a.options.map((option) => translate(option.name, locale)).join(ar ? '، ' : ', ')}</dd></div>)}{product.warranty.label && <div className="flex justify-between gap-3"><dt>{text('Warranty', 'الضمان')}</dt><dd>{product.warranty.label}</dd></div>}</dl>}</li>
             })}</ul>
             {!ids.length && <p className="rounded-xl border border-dashed p-6 text-center text-sm text-muted-foreground">{text('Select products using Compare on their cards.', 'اختار المنتجات من زر المقارنة على كروتها.')}</p>}
             {ids.length < 4 && <button type="button" onClick={close} className="mt-4 w-full rounded-xl border border-dashed px-4 py-4 text-sm font-semibold">{text('+ Continue browsing & add a product', '+ كمل التصفح وضيف منتج')}</button>}

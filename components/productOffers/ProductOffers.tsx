@@ -1,3 +1,5 @@
+import { formatMoney } from '@/lib/format-money'
+import type { Locale } from '@/lib/i18n'
 import Link from 'next/link'
 import { Check, Store } from 'lucide-react'
 import type { StoreProduct } from '@/components/productCard/ProductCard'
@@ -10,10 +12,9 @@ function getAmount(product: StoreProduct) {
   return price?.amount ?? Number.POSITIVE_INFINITY
 }
 
-function getFormattedPrice(product: StoreProduct) {
-  return product.pricing?.on_sale
-    ? product.pricing.sale_price?.formatted ?? product.pricing.regular_price?.formatted
-    : product.pricing?.regular_price?.formatted
+function getFormattedPrice(product: StoreProduct, locale: Locale) {
+  const money = product.pricing?.on_sale ? product.pricing.sale_price ?? product.pricing.regular_price : product.pricing?.regular_price
+  return money ? formatMoney(money, locale) : undefined
 }
 
 export default async function ProductOffers({ offers }: { offers: StoreProduct[] }) {
@@ -37,7 +38,7 @@ export default async function ProductOffers({ offers }: { offers: StoreProduct[]
       <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
         {orderedOffers.map((offer, index) => {
           const isBestPrice = index === 0 && Number.isFinite(getAmount(offer))
-          const price = getFormattedPrice(offer)
+          const price = getFormattedPrice(offer, locale)
 
           return (
             <article key={offer.id ?? `${offer.seller?.name ?? 'seller'}-${index}`} className="flex flex-col gap-3 border-b border-border p-4 last:border-b-0 sm:flex-row sm:items-center sm:justify-between sm:px-5">
@@ -52,10 +53,10 @@ export default async function ProductOffers({ offers }: { offers: StoreProduct[]
               </div>
 
               <div className="flex items-center justify-between gap-4 sm:justify-end">
-                <div className="text-left sm:text-right">
+                <div className="text-start sm:text-end">
                   <p className="text-lg font-bold tabular-nums text-foreground">{price ?? <T text="Price unavailable" />}</p>
                   {offer.pricing?.on_sale && offer.pricing.regular_price?.formatted && (
-                    <p className="text-xs tabular-nums text-muted-foreground line-through">{offer.pricing.regular_price.formatted}</p>
+                    <p className="text-xs tabular-nums text-muted-foreground line-through">{formatMoney(offer.pricing.regular_price, locale)}</p>
                   )}
                   {isBestPrice && <span className="mt-0.5 inline-flex items-center gap-1 text-xs font-semibold text-success-foreground"><Check className="size-3.5" /> <T text="Best price" /></span>}
                 </div>

@@ -1,0 +1,666 @@
+# Copyright (C) 2024 Paymob
+# This file is distributed under the GNU General Public License v3.0.
+msgid ""
+msgstr ""
+"Project-Id-Version: Paymob for WooCommerce 2.0.2\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/paymob-for-woocommerce\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2024-10-31T11:00:06+02:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.8.1\n"
+"X-Domain: paymob-woocommerce\n"
+
+#. Plugin Name of the plugin
+msgid "Paymob for WooCommerce"
+msgstr ""
+
+#. Description of the plugin
+msgid "PayMob Payment Gateway Integration for WooCommerce."
+msgstr ""
+
+#. Author of the plugin
+#: includes/gateways/class-gateway-paymob-main.php:22
+msgid "Paymob"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://paymob.com"
+msgstr ""
+
+#: includes/admin/paymob-custom_list_setting.php:9
+msgid "List of Payment Method Integrations"
+msgstr ""
+
+#: includes/admin/paymob-custom_setting.php:9
+#: includes/admin/paymob_checkout_sections.php:5
+msgid "Add Payment Integration"
+msgstr ""
+
+#: includes/admin/paymob-custom_setting.php:12
+msgid "Enable"
+msgstr ""
+
+#: includes/admin/paymob-custom_setting.php:19
+#: includes/admin/views/htmlsviews/html_gateway_list.php:6
+msgid "Payment Method"
+msgstr ""
+
+#: includes/admin/paymob-custom_setting.php:26
+#: includes/helper/paymob-auto-generate.php:353
+msgid "Paymob Integration ID"
+msgstr ""
+
+#: includes/admin/paymob-custom_setting.php:34
+msgid "Payment Method -  Title"
+msgstr ""
+
+#: includes/admin/paymob-custom_setting.php:41
+msgid "Payment Method -  Description"
+msgstr ""
+
+#: includes/admin/paymob-custom_setting.php:48
+#: includes/admin/paymob-single-gateway.php:32
+#: includes/admin/paymob-unified.php:30
+msgid "Payment Method - Logo URL"
+msgstr ""
+
+#: includes/admin/paymob-list_gateway_table.php:31
+msgid "Edit"
+msgstr ""
+
+#: includes/admin/paymob-list_gateway_table.php:34
+msgid "Remove"
+msgstr ""
+
+#: includes/admin/paymob-list_gateway_table.php:45
+msgid "No gateways found."
+msgstr ""
+
+#: includes/admin/paymob-main.php:7
+#: includes/gateways/class-gateway-paymob-main.php:24
+msgid "Main Configuration"
+msgstr ""
+
+#: includes/admin/paymob-main.php:12
+msgid "API Key"
+msgstr ""
+
+#: includes/admin/paymob-main.php:18
+msgid "Secret Key"
+msgstr ""
+
+#: includes/admin/paymob-main.php:24
+msgid "Public Key"
+msgstr ""
+
+#: includes/admin/paymob-main.php:35
+msgid "Integration Callback"
+msgstr ""
+
+#: includes/admin/paymob-main.php:47
+msgid "Pass Item Data"
+msgstr ""
+
+#: includes/admin/paymob-main.php:58
+msgid "Debug Log"
+msgstr ""
+
+#: includes/admin/paymob-main.php:59
+msgid "Enable debug log"
+msgstr ""
+
+#: includes/admin/paymob-main.php:64
+msgid "Empty cart items"
+msgstr ""
+
+#: includes/admin/paymob-main.php:66
+msgid "Enable empty cart items"
+msgstr ""
+
+#: includes/admin/paymob-single-gateway.php:15
+#: includes/admin/paymob-unified.php:14
+msgid "Payment Method - Title"
+msgstr ""
+
+#: includes/admin/paymob-single-gateway.php:17
+#: includes/admin/paymob-unified.php:16
+msgid "This controls the title which the user sees during checkout."
+msgstr ""
+
+#: includes/admin/paymob-single-gateway.php:23
+#: includes/admin/paymob-unified.php:22
+msgid "Payment Method - Description"
+msgstr ""
+
+#: includes/admin/paymob-single-gateway.php:26
+#: includes/admin/paymob-unified.php:25
+msgid "This controls the description which the user sees during checkout."
+msgstr ""
+
+#: includes/admin/paymob-single-gateway.php:35
+#: includes/admin/paymob-unified.php:33
+msgid "Add a Logo URL for checkout icon."
+msgstr ""
+
+#: includes/admin/paymob-unified.php:8
+msgid "Paymob Integration ID(s)"
+msgstr ""
+
+#: includes/admin/paymob-unified.php:17
+#: includes/admin/paymob-unified.php:24
+#: includes/gateways/class-gateway-paymob.php:10
+#: includes/gateways/class-gateway-paymob.php:11
+#: assets/js/blocks/paymob_block.js:4
+msgid "Pay with Paymob"
+msgstr ""
+
+#: includes/admin/paymob_checkout_sections.php:3
+msgid "Main configuration"
+msgstr ""
+
+#: includes/admin/paymob_checkout_sections.php:4
+msgid "Payment Integrations"
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_accordion1.php:3
+msgid "Step 1: Register with Paymob"
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_accordion1.php:5
+#: includes/admin/views/htmlsviews/html_gateway_list.php:21
+msgid "Click here"
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_accordion1.php:6
+msgid " to register, upload your business documents and select the payment methods you wish to integrate with .Process has few steps, and you can always resume from where you left."
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_accordion1.php:7
+msgid ""
+"After you complete all the steps , Document verification will take up to 3 days and then you can start accepting payments.\n"
+"   If there are any issues with documentation, our sales representative will reach out to assist you."
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_accordion1.php:9
+msgid "After 3 days, please "
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_accordion1.php:9
+msgid "click here "
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_accordion1.php:10
+msgid " to check if your documents have been approved. If you encounter any issues, please email us at support@paymob.com for assistance."
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_accordion1.php:11
+msgid "While waiting for verification to complete, you can follow the installation steps provided below."
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_accordion1.php:12
+msgid "Once verification is complete, please refer to the “Main Configuration”, starting from Step 2 to configure the plugin."
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_accordion1.php:15
+msgid "Step 2: Key Configurations"
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_accordion1.php:17
+msgid "Your dashboard has Test Mode and Live Mode options. Live Mode will be activated only when you have at least one live payment method integration."
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_accordion1.php:19
+msgid "Test Mode: Use this to perform test transactions."
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_accordion1.php:20
+msgid "Live Mode: Use this for live transactions."
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_accordion1.php:21
+msgid "How to Access the Keys:"
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_accordion1.php:23
+msgid "Log in to the Merchant Dashboard."
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_accordion1.php:24
+msgid "Click on the \"Settings\" tab and navigate to the \"Account Info\" section."
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_accordion1.php:25
+msgid "Click the \"view\" button next to each key (API Key, Public Key, Secret Key) to reveal them."
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_accordion1.php:26
+msgid "Copy and paste these keys into the Configuration Page."
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_accordion1.php:29
+msgid "Note: API Key, Public Key, and Secret Key differ between Test and Live Modes. Always use LIVE Keys for live transactions and TEST Keys for test transactions."
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_accordion4.php:4
+msgid "Step 3: Configure Callback URL"
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_accordion4.php:7
+msgid "Click the icon <span style=\"cursor:pointer;\" id=\"cpicon\" class=\"dashicons dashicons-clipboard\"></span> to copy the callback URL."
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_accordion4.php:8
+#: includes/admin/views/htmlsviews/html_accordion5.php:8
+msgid "Log in to the Paymob Merchant Dashboard."
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_accordion4.php:9
+msgid "Go to the \"Developers\" section and select \"Payment Integrations.\""
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_accordion4.php:10
+msgid "Click on the ID of each payment method integration, select \"Edit,\" and paste the URL into both the \"Transaction Processed Callback\" and \"Transaction Response Callback\" fields."
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_accordion4.php:11
+msgid "Click \"Submit.\""
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_accordion4.php:12
+msgid "Repeat these steps for each payment integration. If you add new payment methods in the future, ensure you update the URL accordingly."
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_accordion5.php:4
+msgid "Step 4: Show Item/Product Details on Paymob Checkout ( Optional )"
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_accordion5.php:7
+msgid "Enable the checkbox in this section."
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_accordion5.php:9
+msgid "Navigate to \"Checkout Customization\" → \"Payment Methods.\""
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_accordion5.php:10
+msgid "Under the \"Additional Information\" section, enable the \"Show Item/Product\" option and click \"Apply Changes.\""
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_accordion6.php:4
+msgid "Step 5 - Miscellaneous ( Optional )"
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_accordion6.php:7
+msgid "Enabling the Debug Log checkbox in this section will log all actions in Paymob files. These files will be saved in the directory"
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_accordion6.php:9
+msgid "Enabling the Empty cart items checkbox in this section will clear the cart items before completing the payment. (not recommended)."
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_accordion7.php:4
+msgid "Step 6: Save Changes"
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_accordion7.php:6
+msgid "Click \"Save Changes.\" After saving, you will be redirected to the \"Payment Integrations Page,\" where you can view all the payment methods integrated with Paymob."
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_gateway_list.php:4
+msgid "Re-Order"
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_gateway_list.php:5
+msgid "Enable / Disable"
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_gateway_list.php:7
+msgid "Title"
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_gateway_list.php:8
+msgid "Description"
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_gateway_list.php:9
+msgid "Integration ID"
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_gateway_list.php:10
+msgid "Logo"
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_gateway_list.php:11
+msgid "Action"
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_gateway_list.php:16
+msgid "Loading..."
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_gateway_list.php:22
+msgid "to re-authenticate your Paymob configuration to get the new updated payment methods."
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_loader_paymob.php:5
+msgid "Confirm"
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_loader_paymob.php:6
+#: includes/admin/views/htmlsviews/html_save_card_confirmation_model.php:6
+msgid "Cancel"
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_save_card_confirmation_model.php:4
+msgid "Are you sure you want to delete this card? This action cannot be undone."
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_save_card_confirmation_model.php:5
+#: includes/helper/save_cards/class-paymob-display-saved-cards.php:21
+msgid "Delete"
+msgstr ""
+
+#: includes/gateways/add_gateway/class-paymob-reset-gateways.php:48
+msgid "Payment methods have been reset successfully."
+msgstr ""
+
+#: includes/gateways/add_gateway/class-paymob-save-gateway_settings.php:18
+#: includes/gateways/class-paymob-payment.php:254
+msgid "Please ensure you are entering API, public and secret keys in the main Paymob configuration."
+msgstr ""
+
+#: includes/gateways/add_gateway/class-paymob-save-gateway_settings.php:108
+msgid "Failed to insert gateway into database."
+msgstr ""
+
+#: includes/gateways/add_gateway/class-paymob-save-gateway_settings.php:111
+msgid "Gateway Already Exist."
+msgstr ""
+
+#: includes/gateways/class-gateway-paymob-4008148-wallets-uig-egp.php:10
+#: includes/gateways/class-gateway-paymob-4008148-wallets-uig-egp.php:11
+#: assets/js/blocks/paymob-4008148-wallets-uig-egp_block.js:5
+msgid "Mobile Wallets"
+msgstr ""
+
+#: includes/gateways/class-gateway-paymob-4008151-card-vpc-egp.php:10
+#: assets/js/blocks/paymob-4008151-card-vpc-egp_block.js:5
+msgid "Debit/Credit Card"
+msgstr ""
+
+#: includes/gateways/class-gateway-paymob-4008151-card-vpc-egp.php:11
+msgid "Secure Payment via Paymob Checkout"
+msgstr ""
+
+#: includes/gateways/class-gateway-paymob-4030522-accept-kiosk-cagg-egp.php:10
+#: assets/js/blocks/paymob-4030522-accept-kiosk-cagg-egp_block.js:5
+msgid "Kiosk"
+msgstr ""
+
+#: includes/gateways/class-gateway-paymob-4030522-accept-kiosk-cagg-egp.php:11
+msgid "Generate a reference number and pay through cash at outlets"
+msgstr ""
+
+#: includes/gateways/class-gateway-paymob-4821068-souhoolav3-souhoolav3-egp.php:10
+#: assets/js/blocks/paymob-4821068-souhoolav3-souhoolav3-egp_block.js:5
+msgid "Souhoola"
+msgstr ""
+
+#: includes/gateways/class-gateway-paymob-4821068-souhoolav3-souhoolav3-egp.php:11
+msgid "Buy Now Pay Later - Split your payments with upto 60 months Instalment"
+msgstr ""
+
+#: includes/gateways/class-gateway-paymob-main.php:23
+msgid "Accept payment through Paymob payment provider."
+msgstr ""
+
+#: includes/gateways/class-gateway-paymob-main.php:68
+msgid "Please ensure you are entering API, public, and secret keys."
+msgstr ""
+
+#: includes/gateways/class-gateway-paymob-main.php:78
+msgid "Merchant configuration: "
+msgstr ""
+
+#: includes/gateways/class-paymob-payment.php:137
+msgid "Given currency is not supported. "
+msgstr ""
+
+#: includes/gateways/class-paymob-payment.php:139
+msgid "Currency supported : "
+msgstr ""
+
+#: includes/gateways/class-paymob-payment.php:190
+msgid "Refund failed: "
+msgstr ""
+
+#: includes/gateways/class-paymob-payment.php:216
+msgid "Paymob : Partial refund of "
+msgstr ""
+
+#: includes/gateways/class-paymob-payment.php:220
+msgid "Paymob : Full refund of "
+msgstr ""
+
+#: includes/gateways/class-paymob-payment.php:260
+msgid "Please, ensure adding ("
+msgstr ""
+
+#: includes/helper/paymob-auto-generate.php:119
+msgid "Apple Pay"
+msgstr ""
+
+#: includes/helper/paymob-auto-generate.php:120
+#: includes/helper/paymob-auto-generate.php:127
+msgid "Secure Payment Via Paymob Checkout"
+msgstr ""
+
+#: includes/helper/paymob-auto-generate.php:126
+msgid "Google Pay"
+msgstr ""
+
+#: includes/helper/paymob-auto-generate.php:133
+msgid "Bank Installments"
+msgstr ""
+
+#: includes/helper/paymob-auto-generate.php:134
+msgid "Split your payment into monthly installments"
+msgstr ""
+
+#: includes/helper/paymob-auto-generate.php:271
+msgid "Select an Integration ID"
+msgstr ""
+
+#: includes/helper/paymob-auto-generate.php:401
+#: includes/helper/paymob-auto-generate.php:404
+msgid "Edit Payment Method - "
+msgstr ""
+
+#: includes/helper/paymob-auto-generate.php:402
+#: includes/helper/paymob-auto-generate.php:405
+msgid "Return to payments"
+msgstr ""
+
+#: includes/helper/paymob-order.php:52
+msgid "Paymob : Awaiting Payment"
+msgstr ""
+
+#: includes/helper/paymob-order.php:70
+#: includes/helper/save_cards/class-paymob-add-saved-cards-tab.php:10
+msgid "Paymob Saved Cards"
+msgstr ""
+
+#: includes/helper/paymob-order.php:71
+msgid "Please remove your cards from"
+msgstr ""
+
+#: includes/helper/paymob-order.php:71
+msgid "to complete your purchase"
+msgstr ""
+
+#: includes/helper/paymob-order.php:72
+msgid "Ops,Max number of card tokens is 3."
+msgstr ""
+
+#: includes/helper/paymob-order.php:290
+#: includes/helper/paymob-order.php:296
+msgid "Ops. you are accessing wrong order."
+msgstr ""
+
+#: includes/helper/save_cards/class-paymob-display-saved-cards.php:14
+msgid "Saved Cards"
+msgstr ""
+
+#: includes/helper/save_cards/class-paymob-display-saved-cards.php:16
+msgid "Card"
+msgstr ""
+
+#: includes/helper/save_cards/class-paymob-display-saved-cards.php:16
+msgid "Actions"
+msgstr ""
+
+#: includes/helper/save_cards/class-paymob-display-saved-cards.php:27
+msgid "No saved cards."
+msgstr ""
+
+#: includes/helper/save_cards/class-paymob-handle-card-deletion.php:28
+msgid "Card deleted successfully."
+msgstr ""
+
+#: includes/helper/save_cards/class-paymob-saved-cards-title.php:8
+msgid "Paymob Saved Credit Cards"
+msgstr ""
+
+#. translators: %1$s is a comma-separated list of integration IDs. %2$s is a comma-separated list of currencies.
+#: includes/helper/toggle_gateways/class-paymob-filter-on-currency.php:64
+msgid "Payment Method(s) with the Integration ID(s) (%1$s) require(s) the store currency to be set to: %2$s."
+msgstr ""
+
+#: src/class_wc_paymob_Install.php:18
+msgid "Sorry, PayMob plugin requires WooCommerce to be installed and active."
+msgstr ""
+
+#: src/class_wc_paymob_rowMeta.php:10
+msgid "API documentation"
+msgstr ""
+
+#: src/class_wc_paymob_rowMeta.php:10
+msgid "API docs"
+msgstr ""
+
+#: src/class_wc_paymob_rowMeta.php:11
+msgid "Customer support"
+msgstr ""
+
+#: src/paymob-for-woocommerce.php:47
+msgid "PayMob Settings"
+msgstr ""
+
+#: src/paymob-for-woocommerce.php:48
+msgid "Paymob Settings"
+msgstr ""
+
+#: src/paymob-for-woocommerce.php:101
+#: src/paymob-for-woocommerce.php:178
+msgid "Paymob  Webhook for Order #"
+msgstr ""
+
+#: src/paymob-for-woocommerce.php:111
+#: src/paymob-for-woocommerce.php:190
+msgid "Paymob  Webhook: Transaction Approved"
+msgstr ""
+
+#: src/paymob-for-woocommerce.php:122
+#: src/paymob-for-woocommerce.php:221
+msgid "Paymob Webhook: Payment is not completed "
+msgstr ""
+
+#: src/paymob-for-woocommerce.php:210
+msgid "Paymob  Webhook: Payment Refunded"
+msgstr ""
+
+#: src/paymob-for-woocommerce.php:288
+msgid "Sorry, you are accessing wrong data"
+msgstr ""
+
+#: src/paymob-for-woocommerce.php:314
+msgid "Paymob : Transaction "
+msgstr ""
+
+#: src/paymob-for-woocommerce.php:315
+#: src/paymob-for-woocommerce.php:330
+msgid "In callback action, for order #"
+msgstr ""
+
+#: src/paymob-for-woocommerce.php:329
+msgid "Payment is not completed due to "
+msgstr ""
+
+#: templates/gateway.php:10
+#: templates/gateway_block.js:5
+msgid "checkout_title"
+msgstr ""
+
+#: templates/gateway.php:11
+msgid "checkout_description"
+msgstr ""
+
+#: includes/helper/toggle_gateways/class-paymob-filter-on-currency.php:64
+msgid "Payment Method(s) with the Integration ID(s)"
+msgstr ""
+
+#: includes/helper/toggle_gateways/class-paymob-filter-on-currency.php:64
+msgid "require(s) the store currency to be set to:"
+msgstr ""
+
+#: includes/gateways/add_gateway/class-paymob-toggle-gateway.php:56
+msgid "Payment Method status updated successfully."
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_custom_confirmation_modal.php:2
+msgid "Disable Paymob Gateway"
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_custom_confirmation_modal.php:3
+msgid "If you disable this gateway, all Paymob gateways will be disabled. Do you want to continue?"
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_custom_confirmation_modal.php:22
+msgid "Disable"
+msgstr ""
+
+#: includes/admin/views/htmlsviews/html_loader_paymob.php:5
+msgid "Confirm"
+msgstr ""
+
+#: assets\js\paymob_list_gateways.js:29
+msgid "Remove Gateway"
+msgstr ""
+
+#: assets\js\paymob_list_gateways.js:20
+msgid "Are you sure you want to remove this gateway?"
+msgstr ""
+
+#: assets\js\paymob_list_gateways.js:64
+msgid "Are you sure you want to "
+msgstr ""
+
+#: assets\js\paymob_list_gateways.js:64
+msgid " this gateway?"
+msgstr "هذه البوابة؟ "
+
+#: assets\js\paymob_list_gateways.js:63
+msgid " Gateway"
+msgstr ""
+
+#: assets\js\paymob_list_gateways.js:138
+msgid "Reset Payment Methods"
+msgstr ""
+
+#: assets\js\paymob_list_gateways.js:139
+msgid "Are you sure you want to reset the payment methods?"
+msgstr ""

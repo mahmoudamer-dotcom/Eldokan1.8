@@ -25,7 +25,7 @@ export default async function SearchPage({
   const query = Array.isArray(params.q) ? params.q[0] ?? '' : params.q ?? ''
   const searchTerm = query.trim()
   const locale = await getLocale()
-  const response = searchTerm.length >= 2 ? await SearchProducts(searchTerm, locale) : { data: [] }
+  const response = searchTerm.length >= 2 ? await SearchProducts(searchTerm, locale) : { data: [], unavailable: false, resolvedSearch: null }
   const products: SearchProduct[] = Array.isArray(response?.data) ? response.data : []
 
   return (
@@ -38,7 +38,8 @@ export default async function SearchPage({
           </p>
 
           <DiscoveryPrompt locale={locale} query={searchTerm} />
-          {products.length > 0 ? (
+          {response.resolvedSearch && <p className="mt-4 text-sm text-shop-accent">{locale === 'ar' ? 'نتائج مقترحة لـ' : 'Suggested results for'}: {response.resolvedSearch}</p>}
+          {response.unavailable ? <p role="alert" className="mt-5 rounded-xl border p-6 text-danger-foreground">{locale === 'ar' ? 'تعذر تحميل نتائج البحث. حاول تحديث الصفحة.' : 'Search results could not load. Please refresh.'}</p> : products.length > 0 ? (
             <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4 xl:grid-cols-5">
               {products.map((product, index) => {
                 return <ProductCard key={product.id ?? index} product={product} />

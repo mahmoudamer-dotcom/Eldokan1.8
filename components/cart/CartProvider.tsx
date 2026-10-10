@@ -1,9 +1,11 @@
 'use client'
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
-import { EldokanClientError, type Cart, type CartItemId, type ProductId, type VariationId } from '@eldokan/customer-api-client'
+import { type Cart, type CartItemId, type ProductId, type VariationId } from '@eldokan/customer-api-client'
 import { useLocale } from '@/components/i18n/LocaleProvider'
 import { createEldokanApi } from '@/lib/eldokan-api'
+import { customerError } from '@/lib/customer-error'
+import { mapLimited } from '@/lib/map-limited'
 
 export type CartProductInput = {
   id: string
@@ -28,11 +30,6 @@ type CartContextValue = {
 
 const CartContext = createContext<CartContextValue | null>(null)
 
-function errorMessage(cause: unknown) {
-  if (cause instanceof EldokanClientError) return cause.message
-  return cause instanceof Error ? cause.message : 'Unable to update your cart.'
-}
-
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const { locale } = useLocale()
   const [cart, setCart] = useState<Cart | null>(null)
@@ -45,10 +42,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const hydrateCartImages = useCallback(async (currentCart: Cart) => {
     const missingProductIds = [...new Set(currentCart.items
-      .filter((item) => !imageCache.current.has(item.product_id))
+      .filter((item) => !item.image?.url && !imageCache.current.has(item.product_id))
       .map((item) => item.product_id))]
 
-    await Promise.all(missingProductIds.map(async (productId) => {
+    await mapLimited(missingProductIds, 4, async (productId) => {
       try {
         const response = await createEldokanApi(locale).products.get(productId)
         const product = response.data
@@ -63,7 +60,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       } catch {
         // Cart item details should remain usable if a product image cannot be loaded.
       }
-    }))
+    })
 
     return {
       ...currentCart,
@@ -79,13 +76,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     const mutationAtStart = mutationSequence.current
     try {
       const response = await createEldokanApi(locale).cart.get({ lang: locale })
+      if (sequence !== loadSequence.current || mutationAtStart !== mutationSequence.current) return
+      setCart(response.data)
+      setReady(true)
+      setError('')
       const hydratedCart = await hydrateCartImages(response.data)
       if (sequence === loadSequence.current && mutationAtStart === mutationSequence.current) {
         setCart(hydratedCart)
         setError('')
       }
     } catch (cause) {
-      if (sequence === loadSequence.current && mutationAtStart === mutationSequence.current) setError(errorMessage(cause))
+      if (sequence === loadSequence.current && mutationAtStart === mutationSequence.current) setError(customerError(cause, locale, 'Unable to update your cart.'))
     } finally {
       if (sequence === loadSequence.current) setReady(true)
     }
@@ -108,7 +109,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     const quantity = product.quantity ?? 1
     const stockQuantity = product.stockQuantity ?? null
     if (stockQuantity !== null && quantity > stockQuantity) {
-      const message = `Only ${stockQuantity} item(s) are currently in stock.`
+      const message = locale === 'ar' ? `المتاح حاليًا ${stockQuantity} قطعة فقط.` : `Only ${stockQuantity} item(s) are currently in stock.`
       setError(message)
       throw new Error(message)
     }
@@ -125,7 +126,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       setCart(await hydrateCartImages(response.data))
       setReady(true)
     } catch (cause) {
-      setError(errorMessage(cause))
+      setError(customerError(cause, locale, 'Unable to update your cart.'))
       throw cause
     } finally { setBusy(false) }
   }, [locale, hydrateCartImages])
@@ -133,7 +134,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const updateQuantity = useCallback(async (itemId: CartItemId, quantity: number) => {
     const item = cart?.items.find((entry) => entry.id === itemId)
     if (item && item.stock.quantity !== null && quantity > item.quantity && quantity > item.stock.quantity) {
-      const message = `Only ${item.stock.quantity} item(s) are currently in stock.`
+      const message = locale === 'ar' ? `المتاح حاليًا ${item.stock.quantity} قطعة فقط.` : `Only ${item.stock.quantity} item(s) are currently in stock.`
       setError(message)
       throw new Error(message)
     }
@@ -144,7 +145,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const response = await createEldokanApi(locale).cart.update(itemId, { quantity }, { lang: locale })
       setCart(await hydrateCartImages(response.data))
     } catch (cause) {
-      setError(errorMessage(cause))
+      setError(customerError(cause, locale, 'Unable to update your cart.'))
       throw cause
     } finally { setBusy(false) }
   }, [cart, locale, hydrateCartImages])
@@ -157,7 +158,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const response = await createEldokanApi(locale).cart.remove(itemId, { lang: locale })
       setCart(await hydrateCartImages(response.data))
     } catch (cause) {
-      setError(errorMessage(cause))
+      setError(customerError(cause, locale, 'Unable to update your cart.'))
       throw cause
     } finally { setBusy(false) }
   }, [locale, hydrateCartImages])

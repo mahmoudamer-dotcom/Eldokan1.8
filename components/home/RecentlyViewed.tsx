@@ -3,6 +3,10 @@
 import { useEffect, useState } from 'react'
 import ProductCard, { type StoreProduct } from '@/components/productCard/ProductCard'
 import T from '@/components/i18n/T'
+import { useLocale } from '@/components/i18n/LocaleProvider'
+import { createEldokanApi } from '@/lib/eldokan-api'
+import { toStoreProduct } from '@/lib/catalog-adapters'
+import { mapLimited } from '@/lib/map-limited'
 
 const STORAGE_KEY = 'eldokan.recently-viewed.v1'
 const MAX_RECENT_PRODUCTS = 8
@@ -44,15 +48,29 @@ export function ProductViewTracker({ product }: { product: StoreProduct }) {
 }
 
 export default function RecentlyViewed() {
+  const { locale } = useLocale()
   const [products, setProducts] = useState<StoreProduct[]>([])
   useEffect(() => {
+    let active = true
     queueMicrotask(() => {
       try {
         const saved = JSON.parse(window.localStorage.getItem(STORAGE_KEY) ?? '[]')
-        if (Array.isArray(saved)) setProducts(saved.filter(isStoreProduct))
+        if (!active || !Array.isArray(saved)) return
+        const previous = saved.filter(isStoreProduct).slice(0, MAX_RECENT_PRODUCTS)
+        setProducts(previous)
+        // Refresh saved snapshots in the active language; also refresh stock
+        // and prices without adding anything to the customer's cart.
+        void mapLimited(previous, 3, async (product) => {
+          if (!/^prd_\d+$/.test(String(product.id))) return product
+          try {
+            const response = await createEldokanApi(locale).products.get(product.id as `prd_${number}`, { lang: locale })
+            return toStoreProduct(response.data)
+          } catch { return product }
+        }).then((current) => { if (active) setProducts(current) })
       } catch { setProducts([]) }
     })
-  }, [])
+    return () => { active = false }
+  }, [locale])
   if (products.length === 0) return null
   return <section className="space-y-4" aria-labelledby="recently-viewed-title"><div><p className="text-xs font-semibold uppercase tracking-[0.16em] text-shop-accent"><T text="Pick up where you left off" /></p><h2 id="recently-viewed-title" className="mt-1 text-xl font-bold text-foreground sm:text-2xl"><T text="Recently viewed" /></h2></div><div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4 xl:grid-cols-5">{products.map(product => <ProductCard key={product.id} product={product} />)}</div></section>
 }

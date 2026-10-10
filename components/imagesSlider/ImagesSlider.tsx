@@ -17,7 +17,7 @@ export default function ImagesSlider({
 }) {
   const { t } = useLocale()
   return (
-    <Carousel opts={{ align: 'start' }} className="mx-auto mt-3 w-full px-2">
+    <Carousel opts={{ align: 'start', active: data.images.length > 1 }} className="mx-auto mt-3 w-full px-2">
       <CarouselContent className="-ms-2">
         {data.images.map((item, index) => (
           <CarouselItem key={`${item.url}-${index}`} className="basis-1/4 ps-2 sm:basis-1/5">
@@ -28,7 +28,7 @@ export default function ImagesSlider({
               aria-pressed={selectedIndex === index}
               className={`w-full overflow-hidden product-photo-canvas rounded-lg border p-1 transition ${selectedIndex === index ? 'border-[#d99500] ring-2 ring-[#f5b400]/40' : 'border-border hover:border-gray-400'}`}
             >
-              <Image src={item.url} width={160} height={160} sizes="80px" alt={`${t('Product view')} ${index + 1}`} className="aspect-square w-full object-contain" />
+              <Image src={item.url} width={160} height={160} sizes="(max-width: 640px) 22vw, (max-width: 1024px) 18vw, 9vw" alt={`${t('Product view')} ${index + 1}`} className="aspect-square w-full rounded-lg object-contain" />
             </button>
           </CarouselItem>
         ))}

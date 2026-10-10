@@ -1,11 +1,19 @@
 'use client'
 
+import OrderProgress from './OrderProgress'
+import Money from '@/components/i18n/Money'
+import Link from 'next/link'
 import { useCallback, useEffect, useState } from 'react'
 import type { OrderDetail } from '@eldokan/customer-api-client'
+import { paymentIssueCode } from '@/lib/payment-issue'
+import { canRecoverPayment, orderStatusLabel, paymentStatusLabel } from '@/lib/order-status'
 import { useLocale } from '@/components/i18n/LocaleProvider'
+import { useCart } from '@/components/cart/CartProvider'
+import OrderInvoice from './OrderInvoice'
+import { useOrderStatus } from './useOrderStatus'
 
 type Envelope = { success: true; data: OrderDetail }
-type PaymentEnvelope = { success: true; data: { requires_redirect: boolean; redirect_url: string | null; retryable: boolean; generation?: number; issue?: { code: string; message: string } | null } }
+type PaymentEnvelope = { success: true; data: { requires_redirect: boolean; redirect_url: string | null; retryable: boolean; generation?: number; issue?: string | { code: string; message: string } | null } }
 type SafeError = string | { code?: string; message?: string; request_id?: string | null }
 
 function errorLabel(error: SafeError | undefined, fallback: string) {
@@ -13,91 +21,107 @@ function errorLabel(error: SafeError | undefined, fallback: string) {
   return [error?.message ?? fallback, error?.code, error?.request_id].filter(Boolean).join(' · ')
 }
 
-export default function OrderResult() {
+export default function OrderResult({ expectedOrderId }: { expectedOrderId?: string } = {}) {
   const { locale } = useLocale()
+  const { refresh: refreshCart } = useCart()
   const ar = locale === 'ar'
-  const [order, setOrder] = useState<OrderDetail | null>(null)
-  const [loading, setLoading] = useState(true)
   const [busy, setBusy] = useState(false)
-  const [error, setError] = useState('')
+  const [actionError, setActionError] = useState('')
+  const [pendingAttempt, setPendingAttempt] = useState(false)
   const [retryGeneration, setRetryGeneration] = useState<number | null>(null)
   const [paymentIssue, setPaymentIssue] = useState<string | null>(null)
+  const text = (en: string, arabic: string) => ar ? arabic : en
 
-  const refresh = useCallback(async () => {
-    setLoading(true); setError('')
-    try {
-      const response = await fetch('/api/orders/recovery', { cache: 'no-store', headers: { 'x-eldokan-locale': locale } })
-      const result = await response.json() as Envelope | { error?: SafeError }
-      if (!response.ok || !('data' in result)) throw new Error(errorLabel('error' in result ? result.error : undefined, 'Order status is not available yet.'))
-      setOrder(result.data)
-    } catch (cause) { setError(cause instanceof Error ? cause.message : 'Order status is not available yet.') }
-    finally { setLoading(false) }
-  }, [locale])
+  const read = useCallback(async (signal: AbortSignal) => {
+    const path = expectedOrderId ? `/api/orders/recovery?order_id=${encodeURIComponent(expectedOrderId)}` : '/api/orders/recovery'
+    const response = await fetch(path, { signal, cache: 'no-store', headers: { 'x-eldokan-locale': locale } })
+    const result = await response.json() as Envelope | { state?: string; error?: SafeError }
+    if (!('data' in result) && result.state === 'attempt_pending') {
+      if (!signal.aborted) setPendingAttempt(true)
+      throw new Error(ar ? 'هناك محاولة شراء محفوظة. استعد نفس المحاولة لمعرفة حالة الطلب.' : 'A purchase attempt is saved. Recover the same attempt to check the order.')
+    }
+    if (!response.ok || !('data' in result)) throw new Error(errorLabel('error' in result ? result.error : undefined, ar ? 'حالة الطلب غير متاحة حاليًا.' : 'Order status is not available yet.'))
+    if (expectedOrderId && result.data.id !== expectedOrderId) throw new Error(ar ? 'الطلب المحفوظ لا يطابق هذه الصفحة.' : 'The saved order does not match this return page.')
+    if (!signal.aborted) setPendingAttempt(false)
+    return result.data
+  }, [locale, ar, expectedOrderId])
+  const { order, loading, refreshing, watching, error, refresh } = useOrderStatus(read, busy)
+  const savedOrderId = order?.id
+  useEffect(() => {
+    if (savedOrderId) void refreshCart()
+  }, [savedOrderId, refreshCart])
 
-  useEffect(() => { queueMicrotask(() => { void refresh() }) }, [refresh])
-
-  async function recoverPayment(retry = false, generation?: number) {
-    setBusy(true); setError('')
+  async function recoverPlacement() {
+    if (busy) return
+    setBusy(true); setActionError('')
     try {
       const response = await fetch('/api/orders/recovery', {
         method: 'POST', headers: { 'Content-Type': 'application/json', 'x-eldokan-locale': locale },
-        body: JSON.stringify({ action: 'payment', retry, ...(retry ? { expected_generation: generation } : {}) }),
+        body: JSON.stringify({ action: 'place' }),
       })
-      const result = await response.json() as PaymentEnvelope | { error?: SafeError; code?: string; request_id?: string | null }
-      if (!response.ok || !('data' in result)) throw new Error([errorLabel('error' in result ? result.error : undefined, 'Payment status is not available yet.'), 'code' in result ? result.code : '', 'request_id' in result ? result.request_id : ''].filter(Boolean).join(' · '))
-      if (result.data.requires_redirect && result.data.redirect_url) {
-        const target = new URL(result.data.redirect_url)
-        if (target.protocol !== 'https:' || target.hostname !== 'accept.paymob.com') throw new Error('The hosted payment destination failed validation.')
+      const result = await response.json() as { data?: { payment?: { requires_redirect?: boolean; redirect_url?: string | null } }; error?: SafeError; code?: string; request_id?: string | null }
+      if (!response.ok || !result.data) throw new Error([errorLabel(result.error, text('Order recovery is still unresolved.', 'لم يتأكد مصير الطلب بعد.')), result.code, result.request_id].filter(Boolean).join(' · '))
+      if (result.data.payment?.requires_redirect && result.data.payment.redirect_url) {
+        const target = new URL(result.data.payment.redirect_url)
+        if (target.protocol !== 'https:' || target.hostname !== 'accept.paymob.com') throw new Error(text('The hosted payment destination failed validation.', 'تعذر التحقق من رابط الدفع. الطلب محفوظ.'))
         window.location.assign(target.toString()); return
       }
-      setRetryGeneration(result.data.retryable && Number.isInteger(result.data.generation) ? result.data.generation! : null)
-      setPaymentIssue(result.data.issue?.code ?? null)
       await refresh()
-    } catch (cause) { setError(cause instanceof Error ? cause.message : 'Payment status is uncertain. Keep this order and try recovery again.') }
+    } catch (cause) { setActionError(cause instanceof Error ? cause.message : text('Keep the saved attempt and try recovery again.', 'احتفظ بالمحاولة المحفوظة وحاول استعادتها مرة أخرى.')) }
     finally { setBusy(false) }
   }
 
-  const text = (en: string, arabic: string) => ar ? arabic : en
+  async function recoverPayment(retry = false, generation?: number) {
+    if (busy || !order || !canRecoverPayment(order) || (retry && !Number.isInteger(generation))) return
+    setBusy(true); setActionError('')
+    try {
+      const response = await fetch('/api/orders/recovery', {
+        method: 'POST', headers: { 'Content-Type': 'application/json', 'x-eldokan-locale': locale },
+        body: JSON.stringify({ action: 'payment', order_id: order.id, retry, ...(retry ? { expected_generation: generation } : {}) }),
+      })
+      const result = await response.json() as PaymentEnvelope | { error?: SafeError; code?: string; request_id?: string | null }
+      if (!response.ok || !('data' in result)) throw new Error([errorLabel('error' in result ? result.error : undefined, text('Payment status is not available yet.', 'حالة الدفع غير متاحة حاليًا.')), 'code' in result ? result.code : '', 'request_id' in result ? result.request_id : ''].filter(Boolean).join(' · '))
+      if (result.data.requires_redirect && result.data.redirect_url) {
+        const target = new URL(result.data.redirect_url)
+        if (target.protocol !== 'https:' || target.hostname !== 'accept.paymob.com') throw new Error(text('The hosted payment destination failed validation.', 'تعذر التحقق من رابط الدفع. الطلب محفوظ.'))
+        window.location.assign(target.toString()); return
+      }
+      setRetryGeneration(result.data.retryable && Number.isInteger(result.data.generation) ? result.data.generation! : null)
+      setPaymentIssue(paymentIssueCode(result.data.issue))
+      await refresh()
+    } catch (cause) { setActionError(cause instanceof Error ? cause.message : text('Payment status is uncertain. Keep this order and try recovery again.', 'لم تتأكد حالة الدفع. احتفظ بنفس الطلب وحاول استعادة الدفع.')) }
+    finally { setBusy(false) }
+  }
+
   if (loading) return <section className="rounded-2xl border bg-card p-8 text-center">{text('Loading order status…', 'جارٍ تحميل حالة الطلب…')}</section>
-  if (!order) return <section className="rounded-2xl border bg-card p-8 text-center"><h1 className="text-xl font-bold">{text('Order status unavailable', 'حالة الطلب غير متاحة')}</h1><p className="mt-3 text-muted-foreground">{error || text('The order may still be processing. Do not place another order.', 'قد يكون الطلب قيد المعالجة. لا تنشئ طلبًا آخر.')}</p><button onClick={() => void refresh()} className="mt-5 rounded-lg border px-5 py-3">{text('Recover order', 'استعادة الطلب')}</button></section>
+  if (!order) return <section dir={ar ? 'rtl' : 'ltr'} className="rounded-2xl border bg-card p-8 text-center">
+    <h1 className="text-xl font-bold">{pendingAttempt ? text('Recover your purchase', 'استعادة عملية الشراء') : text('Order status unavailable', 'حالة الطلب غير متاحة')}</h1>
+    <p role="alert" className="mt-3 text-muted-foreground">{actionError || error || text('The order may still be processing. Do not place another order.', 'قد يكون الطلب قيد المعالجة. لا تنشئ طلبًا آخر.')}</p>
+    {pendingAttempt && <button type="button" disabled={busy || refreshing} onClick={() => void recoverPlacement()} className="mt-5 rounded-lg bg-[#f5b400] px-5 py-3 font-semibold text-primary-foreground disabled:opacity-50">{busy ? text('Recovering…', 'جارٍ الاستعادة…') : text('Recover the same checkout attempt', 'استعادة نفس محاولة الطلب')}</button>}
+    <button type="button" disabled={busy || refreshing} onClick={() => void refresh()} className="ms-3 mt-5 rounded-lg border px-5 py-3 disabled:opacity-50">{text('Refresh status', 'تحديث الحالة')}</button>
+  </section>
 
   const paid = order.payment_status === 'paid'
-  const orderDate = new Intl.DateTimeFormat(ar ? 'ar-EG' : 'en-EG', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(order.created_at))
-  const label = paid ? text('Payment confirmed by the order service', 'تم تأكيد الدفع من خدمة الطلبات') : text('Order saved · payment status: ', 'تم حفظ الطلب · حالة الدفع: ') + order.payment_status
+  const recoverable = canRecoverPayment(order)
   return <section dir={ar ? 'rtl' : 'ltr'} className="mx-auto max-w-3xl rounded-2xl border border-border bg-card p-6 shadow-sm sm:p-8">
-    <p className={paid ? 'font-semibold text-success-foreground' : 'font-semibold text-shop-accent'}>{label}</p>
+    <p role="status" className={paid ? 'font-semibold text-success-foreground' : 'font-semibold text-shop-accent'}>{paid ? text('Payment confirmed by the order service', 'تم تأكيد الدفع من خدمة الطلبات') : `${text('Order saved · ', 'تم حفظ الطلب · ')}${paymentStatusLabel(order.payment_status, locale)}`}</p>
     <h1 className="mt-2 text-2xl font-bold">{text('Order details', 'تفاصيل الطلب')}</h1>
     <dl className="mt-5 grid gap-3 border-b pb-5 text-sm sm:grid-cols-2">
       <div><dt className="text-muted-foreground">{text('Order reference', 'رقم الطلب')}</dt><dd className="break-all font-semibold">{order.id}</dd></div>
-      <div><dt className="text-muted-foreground">{text('Order status', 'حالة الطلب')}</dt><dd className="font-semibold">{order.status}</dd></div>
-      <div><dt className="text-muted-foreground">{text('Payment status', 'حالة الدفع')}</dt><dd className="font-semibold">{order.payment_status}</dd></div>
-      <div><dt className="text-muted-foreground">{text('Total', 'الإجمالي')}</dt><dd className="font-semibold">{order.total.formatted}</dd></div>
+      <div><dt className="text-muted-foreground">{text('Order status', 'حالة الطلب')}</dt><dd className="font-semibold">{orderStatusLabel(order.status, locale)}</dd></div>
+      <div><dt className="text-muted-foreground">{text('Payment status', 'حالة الدفع')}</dt><dd className="font-semibold">{paymentStatusLabel(order.payment_status, locale)}</dd></div>
+      <div><dt className="text-muted-foreground">{text('Total', 'الإجمالي')}</dt><dd className="font-semibold"><Money value={order.total} /></dd></div>
     </dl>
-    <section className="invoice-print-root mt-6 space-y-5 rounded-xl border p-5">
-      <header className="flex flex-wrap items-start justify-between gap-3 border-b pb-4">
-        <div><p className="text-sm text-muted-foreground">{text('ElDokan', 'الدكان')}</p><h2 className="text-xl font-bold">{paid ? text('Paid order invoice', 'فاتورة الطلب المدفوع') : text('Order summary', 'ملخص الطلب')}</h2></div>
-        <div className="text-sm"><p><strong>{text('Invoice / Order', 'رقم الفاتورة / الطلب')}:</strong> {order.id}</p><p><strong>{text('Date', 'التاريخ')}:</strong> {orderDate}</p></div>
-      </header>
-      <div className="grid gap-3 text-sm sm:grid-cols-2">
-        <div><h3 className="mb-1 font-bold">{text('Customer', 'بيانات العميل')}</h3><p>{order.address.first_name} {order.address.last_name}</p><p>{order.address.phone}</p><p>{order.address.email}</p></div>
-        <div><h3 className="mb-1 font-bold">{text('Delivery address', 'عنوان التوصيل')}</h3><p>{order.address.street_address}{order.address.address_extra ? ` · ${order.address.address_extra}` : ''}</p><p>{order.address.city} · {order.address.state} · {order.address.country}</p><p>{text('Payment', 'الدفع')}: {order.payment_method}</p><p>{text('Status', 'الحالة')}: {order.payment_status}</p></div>
-      </div>
-      <div className="overflow-x-auto"><table className="w-full border-collapse text-sm"><thead><tr className="border-y text-start"><th className="py-2 text-start">{text('Item', 'المنتج')}</th><th className="py-2 text-end">{text('Qty', 'الكمية')}</th><th className="py-2 text-end">{text('Subtotal', 'الإجمالي الفرعي')}</th><th className="py-2 text-end">{text('Total', 'الإجمالي')}</th></tr></thead><tbody>{order.lines.map((line, index) => <tr key={`${line.product_id}-${index}`} className="border-b"><td className="py-2">{line.name}</td><td className="py-2 text-end">{line.quantity}</td><td className="py-2 text-end">{line.subtotal.formatted}</td><td className="py-2 text-end">{line.total.formatted}</td></tr>)}</tbody></table></div>
-      <dl className="ms-auto max-w-sm space-y-1 text-sm">
-        <div className="flex justify-between gap-4"><dt>{text('Subtotal', 'المجموع الفرعي')}</dt><dd>{order.subtotal.formatted}</dd></div>
-        <div className="flex justify-between gap-4"><dt>{text('Discount', 'الخصم')}</dt><dd>{order.discount.formatted}</dd></div>
-        <div className="flex justify-between gap-4"><dt>{text('Shipping', 'الشحن')}</dt><dd>{order.shipping_total.formatted}</dd></div>
-        <div className="flex justify-between gap-4"><dt>{text('Tax', 'الضريبة')}</dt><dd>{order.tax.formatted}</dd></div>
-        {order.fees.map((fee, index) => <div key={`${fee.name}-${index}`} className="flex justify-between gap-4"><dt>{fee.name}</dt><dd>{fee.total.formatted}</dd></div>)}
-        <div className="flex justify-between gap-4 border-t pt-2 text-base font-bold"><dt>{paid ? text('Paid total', 'إجمالي المدفوع') : text('Order total', 'إجمالي الطلب')}</dt><dd>{order.total.formatted}</dd></div>
-      </dl>
-      {order.order_notes && <p className="text-sm"><strong>{text('Order notes', 'ملاحظات الطلب')}:</strong> {order.order_notes}</p>}
-    </section>
-    {paid && <button onClick={() => window.print()} className="print:hidden mt-4 rounded-lg bg-[#f5b400] text-primary-foreground px-5 py-3 font-semibold">{text('Print / save invoice', 'طباعة / حفظ الفاتورة')}</button>}
-    {!paid && order.payment_method === 'paymob' && <button disabled={busy} onClick={() => void recoverPayment()} className="mt-5 rounded-lg bg-[#f5b400] text-primary-foreground px-5 py-3 font-semibold disabled:opacity-50">{busy ? text('Recovering…', 'جارٍ الاستعادة…') : text('Recover hosted payment', 'استعادة الدفع')}</button>}
-    {!paid && order.payment_method === 'paymob' && retryGeneration !== null && <button disabled={busy} onClick={() => { if (window.confirm(text('Start a new payment session for this same order?', 'بدء جلسة دفع جديدة لنفس الطلب؟'))) void recoverPayment(true, retryGeneration) }} className="ms-2 mt-5 rounded-lg border px-5 py-3 font-semibold disabled:opacity-50">{text('Confirm payment retry', 'تأكيد إعادة محاولة الدفع')}</button>}
-    <button disabled={busy} onClick={() => void refresh()} className="ms-3 mt-5 rounded-lg border px-5 py-3 font-semibold">{text('Refresh status', 'تحديث الحالة')}</button>
-    {error && <p role="alert" className="mt-4 text-sm text-danger-foreground">{error}</p>}
-    {!paid && paymentIssue && <p role="status" className="mt-4 text-sm text-shop-accent">{text('Payment needs follow-up on this same order.', 'الدفع يحتاج متابعة على نفس الطلب.')} <span dir="ltr">{paymentIssue}</span></p>}
+    {watching && <p role="status" className="mt-4 rounded-lg bg-shop-soft p-3 text-sm text-shop-accent">{text('Checking for payment confirmation automatically…', 'جارٍ متابعة تأكيد الدفع تلقائيًا…')}</p>}
+    <OrderProgress status={order.status} fulfillments={order.fulfillments} />
+    <OrderInvoice order={order} />
+    <div className="mt-5 flex flex-wrap gap-3 print:hidden">
+      {recoverable && <button type="button" disabled={busy || refreshing} onClick={() => void recoverPayment()} className="rounded-lg bg-[#f5b400] px-5 py-3 font-semibold text-primary-foreground disabled:opacity-50">{busy ? text('Recovering…', 'جارٍ الاستعادة…') : text('Recover hosted payment', 'استعادة الدفع')}</button>}
+      {recoverable && retryGeneration !== null && <button type="button" disabled={busy || refreshing} onClick={() => { if (window.confirm(text('Start a new payment session for this same order?', 'بدء جلسة دفع جديدة لنفس الطلب؟'))) void recoverPayment(true, retryGeneration) }} className="rounded-lg border px-5 py-3 font-semibold disabled:opacity-50">{text('Confirm payment retry', 'تأكيد إعادة محاولة الدفع')}</button>}
+      <button type="button" disabled={busy || refreshing} onClick={() => void refresh()} className="rounded-lg border px-5 py-3 font-semibold disabled:opacity-50">{refreshing ? text('Refreshing…', 'جارٍ التحديث…') : text('Refresh status', 'تحديث الحالة')}</button>
+      <Link href="/" className="rounded-lg border px-5 py-3 font-semibold">{text('Continue shopping', 'متابعة التسوق')}</Link>
+    </div>
+    {(actionError || error) && <p role="alert" className="mt-4 text-sm text-danger-foreground">{actionError || error}</p>}
+    {recoverable && paymentIssue && <p role="status" className="mt-4 text-sm text-shop-accent">{text('Payment needs follow-up on this same order.', 'الدفع يحتاج متابعة على نفس الطلب.')} <span dir="ltr">{paymentIssue}</span></p>}
   </section>
 }

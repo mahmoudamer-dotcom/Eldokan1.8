@@ -1,0 +1,6 @@
+a[href*="section=paymob-main"].wc-block-editor-components-external-link-card {
+	display: none;
+}
+.wc-blocks-incompatible-extensions-notice.components-notice.is-warning.is-dismissible {
+	display: none !important;
+}

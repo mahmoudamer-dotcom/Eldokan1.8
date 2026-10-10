@@ -1,0 +1,611 @@
+# Copyright (C) 2023 Paymob Plugins Team
+# This file is distributed under the GNU General Public License v3.0.
+msgid ""
+msgstr ""
+"Project-Id-Version: Paymob for WooCommerce 1.0.2\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/paymob-for-woocommerce\n"
+"POT-Creation-Date: 2023-12-12T08:00:45+00:00\n"
+"PO-Revision-Date: 2024-11-15 15:20+0500\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: ar_EG\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.5\n"
+"X-Domain: paymob-woocommerce\n"
+
+#. Plugin Name of the plugin
+msgid "Paymob for WooCommerce"
+msgstr "باي موب للووكوميرس"
+
+#. Description of the plugin
+msgid "PayMob Payment Gateway Integration for WooCommerce."
+msgstr "طريقة الدفع من خلال ماي موب للووكويرس."
+
+#. Author of the plugin
+msgid "Paymob Plugins Team"
+msgstr "فريق عمل ماي موب"
+
+#. Author URI of the plugin
+msgid "https://paymob.com"
+msgstr ""
+
+#: includes/admin/settings.php:9
+msgid "Enable Paymob payment method"
+msgstr "تفعيل طريقه الدفع لباي موب"
+
+#: includes/admin/settings.php:12
+msgid "Merchant configuration:"
+msgstr "تعريفات التاجر:"
+
+#: includes/admin/settings.php:16
+msgid "Please, ensure using the secret and public keys that are exists in Paymob <a href=\"https://accept.paymob.com/portal2/en/settings\">merchant account. </a><br/>For testing purposes, you can use secret and public test keys that exist in the same account"
+msgstr ""
+"يرجى التأكد من استخدام المفاتيح السرية والعامة الموجودة في <a href=\"https://accept.paymob.com/portal2/en/settings\">حساب التاجر Paymob.</a><br/> \n"
+"لأغراض الاختبار، يمكنك استخدام مفاتيح الاختبار السرية والعامة الموجودة في نفس الحساب"
+
+#: includes/admin/settings.php:20
+msgid "Secret Key"
+msgstr "الرمز السري"
+
+#: includes/admin/settings.php:25
+msgid "Public Key"
+msgstr "الرمز العام"
+
+#: includes/admin/settings.php:30
+msgid "API Key"
+msgstr "رمز التكامل"
+
+#: includes/admin/settings.php:32
+msgid "Validate PayMob API Key"
+msgstr "التحقق من رمز التكامل"
+
+#: includes/admin/settings.php:38
+msgid "HMAC Key"
+msgstr "رمز ال HMAC"
+
+#: includes/admin/settings.php:44
+msgid "Integration ID(s)"
+msgstr "أرقام طرق الدفع"
+
+#: includes/admin/settings.php:49
+msgid "Title"
+msgstr "العنوان"
+
+#: includes/admin/settings.php:51
+msgid "This controls the title which the user sees during checkout."
+msgstr "يتحكم هذا في العنوان الذي يراه المستخدم أثناء الخروج لصفحه الدفع."
+
+#: includes/admin/settings.php:52 includes/admin/settings.php:58
+msgid "Pay with Paymob"
+msgstr "الدفع عن طريق باي موب"
+
+#: includes/admin/settings.php:56
+msgid "Description"
+msgstr "الوصف"
+
+#: includes/admin/settings.php:59
+msgid "This controls the description which the user sees during checkout."
+msgstr "يتحكم هذا في الوصف الذي يراه المستخدم أثناء الخروج لصفحه الدفع."
+
+#: includes/admin/settings.php:63
+msgid "Logo URL"
+msgstr "رابط الايقونه / شعار"
+
+#: includes/admin/settings.php:66
+msgid "Add a Logo URL for checkout icon."
+msgstr "أضف رابط أيقونه / شعار الذي سوف يراه المستخدم في صفحه الدفع."
+
+#: includes/admin/settings.php:70
+msgid "Integration Callback"
+msgstr "رابط رجوع  التكامل"
+
+#: includes/admin/settings.php:72
+msgid "Please click on this icon"
+msgstr "الرجاء الضغط على هذا الرمز"
+
+#: includes/admin/settings.php:72
+msgid " to copy the callback URLs and paste it into paymob account."
+msgstr " لنسخ رابط عوده التكامل ولصقها في حساب باي موب."
+
+#: includes/admin/settings.php:77
+msgid "Empty cart items"
+msgstr "مسح عناصر سلة التسوق"
+
+#: includes/admin/settings.php:79
+msgid "Enable empty cart items"
+msgstr "تفعيل خاصيه مسح عناصر سلة التسوق"
+
+#: includes/admin/settings.php:80
+msgid "You can check this option in case you need to clear the cart items before completing the payment. (not recommended)"
+msgstr "يمكنك تحديد هذا الخيار في حال احتجت إلى مسح عناصر سلة التسوق قبل إتمام الدفع. (لا ينصح)"
+
+#: includes/admin/settings.php:84
+msgid "Debug Log"
+msgstr "خاصيه التسجيل"
+
+#: includes/admin/settings.php:85
+msgid "Enable debug log"
+msgstr "تفعيل خاصيه التسجيل"
+
+#: includes/admin/settings.php:87
+msgid "Log file will be saved in "
+msgstr "ملف التسجيل يتم حفظه في "
+
+#: includes/admin/settings.php:88
+msgid "Pass Item Data"
+msgstr "بيانات العناصر"
+
+#: includes/admin/settings.php:89
+msgid "To display item-level details of the products during checkout, Enable the Checkbox here && navigate to the Paymob Merchant Dashboard,<br/> go to Checkout Customization -> Payment Methods, enable the Show Item/Product option, and then click Apply Changes to save the settings."
+msgstr "لعرض تفاصيل المنتجات على مستوى السلعة أثناء الدفع، قم بتمكين خانة الاختيار هنا وانتقل إلى لوحة التحكم,<br/> go to Checkout Customization -> Payment Methods, enable the Show Item/Product option, and then click Apply Changes to save the settings."
+
+#: includes/admin/settings.php:90
+msgid "Main configuration"
+msgstr "الاعدادات الرئيسية"
+
+#: includes/helper/paymob.php:48
+msgid "Paymob : Awaiting Payment"
+msgstr "باي موب: في إنتظار الدفع"
+
+#: includes/helper/paymob.php:92
+msgid "In create intention for order # "
+msgstr ""
+
+#: includes/helper/paymob.php:96
+msgid "Intention response for order # "
+msgstr ""
+
+#: includes/helper/paymob.php:137
+msgid "Order "
+msgstr "الطلب "
+
+#: includes/helper/paymob.php:182 includes/helper/paymob.php:188
+msgid "Ops. you are accessing wrong order."
+msgstr "عذراً، يتم إختراق بيانات طلب خاطئه."
+
+#: includes/payment/paymob-gateway.php:16
+msgid "Pay With Paymob"
+msgstr "الدفع عن طريق باي موب"
+
+#: includes/payment/paymob-gateway.php:17
+msgid "Paymob payment."
+msgstr "باي موب للدفع."
+
+#: includes/payment/paymob-gateway.php:134
+msgid "Please ensure you are entering API, public and secret keys. Also, ensure to select at least one of the integration IDs.."
+msgstr "يرجي التأكد من إدخال رمز التكامل، الرمز السري، الرمز العام. و كذلك، إختيار طريقه دفع واحده علي اﻷقل."
+
+#: init_paymob.php:60
+msgid "API documentation"
+msgstr "الروابط التقنبه"
+
+#: init_paymob.php:61
+msgid "Customer support"
+msgstr "الدعم الفني"
+
+#: init_paymob.php:79
+msgid "Sorry, PayMob plugin requires WooCommerce to be installed and active."
+msgstr "عذرًا، تتطلب إضاقة باي موب تثبيت الووكوميرس وتنشيطه."
+
+#: paymob_payment.php:40
+msgid "PayMob Settings"
+msgstr "إعدادات باي موب"
+
+#: paymob_payment.php:88
+msgid "Paymob  Webhook for Order #"
+msgstr ""
+
+#: paymob_payment.php:97
+msgid "Paymob  Webhook: Transaction Approved"
+msgstr "Paymob Webhook: تم قبول معامله الدفع"
+
+#: paymob_payment.php:114
+msgid "Paymob  Webhook: Payment Refunded"
+msgstr "Paymob Webhook: تم إسترداد الدفع"
+
+#: paymob_payment.php:125
+msgid "Paymob Webhook: Payment is not completed "
+msgstr "Paymob Webhook: لم يكتمل الدفع "
+
+#: paymob_payment.php:142
+msgid "Sorry, you are accessing wrong data"
+msgstr "عذرًا، أنت تقوم بالوصول إلى بيانات خاطئة"
+
+#: paymob_payment.php:167
+msgid "Paymob : Transaction "
+msgstr "باي موب : المعامله "
+
+#: paymob_payment.php:168 paymob_payment.php:181
+msgid "In callback action, for order #"
+msgstr ""
+
+#: paymob_payment.php:180
+msgid "Payment is not completed due to "
+msgstr "لم يكتمل الدفع بسبب "
+
+#: paymob_payment.php:202
+msgid "Merchant configuration"
+msgstr "تعريفات التاجر"
+
+#: add-paymob_gateway.php:35
+msgid "Enable"
+msgstr "اظهار"
+
+#: add-paymob_gateway.php:42
+msgid "Payment Method"
+msgstr "طريقة الدفع"
+
+#: add-paymob_gateway.php:84
+msgid "sectionend"
+msgstr "الاقسام"
+
+#: add-paymob_gateway.php:72
+msgid "Payment Method - Logo URL"
+msgstr "رابط ايقونه وسيله الدفع"
+
+#: add-paymob_gateway.php:64
+msgid "Payment Method -  Description"
+msgstr "وصف وسيله الدفع"
+
+#: add-paymob_gateway.php:57
+msgid "Payment Method -  Title"
+msgstr "عنوان وسيله الدفع"
+
+#: add-paymob_gateway.php:49
+msgid "Paymob Integration ID"
+msgstr "رمز تكامل باي موب"
+
+#: add-paymob_gateway.php:49
+msgid "Re-Order"
+msgstr "اعادة ترتيب"
+
+#: add-paymob_gateway.php:49
+msgid "Enable / Disable"
+msgstr "اظهار/اخفاء"
+
+#: add-paymob_gateway.php:49
+msgid "Logo"
+msgstr "ايقونة"
+
+#: add-paymob_gateway.php:49
+msgid "Action"
+msgstr "تفعيل"
+
+#: add-paymob_gateway.php:49
+msgid "Loading..."
+msgstr "تحميل..."
+
+#: add-paymob_gateway.php:49
+msgid "Add Payment Integration"
+msgstr "اضافة وسيلة دفع"
+
+#: add-paymob_gateway.php:49
+msgid "Payment Integrations"
+msgstr "طرق الدفع"
+
+#: add-paymob_gateway.php:49
+msgid "Integration ID"
+msgstr "تكامل الدفع"
+
+#: add-paymob_gateway.php:49
+msgid "List of Payment Method Integrations"
+msgstr "طرق الدفع"
+
+#: includes/gateways/class-gateway-paymob-main.php:19
+msgid "Main Configuration"
+msgstr "الاعدادات الرئيسية"
+
+#: class-gateway-paymob-main.php:49
+msgid "Accept payment through Paymob payment provider."
+msgstr "الدفع من خلال باي موب."
+
+#: class-gateway-paymob-main.php:49
+msgid "Paymob"
+msgstr "باي موب"
+
+#: paymob-auto-generate-main.php:49
+msgid "At least one Payment Method should be enabled below Paymob."
+msgstr "يجب تمكين طريقة دفع واحدة على الأقل أسفل باي موب."
+
+#: includes/admin/paymob-main.php:10
+msgid "Step 1: Register with Paymob"
+msgstr "الخطوة 1: التسجيل في باي موب"
+
+#: includes/admin/views/htmlsviews/html_accordion1.php:5
+#: includes/admin/views/htmlsviews/html_gateway_list.php:21
+msgid "Click here"
+msgstr "إضغط هنا"
+
+#: includes/admin/views/htmlsviews/html_accordion1.php:9
+msgid "click here "
+msgstr "إضغط هنا"
+
+#: includes/admin/views/htmlsviews/html_accordion1.php:6
+msgid " to register, upload your business documents and select the payment methods you wish to integrate with .Process has few steps, and you can always resume from where you left."
+msgstr " للتسجيل وتحميل مستندات عملك واختيار طرق الدفع التي ترغب في الاندماج معها. العملية لها خطوات قليلة، ويمكنك دائمًا استئناف العملية من حيث توقفت."
+
+#: includes/admin/views/htmlsviews/html_accordion1.php:7
+msgid ""
+"After you complete all the steps , Document verification will take up to 3 days and then you can start accepting payments.\n"
+"   If there are any issues with documentation, our sales representative will reach out to assist you."
+msgstr ""
+"بعد إكمال جميع الخطوات، سيستغرق التحقق من المستندات ما يصل إلى 3 أيام ثم يمكنك البدء في قبول المدفوعات.\n"
+"   إذا كانت هناك أي مشاكل في التوثيق، سيتواصل معك مندوب المبيعات لدينا لمساعدتك."
+
+#: includes/admin/views/htmlsviews/html_accordion1.php:9
+msgid "After 3 days, please "
+msgstr "بعد 3 أيام، من فضلك"
+
+#: includes/admin/views/htmlsviews/html_accordion1.php:10
+msgid " to check if your documents have been approved. If you encounter any issues, please email us at support@paymob.com for assistance."
+msgstr " للتحقق مما إذا كان قد تمت الموافقة على مستنداتك. إذا واجهتك أي مشاكل، يرجى مراسلتنا عبر البريد الإلكتروني support@paymob.com للحصول على المساعدة."
+
+#: includes/admin/views/htmlsviews/html_accordion1.php:11
+msgid "While waiting for verification to complete, you can follow the installation steps provided below."
+msgstr "أثناء انتظار اكتمال التحقق، يمكنك اتباع خطوات التثبيت الواردة أدناه."
+
+#: includes/admin/views/htmlsviews/html_accordion1.php:12
+msgid "Once verification is complete, please refer to the “Main Configuration”, starting from Step 2 to configure the plugin."
+msgstr "بمجرد اكتمال التحقق، يُرجى الرجوع إلى \"الاعدادات الرئيسية\"، بدءًا من الخطوة 2 لتعريف لتعريف الإضافه."
+
+#: includes/admin/paymob-main.php:23
+msgid "Step 2: Key Configurations"
+msgstr "الخطوة 2: اعدادات طرق الدفع"
+
+#: includes/admin/paymob-main.php:25
+msgid "Email Paymob at <a href=\"mailto:support@paymob.com\">support@paymob.com</a> to get assistance from the Sales Team for further onboarding."
+msgstr "أرسل بريدًا إلكترونيًا إلى باي موب<a href=\"mailto:support@paymob.com\">support@paymob.com</a> للحصول ع مزيد من المتابعه من فريق المبيعات."
+
+#: includes/admin/paymob-main.php:28
+msgid "Step 3: Configure Callback URL"
+msgstr "الخطوة 3: تكوين رابط الرجوع"
+
+#: includes/admin/paymob-main.php:30
+msgid "Your dashboard has Test Mode and Live Mode options. Live Mode will be activated only when you have at least one live payment method integration."
+msgstr "تحتوي لوحة التحكم الخاصة بك على خياري وضع التيست والوضع اللايف. سيتم تنشيط الوضع اللايف فقط عندما يكون لديك تكامل واحد على الأقل لطريقة دفع مباشرة."
+
+#: includes/admin/paymob-main.php:32
+msgid "Test Mode: Use this to perform test transactions."
+msgstr "وضع التيست: استخدم هذا لإجراء معاملات الاختبار."
+
+#: includes/admin/paymob-main.php:33
+msgid "Live Mode: Use this for live transactions."
+msgstr "الوضع اللايف: استخدم هذا للمعاملات المباشرة."
+
+#: includes/admin/paymob-main.php:34
+msgid "How to Access the Keys:"
+msgstr "كيفية الوصول إلى المفاتيح:"
+
+#: includes/admin/paymob-main.php:36
+msgid "Log in to the Merchant Dashboard."
+msgstr "تسجيل الدخول إلى لوحة معلومات التاجر."
+
+#: includes/admin/paymob-main.php:37
+msgid "Click on the \"Settings\" tab and navigate to the \"Account Info\" section."
+msgstr "انقر علي الإعدادات وانتقل إلى قسم معلومات الحساب ."
+
+#: includes/admin/paymob-main.php:38
+msgid "Click the \"view\" button next to each key (API Key, Public Key, Secret Key) to reveal them."
+msgstr "(API Key, Public Key, Secret Key) لاظهارهانقر فوق زر عرض بجوار كل مفتاح."
+
+#: includes/admin/paymob-main.php:39
+msgid "Copy and paste these keys into the Configuration Page."
+msgstr "انسخ هذه المفاتيح وألصقها في صفحة التكوين."
+
+#: includes/admin/paymob-main.php:42
+msgid "Note: API Key, Public Key, and Secret Key differ between Test and Live Modes. Always use LIVE Keys for live transactions and TEST Keys for test transactions."
+msgstr "ملاحظة: يختلف مفتاح API والمفتاح العام والمفتاح السري بين وضعي الاختبار والمباشر. استخدم دائمًا مفاتيح LIVE للمعاملات المباشرة ومفاتيح TEST للمعاملات الاختبارية."
+
+#: includes/admin/paymob-main.php:69
+msgid "Step 4: Show Item/Product Details on Paymob Checkout ( Optional )"
+msgstr "الخطوة 4: إظهار تفاصيل المنتج/العنصر عند إتمام عملية الدفع عبر باي موب(اختياري)"
+
+#: includes/admin/paymob-main.php:72
+msgid "Click the icon <span style=\"cursor:pointer;\" id=\"cpicon\" class=\"dashicons dashicons-clipboard\"></span> to copy the callback URL."
+msgstr "انقر فوق الرمز <span style=\"cursor:pointer;\" id=\"cpicon\" class=\"dashicons dashicons-clipboard\"></span> لنسخ عنوان URL للاتصال العكسي."
+
+#: includes/admin/paymob-main.php:98
+msgid "Log in to the Paymob Merchant Dashboard."
+msgstr "قم بتسجيل الدخول إلى لوحة معلومات التاجر في باي موب."
+
+#: includes/admin/paymob-main.php:74
+msgid "Go to the \"Developers\" section and select \"Payment Integrations.\""
+msgstr "انتقل إلى قسم المطورون وحدد تكاملات الدفع."
+
+#: includes/admin/paymob-main.php:75
+msgid "Click on the ID of each payment method integration, select \"Edit,\" and paste the URL into both the \"Transaction Processed Callback\" and \"Transaction Response Callback\" fields."
+msgstr "انقر فوق معرف كل تكامل لطريقة الدفع، وحدد تحرير، ثم الصق عنوان URL في الحقلين مكالمة معالجة المعاملة ومكالمة استجابة المعاملة."
+
+#: includes/admin/paymob-main.php:76
+msgid "Click \"Submit.\""
+msgstr "انقر\"ارسال\""
+
+#: includes/admin/paymob-main.php:77
+msgid "Repeat these steps for each payment integration. If you add new payment methods in the future, ensure you update the URL accordingly."
+msgstr "كرر هذه الخطوات لكل عملية تكامل للدفع. إذا أضفت طرق دفع جديدة في المستقبل، فتأكد من تحديث عنوان URL وفقًا لذلك."
+
+#: includes/admin/paymob-main.php:94
+msgid "Step 5: Miscellaneous ( Optional )"
+msgstr "الخطوة 5: متفرقات (اختياري)"
+
+#: includes/admin/paymob-main.php:97
+msgid "Enable the checkbox in this section."
+msgstr "قم بتمكين مربع الاختيار في هذا القسم."
+
+#: includes/admin/paymob-main.php:99
+msgid "Navigate to \"Checkout Customization\" → \"Payment Methods.\""
+msgstr "انتقل الي صفحة الدفع الي طرق الدفع"
+
+#: includes/admin/paymob-main.php:100
+msgid "Under the \"Additional Information\" section, enable the \"Show Item/Product\" option and click \"Apply Changes.\""
+msgstr "تحت قسم المعلومات الإضافية، قم بتمكين خيار إظهار العنصر/المنتج وانقر فوق تطبيق التغييرات."
+
+#: includes/admin/paymob-main.php:119
+msgid "Enabling the Debug Log checkbox in this section will log all actions in Paymob files. These files will be saved in the directory"
+msgstr "سيؤدي تمكين مربع الاختيار سجل التصحيح في هذا القسم إلى تسجيل جميع الإجراءات في ملفات باي موب  سيتم حفظ هذه الملفات في الدليل"
+
+#: includes/admin/paymob-main.php:121
+msgid "Enabling the Empty cart items checkbox in this section will clear the cart items before completing the payment. (not recommended)."
+msgstr "سيؤدي تفعيل مربع الاختيار إفراغ عناصر سلة التسوق في هذا القسم إلى مسح عناصر سلة التسوق قبل إكمال الدفع. (غير مستحسن)."
+
+#: includes/admin/paymob-main.php:144
+msgid "Step 6: Save Changes"
+msgstr "الخطوة 6: حفظ التغييرات"
+
+#: includes/admin/paymob-main.php:146
+msgid "Click \"Save Changes.\" After saving, you will be redirected to the \"Payment Integrations Page,\" where you can view all the payment methods integrated with Paymob."
+msgstr "انقر فوق حفظ التغييرات. بعد الحفظ، سيتم إعادة توجيهك إلى صفحة تكاملات الدفع، حيث يمكنك عرض جميع طرق الدفع المتكاملة مع باي موب."
+
+#: includes/admin/paymob-main.php:144
+msgid "to re-authenticate your Paymob configuration to get the new updated payment methods."
+msgstr "لإعادة مصادقة تكوين Paymob الخاص بك للحصول على طرق الدفع المحدثة الجديدة."
+
+#: includes/admin/paymob-main.php:144
+msgid "Remove"
+msgstr "حذف"
+
+#: includes/admin/paymob-main.php:144
+msgid "Edit"
+msgstr "تعديل"
+
+#: includes/gateways/class-gateway-paymob-4008148-wallets-uig-egp.php:10
+msgid "Edit Payment Method - Mobile Wallets"
+msgstr "تعديل وسيلة الدفع - محافظ المحمول"
+
+#: includes/gateways/class-gateway-paymob-4008151-card-vpc-egp.php:10
+msgid "Edit Payment Method - Debit/Credit Card"
+msgstr "تعديل وسيلة الدفع - بطاقة الخصم/الائتمان"
+
+#: includes/gateways/class-gateway-paymob-4030522-accept-kiosk-cagg-egp.php:10
+msgid "Edit Payment Method - Kiosk"
+msgstr "تعديل وسيلة الدفع - امان"
+
+#: includes/gateways/class-gateway-paymob-4821068-souhoolav3-souhoolav3-egp.php:10
+msgid "Edit Payment Method - Souhoola"
+msgstr "تعديل وسيلة الدفع - سهولة"
+
+#: includes/gateways/class-gateway-paymob-4008151-card-vpc-egp.php:11
+msgid "Secure Payment via Paymob Checkout"
+msgstr "الدفع الآمن عبر باي موب"
+
+#: includes/admin/paymob-unified.php:14
+msgid "Payment Method - Title"
+msgstr "وسيلة الدفع - العنوان"
+
+#: includes/admin/paymob-unified.php:22
+msgid "Payment Method - Description"
+msgstr "وسيلة الدفع - الوصف"
+
+#: includes/helper/save_cards/class-paymob-saved-cards-title.php:8
+msgid "Paymob Saved Credit Cards"
+msgstr "وسيلة الدفع - الوصف"
+
+#: includes/helper/save_cards/class-paymob-add-saved-cards-tab.php:10
+msgid "Paymob Saved Cards"
+msgstr "باي موب بطاقات  المحفوظة"
+
+#: includes/helper/save_cards/class-paymob-display-saved-cards.php:14
+msgid "Saved Cards"
+msgstr "بطاقات  المحفوظة"
+
+#: includes/helper/save_cards/class-paymob-saved-cards-title.php:16
+msgid "Card"
+msgstr "بطاقات"
+
+#: includes/helper/save_cards/class-paymob-saved-cards-title.php:16
+msgid "Actions"
+msgstr "الإجراءات"
+
+#: includes/helper/save_cards/class-paymob-saved-cards-title.php:27
+msgid "No saved cards."
+msgstr "لا توجد بطاقات محفوظة."
+
+#: includes/admin/views/htmlsviews/html_save_card_confirmation_model.php:4
+msgid "Are you sure you want to delete this card? This action cannot be undone."
+msgstr "هل أنت متأكد أنك تريد حذف هذه البطاقة؟ لا يمكن التراجع عن هذا الإجراء."
+
+#: includes/admin/views/htmlsviews/html_save_card_confirmation_model.php:5
+msgid "Delete"
+msgstr "مسح"
+
+#: includes/admin/views/htmlsviews/html_save_card_confirmation_model.php:6
+msgid "Cancel"
+msgstr "إالغاء"
+
+#: includes/helper/save_cards/class-paymob-handle-card-deletion.php:28
+msgid "Card deleted successfully."
+msgstr "تم حذف البطاقة بنجاح."
+
+#: includes/helper/paymob-order.php:71
+msgid "Please remove your cards from"
+msgstr "الرجاء إزالة البطاقات الخاصة بك من"
+
+#: includes/helper/paymob-order.php:71
+msgid "to complete your purchase"
+msgstr "لإكمال عملية الشراء"
+
+#: includes/helper/paymob-order.php:72
+msgid "Ops,Max number of card tokens is 3."
+msgstr "حسنًا، الحد الأقصى لعدد رموز البطاقة هو 3."
+
+#: includes/helper/toggle_gateways/class-paymob-filter-on-currency.php:64
+msgid "Payment Method(s) with the Integration ID(s)"
+msgstr "طريقة (طرق) الدفع مع معرف (معرفات) التكامل"
+
+#: includes/helper/toggle_gateways/class-paymob-filter-on-currency.php:64
+msgid "require(s) the store currency to be set to:"
+msgstr "تتطلب (عملات) تعيين عملة المتجر على:"
+
+#: includes/gateways/add_gateway/class-paymob-toggle-gateway.php:56
+msgid "Payment Method status updated successfully."
+msgstr "تم تحديث حالة طريقة الدفع بنجاح."
+
+#: includes/admin/views/htmlsviews/html_custom_confirmation_modal.php:2
+msgid "Disable Paymob Gateway"
+msgstr "تعطيل بوابة باي موب"
+
+#: includes/admin/views/htmlsviews/html_custom_confirmation_modal.php:3
+msgid "If you disable this gateway, all Paymob gateways will be disabled. Do you want to continue?"
+msgstr "إذا قمت بتعطيل هذه البوابة، فسيتم تعطيل جميع بوابات باي موب. هل تريد الاستمرار؟"
+
+#: includes/admin/views/htmlsviews/html_custom_confirmation_modal.php:22
+msgid "Disable"
+msgstr "إيقاف تفعيل"
+
+#: includes/admin/views/htmlsviews/html_loader_paymob.php:5
+msgid "Confirm"
+msgstr "تأكيد"
+
+#: assets\js\paymob_list_gateways.js:29
+msgid "Remove Gateway"
+msgstr "إزالة البوابة"
+
+#: assets\js\paymob_list_gateways.js:20
+msgid "Are you sure you want to remove this gateway?"
+msgstr "هل أنت متأكد أنك تريد إزالة هذه البوابة؟"
+
+#: assets\js\paymob_list_gateways.js:64
+msgid "Are you sure you want to "
+msgstr "هل أنت متأكد أنك تريد ذلك "
+
+#: assets\js\paymob_list_gateways.js:64
+msgid " this gateway?"
+msgstr "هذه البوابة؟  "
+
+#: assets\js\paymob_list_gateways.js:63
+msgid " Gateway"
+msgstr " بوابة  "
+
+#: assets\js\paymob_list_gateways.js:138
+msgid "Reset Payment Methods"
+msgstr "إعادة ضبط طرق الدفع"
+
+#: assets\js\paymob_list_gateways.js:139
+msgid "Are you sure you want to reset the payment methods?"
+msgstr "هل أنت متأكد أنك تريد إعادة ضبط طرق الدفع؟"
+
+#: includes/helper/paymob-auto-generate.php:401
+msgid "Edit Payment Method - "
+msgstr "تعديل طريقة الدفع - "

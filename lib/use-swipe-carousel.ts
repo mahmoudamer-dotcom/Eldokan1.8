@@ -14,6 +14,7 @@ export function useSwipeCarousel(count: number, startIndex = 0, swipeEnabled = t
   const { locale } = useLocale()
   const direction = locale === 'ar' ? 'rtl' : 'ltr'
   const [viewportRef, api] = useEmblaCarousel({
+    active: count > 1,
     direction,
     loop: true,
     startIndex,

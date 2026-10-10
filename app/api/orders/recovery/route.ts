@@ -1,6 +1,8 @@
 import { createEldokanApiForRequest } from '@/lib/eldokan-api'
 import { EldokanClientError, type Language } from '@eldokan/customer-api-client'
 import { appendCustomerApiCookies } from '@/lib/customer-api-transport'
+import { canStartNewCheckout } from '@/lib/order-status'
+import { GUEST_ORDER_HISTORY_COOKIE, guestOrderHistoryCookie, readGuestOrderHistory } from '@/lib/guest-order-history'
 
 export const runtime = 'nodejs'
 
@@ -10,6 +12,15 @@ type RecoveryState = {
   purchase: Record<string, unknown>
   order_id?: string
   guest_access?: { credential: string; csrf_token: string }
+}
+
+function cookieValue(request: Request, name: string) {
+  return request.headers.get('cookie')?.split(';').map((part) => part.trim()).find((part) => part.startsWith(`${name}=`))?.slice(name.length + 1)
+}
+
+function savedOrder(request: Request, current: RecoveryState | null, orderId?: string) {
+  if (!orderId || current?.order_id === orderId) return current
+  return readGuestOrderHistory(cookieValue(request, GUEST_ORDER_HISTORY_COOKIE)).find((order) => order.order_id === orderId) ?? null
 }
 
 function readState(request: Request): RecoveryState | null {
@@ -42,7 +53,9 @@ function failureDetails(cause: unknown) {
 }
 
 async function readOrder(request: Request, cookies: string[]) {
-  const recovery = readState(request)
+  const requestedId = new URL(request.url).searchParams.get('order_id')
+  if (requestedId !== null && !/^ord_[a-f0-9]{64}$/.test(requestedId)) return Response.json({ error: 'Invalid order reference.' }, { status: 400, headers: { 'Cache-Control': 'no-store' } })
+  const recovery = savedOrder(request, readState(request), requestedId ?? undefined)
   if (recovery && !recovery.order_id) return Response.json({ state: 'attempt_pending' }, { headers: { 'Cache-Control': 'private, no-store' } })
   if (!recovery?.order_id) return Response.json({ success: false, error: { code: 'recovery_unavailable', message: 'No recoverable order is available.' } }, { status: 404, headers: { 'Cache-Control': 'no-store' } })
   try {
@@ -74,13 +87,21 @@ async function recoveryAction(request: Request, cookies: string[]) {
 
   if (body.action === 'place') {
     if (!existing) return Response.json({ error: 'No checkout attempt is available for recovery.' }, { status: 404, headers: { 'Cache-Control': 'no-store' } })
+    let purchase = existing.purchase
+    // Optional invoice display for an older prepared attempt. Its financial inputs,
+    // selected plan, attempt ID and provider intention remain unchanged.
+    if (body.installment_display !== undefined) {
+      const display = body.installment_display as { tenure?: unknown; monthly_amount?: unknown }
+      if (!display || typeof display !== 'object' || Array.isArray(display) || Object.keys(display).length !== 2 || existing.purchase.payment_method !== 'paymob' || existing.purchase.paymob_option_id !== 'bank_installments' || body.installment_plan_id !== existing.purchase.installment_plan_id || !Number.isInteger(display.tenure) || Number(display.tenure) < 1 || Number(display.tenure) > 120 || !Number.isSafeInteger(display.monthly_amount) || Number(display.monthly_amount) < 1 || Number(display.monthly_amount) > 1000000000000) return Response.json({ error: 'Invalid selected installment display.' }, { status: 400, headers: { 'Cache-Control': 'no-store' } })
+      purchase = { ...existing.purchase, installment_display: display }
+    }
     try {
       const result = await createEldokanApiForRequest(request, locale(request), (cookie) => cookies.push(cookie)).checkout.placeOrder({
-        ...existing.purchase,
+        ...purchase,
         checkout_attempt_id: existing.checkout_attempt_id,
       } as import('@eldokan/customer-api-client').PlacementInput)
       const guest = result.data.guest_access
-      const updated: RecoveryState = { ...existing, order_id: result.data.order_id, ...(guest ? { guest_access: { credential: guest.credential, csrf_token: guest.csrf_token } } : {}) }
+      const updated: RecoveryState = { ...existing, purchase, order_id: result.data.order_id, ...(guest ? { guest_access: { credential: guest.credential, csrf_token: guest.csrf_token } } : {}) }
       try { return Response.json({ success: true, data: { order_id: result.data.order_id, payment: result.data.payment }, meta: result.meta }, { headers: { 'Cache-Control': 'private, no-store', 'Set-Cookie': stateCookie(updated, request) } }) }
       catch { return Response.json({ error: 'Order may be placed, but recovery state could not be saved. Keep this same attempt and contact support.' }, { status: 502, headers: { 'Cache-Control': 'no-store' } }) }
     } catch (cause) {
@@ -88,16 +109,18 @@ async function recoveryAction(request: Request, cookies: string[]) {
     }
   }
 
-  if (!existing?.order_id) return Response.json({ error: 'No recoverable order is available.' }, { status: 404, headers: { 'Cache-Control': 'no-store' } })
-  const access = existing.guest_access ? { guestAccess: { credential: existing.guest_access.credential, csrfToken: existing.guest_access.csrf_token } } : {}
+  if (body.action === 'payment' && body.order_id !== undefined && (typeof body.order_id !== 'string' || !/^ord_[a-f0-9]{64}$/.test(body.order_id))) return Response.json({ error: 'Invalid order reference.' }, { status: 400 })
+  const selected = body.action === 'payment' ? savedOrder(request, existing, body.order_id as string | undefined) : existing
+  if (!selected?.order_id) return Response.json({ error: 'No recoverable order is available.' }, { status: 404, headers: { 'Cache-Control': 'no-store' } })
+  const access = selected.guest_access ? { guestAccess: { credential: selected.guest_access.credential, csrfToken: selected.guest_access.csrf_token } } : {}
   const api = createEldokanApiForRequest(request, locale(request), (cookie) => cookies.push(cookie))
 
   if (body.action === 'payment') {
     const retry = body.retry === true
     if (retry && (!Number.isInteger(body.expected_generation) || Number(body.expected_generation) < 0)) return Response.json({ error: 'A current payment generation is required.' }, { status: 400 })
     try {
-      if (!existing.guest_access) await api.auth.session()
-      const payment = await api.orders.payment(existing.order_id as `ord_${string}`, retry ? { retry: true, expected_generation: Number(body.expected_generation) } : {}, access)
+      if (!selected.guest_access) await api.auth.session()
+      const payment = await api.orders.payment(selected.order_id as `ord_${string}`, retry ? { retry: true, expected_generation: Number(body.expected_generation) } : {}, access)
       const redirect = payment.data.requires_redirect && payment.data.redirect_url ? new URL(payment.data.redirect_url) : null
       if (redirect && (redirect.protocol !== 'https:' || redirect.hostname !== 'accept.paymob.com')) return Response.json({ error: 'The hosted payment URL failed validation.' }, { status: 502 })
       return Response.json(payment, { headers: { 'Cache-Control': 'no-store' } })
@@ -106,7 +129,22 @@ async function recoveryAction(request: Request, cookies: string[]) {
     }
   }
 
-  if (body.action === 'clear') return Response.json({ cleared: true }, { headers: { 'Cache-Control': 'no-store', 'Set-Cookie': `${COOKIE}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0` } })
+  if (body.action === 'clear') {
+    if (body.expected_order_id !== selected.order_id) return Response.json({ error: 'The saved order changed. Refresh its status before continuing.', code: 'checkout_recovery_changed' }, { status: 409, headers: { 'Cache-Control': 'no-store' } })
+    try {
+      const result = await api.orders.get(selected.order_id as `ord_${string}`, access)
+      if (result.data.id !== selected.order_id || !canStartNewCheckout(result.data)) return Response.json({ error: 'Could not verify the saved order reference.', code: 'checkout_recovery_required' }, { status: 409, headers: { 'Cache-Control': 'no-store' } })
+      const headers = new Headers({ 'Cache-Control': 'private, no-store' })
+      const secure = new URL(request.url).protocol === 'https:'
+      if (selected.guest_access) {
+        headers.append('Set-Cookie', guestOrderHistoryCookie(readGuestOrderHistory(cookieValue(request, GUEST_ORDER_HISTORY_COOKIE)), { order_id: selected.order_id as `ord_${string}`, guest_access: selected.guest_access }, secure))
+      }
+      headers.append('Set-Cookie', `${COOKIE}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0${secure ? '; Secure' : ''}`)
+      return Response.json({ cleared: true }, { headers })
+    } catch (cause) {
+      return Response.json({ error: 'Could not confirm the saved order. Its recovery state has been retained.', ...failureDetails(cause) }, { status: 502, headers: { 'Cache-Control': 'no-store' } })
+    }
+  }
   return Response.json({ error: 'Unsupported recovery action.' }, { status: 400 })
 }
 

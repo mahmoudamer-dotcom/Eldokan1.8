@@ -1,18 +1,29 @@
 {
-  "release": "ElDokan Customer API Client 0.6.0",
-  "date": "2026-10-07",
+  "release": "ElDokan Customer API Client 0.8.1",
+  "date": "2026-10-10",
   "package": "@eldokan/customer-api-client",
   "contract": "ElDokan Customer API v1",
-  "source_adapter": "0.8.0",
-  "source_portal": "1.8.0",
-  "openapi_sha256": "38b31c46db7fefd47698b2c2da1a55391e293a3e9e875436422c9ac66cece322",
+  "source_adapter": "0.10.0",
+  "openapi_sha256": "f6fa84f8ec5e663f27d7da42f256003bf83cd70f95981050d9679f23c5519719",
   "verification": {
-    "generated_schemas": 133,
-    "contract_paths": 32,
     "typescript_typecheck": "PASS",
     "typescript_build": "PASS",
     "unit_tests": "NOT RUN",
-    "package_verifier": "PASS",
-    "npm_pack_dry_run": "NOT RUN"
+    "wordpress_runtime": "NOT RUN",
+    "bosta_integration": "DEFERRED",
+    "generated_schemas": 144,
+    "contract_paths": 48,
+    "frontend_production_build": "PASS",
+    "php_syntax": "PASS (28 files; JavaScript PHP parser, not PHP runtime)",
+    "eslint": "PASS (154 files; zero errors or warnings)"
+  },
+  "optional_extensions": {
+    "stories": {
+      "plugin": "ElDokan Stories 1.1.0",
+      "endpoint": "GET /stories",
+      "client": "api.stories.list()",
+      "types": "src/resources/stories.ts",
+      "wordpress_runtime": "NOT RUN"
+    }
   }
 }

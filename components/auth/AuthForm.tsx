@@ -1,5 +1,6 @@
 'use client'
 
+import { customerError } from '@/lib/customer-error'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -53,7 +54,7 @@ export default function AuthForm({ mode }: { mode: 'login' | 'register' }) {
     } catch (cause) {
       setServerError(cause instanceof EldokanClientError && cause.kind === 'network'
         ? t('Unable to connect to the storefront API. Check your connection and try again.')
-        : cause instanceof Error ? cause.message : 'Unable to authenticate. Please try again.')
+        : customerError(cause, locale, 'Unable to authenticate. Please try again.'))
     }
   }
 
@@ -63,39 +64,40 @@ export default function AuthForm({ mode }: { mode: 'login' | 'register' }) {
   return (
     <main className="mx-auto flex w-full max-w-md flex-1 items-center px-4 py-7 sm:py-12">
       <section className="w-full rounded-2xl border border-border bg-card p-4 shadow-sm sm:p-8">
-        <h1 className="text-2xl font-bold">{isRegister ? 'Create your account' : 'Welcome back'}</h1>
-        <p className="mt-2 text-sm text-muted-foreground">{isRegister ? 'Register to shop and manage your account.' : 'Sign in to continue to your account.'}</p>
+        <h1 className="text-2xl font-bold">{isRegister ? t('Create your account') : t('Welcome back')}</h1>
+        <p className="mt-2 text-sm text-muted-foreground">{isRegister ? t('Register to shop and manage your account.') : t('Sign in to continue to your account.')}</p>
         <form className="mt-7 space-y-4" onSubmit={handleSubmit(submit)} noValidate>
           {isRegister && <>
-            <label className="block text-sm font-medium">First name
+            <label className="block text-sm font-medium">{t("First name")}
               <input className={fieldClass} autoComplete="given-name" aria-invalid={Boolean(errors.first_name)} {...register('first_name', { required: 'First name is required.', validate: (value) => Boolean(value?.trim()) || 'Enter your first name.' })} />
-              {errors.first_name && <span className={errorClass}>{errors.first_name.message}</span>}
+              {errors.first_name && <span className={errorClass}>{t(errors.first_name.message ?? '')}</span>}
             </label>
-            <label className="block text-sm font-medium">Last name
+            <label className="block text-sm font-medium">{t("Last name")}
               <input className={fieldClass} autoComplete="family-name" aria-invalid={Boolean(errors.last_name)} {...register('last_name', { required: 'Last name is required.', validate: (value) => Boolean(value?.trim()) || 'Enter your last name.' })} />
-              {errors.last_name && <span className={errorClass}>{errors.last_name.message}</span>}
+              {errors.last_name && <span className={errorClass}>{t(errors.last_name.message ?? '')}</span>}
             </label>
-            <label className="block text-sm font-medium">Phone (optional)
-              <input className={fieldClass} type="tel" autoComplete="tel" maxLength={32} aria-invalid={Boolean(errors.phone)} {...register('phone', { validate: (value) => !value || (/^\+?[0-9 ()-]+$/.test(value.trim()) && (value.match(/[0-9]/g)?.length ?? 0) >= 6) || 'Use at least six digits, with only digits, spaces, parentheses, hyphens, and an optional leading +.' })} />
-              {errors.phone && <span className={errorClass}>{errors.phone.message}</span>}
+            <label className="block text-sm font-medium">{t("Phone (optional)")}
+              <input className={fieldClass} dir="ltr" type="tel" autoComplete="tel" maxLength={32} aria-invalid={Boolean(errors.phone)} {...register('phone', { validate: (value) => !value || (/^\+?[0-9 ()-]+$/.test(value.trim()) && (value.match(/[0-9]/g)?.length ?? 0) >= 6) || 'Use at least six digits, with only digits, spaces, parentheses, hyphens, and an optional leading +.' })} />
+              {errors.phone && <span className={errorClass}>{t(errors.phone.message ?? '')}</span>}
             </label>
           </>}
-          <label className="block text-sm font-medium">Email address
-            <input className={fieldClass} type="email" autoComplete="email" aria-invalid={Boolean(errors.email)} {...register('email', { required: 'Email address is required.', validate: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim()) || 'Enter a valid email address.' })} />
-            {errors.email && <span className={errorClass}>{errors.email.message}</span>}
+          <label className="block text-sm font-medium">{t("Email address")}
+            <input className={fieldClass} dir="ltr" type="email" autoComplete="email" aria-invalid={Boolean(errors.email)} {...register('email', { required: 'Email address is required.', validate: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim()) || 'Enter a valid email address.' })} />
+            {errors.email && <span className={errorClass}>{t(errors.email.message ?? '')}</span>}
           </label>
-          <label className="block text-sm font-medium">Password
+          <label className="block text-sm font-medium">{t("Password")}
             <input className={fieldClass} type="password" autoComplete={isRegister ? 'new-password' : 'current-password'} aria-invalid={Boolean(errors.password)} {...register('password', { required: 'Password is required.', minLength: isRegister ? { value: 10, message: 'Password must be at least 10 characters.' } : undefined })} />
-            {errors.password && <span className={errorClass}>{errors.password.message}</span>}
+            {errors.password && <span className={errorClass}>{t(errors.password.message ?? '')}</span>}
           </label>
           {serverError && <p role="alert" className="rounded-lg bg-danger-soft p-3 text-sm text-danger-foreground">{serverError}</p>}
           <button disabled={isSubmitting} className="h-12 w-full rounded-lg bg-[#f5b400] px-4 font-semibold text-primary-foreground transition hover:bg-[#e5a900] disabled:cursor-wait disabled:opacity-60">
-            {isSubmitting ? 'Please wait…' : isRegister ? 'Create account' : 'Sign in'}
+            {isSubmitting ? t('Please wait…') : isRegister ? t('Create account') : t('Sign in')}
           </button>
         </form>
+        {!isRegister && <Link href="/forgot-password" className="mt-4 block text-sm underline">{locale === 'ar' ? 'نسيت كلمة المرور؟' : 'Forgot your password?'}</Link>}
         <p className="mt-6 text-center text-sm text-muted-foreground">
-          {isRegister ? 'Already have an account?' : 'New to Eldokan?'}{' '}
-          <Link className="font-semibold text-shop-accent hover:underline" href={isRegister ? '/login' : '/register'}>{isRegister ? 'Sign in' : 'Create an account'}</Link>
+          {isRegister ? t('Already have an account?') : t('New to Eldokan?')}{' '}
+          <Link className="font-semibold text-shop-accent hover:underline" href={isRegister ? '/login' : '/register'}>{isRegister ? t('Sign in') : t('Create an account')}</Link>
         </p>
       </section>
     </main>

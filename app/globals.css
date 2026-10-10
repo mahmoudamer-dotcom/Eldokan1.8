@@ -12,7 +12,15 @@
 
 .announcement-top-bar__track {
   animation: announcement-top-bar-scroll 30s linear infinite;
+  direction: ltr;
+  flex-direction: row;
+  will-change: transform;
 }
+
+/* Keep both copies on the same physical axis in either document direction.
+   Translating exactly one copy leaves identical content at the loop seam. */
+.announcement-top-bar { direction: ltr; }
+.announcement-top-bar__group { flex: 0 0 auto; }
 
 .category-scrollbar-hidden {
   scrollbar-width: none;
@@ -30,7 +38,12 @@
 @media (prefers-reduced-motion: reduce) {
   .announcement-top-bar__track {
     animation: none;
+    width: 100%;
+    will-change: auto;
   }
+  .announcement-top-bar__group { min-width: 0; width: 100%; flex-wrap: wrap; row-gap: 0.5rem; }
+  .announcement-top-bar__group[aria-hidden="true"] { display: none; }
+  .announcement-top-bar__group > span { white-space: normal; text-align: center; }
 }
 
 @theme inline {
@@ -178,12 +191,136 @@
     @apply font-sans;
     scroll-padding-top: 12rem;
   }
+  html[lang="ar"] {
+    font-family: var(--font-arabic), var(--font-openSans), Arial, sans-serif;
+  }
+  html[lang="ar"] :is(h1, h2, h3, h4, p, label, button, a) {
+    letter-spacing: normal;
+  }
+  html[lang="ar"] :is(h1, h2, h3, h4) { line-height: 1.5; }
+  html[lang="ar"] :is(p, label) { line-height: 1.8; }
+  :is(a, button, input, select, textarea, summary):focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 3px;
+  }
   main, fieldset {
     min-width: 0;
   }
   input, select, textarea {
     min-width: 0;
     max-width: 100%;
+  }
+}
+
+.skip-link {
+  position: fixed;
+  inset-inline-start: 1rem;
+  top: 0.75rem;
+  z-index: 100;
+  transform: translateY(-180%);
+  padding: 0.75rem 1.25rem;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-radius: 0.75rem;
+  font-weight: 700;
+}
+.skip-link:focus { transform: translateY(0); }
+
+/* Department storefronts share navigation and shopping controls, while their
+   visual composition follows the kind of products in that department. */
+.category-world {
+  --department-ink: var(--foreground);
+  --department-muted: var(--muted-foreground);
+  --department-surface: var(--muted);
+  --department-accent: var(--shop-accent);
+}
+.category-world-hero {
+  position: relative;
+  display: grid;
+  gap: 2rem;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 1.75rem;
+  padding: clamp(1.25rem, 4vw, 3.5rem);
+  background: var(--department-surface);
+  color: var(--department-ink);
+}
+.category-world-copy { min-width: 0; align-self: center; }
+.category-world-eyebrow { display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; font-weight: 700; color: var(--department-accent); }
+.category-world-name { margin-top: 1rem; font-size: clamp(1.75rem, 3.5vw, 3rem); font-weight: 800; line-height: 1.2; text-wrap: balance; }
+.category-world-heading { margin-top: 1rem; font-size: clamp(1.125rem, 2vw, 1.5rem); font-weight: 600; text-wrap: balance; }
+.category-world-description { margin-top: 0.75rem; max-width: 34rem; font-size: 0.9375rem; line-height: 1.8; color: var(--department-muted); }
+.category-world-browse { display: inline-flex; min-height: 2.75rem; align-items: center; gap: 0.75rem; border-radius: 999px; padding: 0.75rem 1.25rem; background: var(--department-ink); color: var(--department-surface); font-size: 0.875rem; font-weight: 700; }
+.category-world-copy .mt-4 { margin-top: 0; }
+.category-world-showcase { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.75rem; min-width: 0; align-items: center; }
+.category-world-product { display: flex; min-width: 0; flex-direction: column; overflow: hidden; border: 1px solid #e5e7eb; border-radius: 1rem; background: var(--card); color: var(--card-foreground); transition: transform 180ms ease; }
+.category-world-product:hover { transform: translateY(-4px); }
+.category-world-photo { position: relative; aspect-ratio: 1; overflow: hidden; border-radius: inherit; background: #fff; }
+.category-world-photo img { border-radius: inherit; }
+.category-world-caption { min-width: 0; padding: 0.75rem; }
+.category-world-symbol { grid-column: 1 / -1; display: grid; min-height: 14rem; place-items: center; border: 1px solid var(--department-accent); border-radius: 2rem; color: var(--department-accent); }
+.category-world-child { display: flex; min-height: 3rem; flex-shrink: 0; align-items: center; gap: 1rem; border: 1px solid var(--border); border-radius: 1rem; padding: 0.75rem 1rem; background: var(--card); color: var(--card-foreground); font-size: 0.875rem; font-weight: 600; }
+.category-world-child:hover { border-color: var(--department-accent); }
+.category-world-guide { display: flex; align-items: center; gap: 0.75rem; margin-top: 1.25rem; padding-block: 1rem; border-bottom: 1px solid var(--border); font-size: 0.875rem; color: var(--muted-foreground); }
+.category-world-guide > svg { color: var(--department-accent); }
+
+.category-world--technology { --department-surface: #111c2d; --department-ink: #f3f7ff; --department-muted: #becbdf; --department-accent: #8cc8ff; }
+.category-world--technology .category-world-hero { background-image: linear-gradient(#ffffff05 1px, transparent 1px), linear-gradient(90deg, #ffffff05 1px, transparent 1px); background-size: 28px 28px; }
+.category-world--technology .category-world-showcase { grid-template-columns: 1.25fr 1fr; align-items: stretch; }
+.category-world--technology .category-world-product:first-child { grid-row: span 2; }
+.category-world--technology .category-world-product:first-child .category-world-photo { flex: 1; min-height: 12rem; }
+.category-world--technology .category-world-product:not(:first-child) .category-world-photo { aspect-ratio: 1.8; }
+.category-world--technology .category-world-product { border-color: #47617c; }
+.category-world--beauty { --department-surface: #fff1f3; --department-ink: #522c3a; --department-muted: #795663; --department-accent: #944763; }
+.category-world--beauty .category-world-hero { border-radius: 3rem 1.5rem; }
+.category-world--beauty .category-world-product { border: 0; border-radius: 5rem 5rem 1rem 1rem; }
+.category-world--beauty .category-world-product:nth-child(2) { margin-top: 3rem; }
+.category-world--beauty .category-world-photo { border-radius: inherit; margin: 0.5rem; }
+.category-world--fashion { --department-surface: #ece9e3; --department-ink: #292623; --department-muted: #66605a; --department-accent: #705c49; }
+.category-world--fashion .category-world-hero { border-radius: 0.5rem; }
+.category-world--fashion .category-world-showcase { align-items: start; }
+.category-world--fashion .category-world-product { border-radius: 0; border: 0; }
+.category-world--fashion .category-world-photo { aspect-ratio: 0.7; }
+.category-world--fashion .category-world-product:nth-child(2) { margin-top: 2.5rem; }
+.category-world--fashion .category-world-product:nth-child(3) { margin-top: 5rem; }
+.category-world--handmade { --department-surface: #f5e8da; --department-ink: #513526; --department-muted: #765746; --department-accent: #95532e; }
+.category-world--handmade .category-world-hero { border-radius: 2rem; border-style: dashed; }
+.category-world--handmade .category-world-product { border-radius: 5rem 5rem 1rem 1rem; border-color: #d4b797; }
+.category-world--handmade .category-world-photo { aspect-ratio: 0.8; }
+.category-world--handmade .category-world-product:nth-child(2) { align-self: end; }
+.category-world--home { --department-surface: #eaf0e8; --department-ink: #2c4031; --department-muted: #526659; --department-accent: #3b6b49; }
+.category-world--home .category-world-showcase { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.category-world--home .category-world-product:first-child { grid-column: span 2; }
+.category-world--home .category-world-product:first-child .category-world-photo { aspect-ratio: 2.6; }
+.category-world--home .category-world-product:not(:first-child) .category-world-photo { aspect-ratio: 1.8; }
+.category-world--home .category-world-product { border-radius: 1.25rem; border-color: #c8d5c8; }
+.category-world--tools { --department-surface: #292923; --department-ink: #fff7e5; --department-muted: #d0ccbf; --department-accent: #ffd35f; }
+.category-world--tools .category-world-hero { border-radius: 0.75rem; border-top: 5px solid var(--department-accent); }
+.category-world--tools .category-world-product { border-radius: 0.35rem; border-color: #716444; }
+.category-world--tools .category-world-showcase { gap: 0.5rem; }
+.category-world--tools .category-world-photo { aspect-ratio: 0.85; }
+.category-world--explore .category-world-product:nth-child(2) { margin-top: 2rem; }
+.dark .category-world--beauty { --department-surface: #35242c; --department-ink: #ffe7f0; --department-muted: #dcc0cc; --department-accent: #efb3ca; }
+.dark .category-world--fashion { --department-surface: #2b2926; --department-ink: #f6efe4; --department-muted: #c8bfb3; --department-accent: #d6b994; }
+.dark .category-world--handmade { --department-surface: #35291f; --department-ink: #fff0e1; --department-muted: #dec3aa; --department-accent: #efb580; }
+.dark .category-world--home { --department-surface: #24332a; --department-ink: #e9f5e8; --department-muted: #bacfbc; --department-accent: #a6d9ae; }
+@media (min-width: 64rem) {
+  .category-world-hero { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .category-world--fashion .category-world-hero { grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); }
+}
+@media (max-width: 39.999rem) {
+  .category-world-caption { padding: 0.5rem; }
+  .category-world-caption > span:first-child { font-size: 0.75rem; }
+  .category-world-photo img { padding: 0.5rem; }
+  .category-world--fashion .category-world-product:nth-child(3) { margin-top: 2rem; }
+  .category-world--beauty .category-world-product:nth-child(2) { margin-top: 1.5rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 

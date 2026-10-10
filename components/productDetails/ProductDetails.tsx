@@ -1,3 +1,4 @@
+import Money from '@/components/i18n/Money'
 import Link from 'next/link'
 import { CircleHelp, Star, Store } from 'lucide-react'
 import type { ProductDetailData } from '@/types/product'
@@ -26,9 +27,9 @@ export default async function ProductDetails({ data }: { data: ProductDetailData
     <section className="min-w-0 rounded-2xl border border-border bg-card p-4 shadow-sm sm:p-7">
       <div className="flex items-start justify-between gap-3 [&>div]:min-w-0 [&>button]:shrink-0">
         <div>
-          {data.brand?.name && <p className="text-sm font-semibold text-shop-accent">{data.brand.name}</p>}
-          <h1 className="mt-2 break-words text-2xl font-semibold leading-tight text-foreground sm:text-3xl">{data.name}</h1>
-          {data.sku && <p className="mt-3 text-xs text-muted-foreground">SKU: {data.sku}</p>}
+          {data.brand?.name && <p className="text-sm font-semibold text-shop-accent"><T text={data.brand.name} /></p>}
+          <h1 dir="auto" className="mt-2 break-words text-2xl font-semibold leading-tight text-foreground sm:text-3xl">{data.name}</h1>
+          {data.sku && <p className="mt-3 text-xs text-muted-foreground"><T text="SKU" />: <bdi>{data.sku}</bdi></p>}
         </div>
         <WishlistButton productId={data.id} className="p-2.5" />
       </div>
@@ -45,9 +46,9 @@ export default async function ProductDetails({ data }: { data: ProductDetailData
       <div className="mt-6 border-y border-border py-5">
         <div className="flex flex-wrap items-center gap-3">
           <span className="text-2xl font-bold tracking-tight sm:text-3xl text-foreground">
-            {data.pricing.on_sale ? salePrice.formatted : regularPrice.formatted}
+            <Money value={data.pricing.on_sale ? salePrice : regularPrice} />
           </span>
-          {data.pricing.on_sale && <span className="text-base text-muted-foreground line-through">{regularPrice.formatted}</span>}
+          {data.pricing.on_sale && <span className="text-base text-muted-foreground line-through"><Money value={regularPrice} /></span>}
           {discount !== null && <span className="rounded-md bg-shop-soft px-2 py-1 text-sm font-semibold text-shop-accent"><T text="Save" /> {discount}%</span>}
         </div>
         <p className="mt-2 text-xs text-muted-foreground"><T text="Current price from Eldokan marketplace." /></p>
@@ -59,6 +60,12 @@ export default async function ProductDetails({ data }: { data: ProductDetailData
         </p>
       )}
 
+      {data.id && <ProductPurchaseActions
+        productId={String(data.id)} productType={data.type ?? 'simple'} attributes={data.attributes} variations={data.variations} name={data.name} imageUrl={data.images[0]?.url}
+        unitPrice={data.pricing.on_sale ? salePrice.amount : regularPrice.amount}
+        available={data.stock?.status !== 'out_of_stock'} stockQuantity={data.stock?.quantity}
+      />}
+
       {data.seller && (
         <section className="mt-5 rounded-xl border border-border bg-background p-4" aria-label={t('Seller information')}>
           <div className="flex items-center gap-3">
@@ -68,7 +75,7 @@ export default async function ProductDetails({ data }: { data: ProductDetailData
             <div className="min-w-0">
               <p className="text-xs font-medium text-muted-foreground"><T text="Sold by" /></p>
               {data.seller.id ? (
-                <Link href={`/seller/${encodeURIComponent(data.seller.id)}`} className="block truncate font-semibold text-foreground underline decoration-gray-300 underline-offset-4 hover:decoration-[#d99500]">
+                <Link href={`/seller/${encodeURIComponent(data.seller.id)}`} className="block break-words font-semibold text-foreground underline decoration-gray-300 underline-offset-4 hover:decoration-[#d99500]">
                   {data.seller.name || <T text="Marketplace seller" />}
                 </Link>
               ) : (
@@ -85,6 +92,7 @@ export default async function ProductDetails({ data }: { data: ProductDetailData
                   <T text="No seller ratings yet" />
                 )}
               </div>
+              {data.seller.id && <Link href={`/seller/${encodeURIComponent(data.seller.id)}`} className="mt-2 inline-flex text-xs font-semibold text-shop-accent underline underline-offset-4">{locale === 'ar' ? 'شوف منتجات البائع وتقييماته' : 'View seller products and reviews'}</Link>}
             </div>
           </div>
         </section>
@@ -102,19 +110,14 @@ export default async function ProductDetails({ data }: { data: ProductDetailData
       {(data.attributes ?? []).filter((attribute) => !attribute.variation).length > 0 && (
         <dl className="mt-5 space-y-3 rounded-xl bg-background p-4">
           {data.attributes.filter((attribute) => !attribute.variation).map((attribute, index) => (
-            <div key={`${attribute.name}-${index}`} className="flex flex-wrap gap-x-2 text-sm">
+            <div key={`${t(attribute.name)}-${index}`} className="flex flex-wrap gap-x-2 text-sm">
               <dt className="font-semibold text-foreground">{attribute.name}:</dt>
-              <dd className="text-muted-foreground">{attribute.options.map((option) => option.name).join(', ')}</dd>
+              <dd className="text-muted-foreground">{attribute.options.map((option) => t(option.name)).join(locale === 'ar' ? '، ' : ', ')}</dd>
             </div>
           ))}
         </dl>
       )}
 
-      {data.id && <ProductPurchaseActions
-        productId={String(data.id)} productType={data.type ?? 'simple'} attributes={data.attributes} variations={data.variations} name={data.name} imageUrl={data.images[0]?.url}
-        unitPrice={data.pricing.on_sale ? salePrice.amount : regularPrice.amount}
-        available={data.stock?.status !== 'out_of_stock'} stockQuantity={data.stock?.quantity}
-      />}
       <p className="mt-5 flex items-center justify-center gap-2 text-xs text-muted-foreground">
         <CircleHelp className="size-4 text-muted-foreground" /> <T text="Product information provided by the seller" />
       </p>

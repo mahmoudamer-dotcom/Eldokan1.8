@@ -1,3 +1,4 @@
+import Money from '@/components/i18n/Money'
 import { Star } from 'lucide-react'
 import Link from 'next/link'
 import ProductImageCarousel from './ProductImageCarousel'
@@ -46,9 +47,9 @@ export default function ProductCard({ product, swipeImages = true }: { product: 
 
   const card = (
     <article className="group flex h-full min-w-0 flex-col overflow-hidden rounded-xl border border-border bg-card transition duration-200 hover:-translate-y-0.5 hover:border-input hover:shadow-lg">
-      <div className="relative aspect-square overflow-hidden bg-background p-0">
+      <div className="relative aspect-square overflow-hidden rounded-xl bg-background p-0">
         <ProductImageCarousel productId={product.id} productName={name} initialImages={images} swipeImages={swipeImages} />
-        <WishlistButton productId={product.id} className="absolute right-3 top-3 z-10" />
+        <WishlistButton productId={product.id} className="absolute end-3 top-3 z-10" />
         <AddToCartButton compact product={product.id ? {
           id: product.id,
           type: product.type,
@@ -58,16 +59,16 @@ export default function ProductCard({ product, swipeImages = true }: { product: 
             ? product.pricing.sale_price?.amount ?? product.pricing.regular_price?.amount ?? 0
             : product.pricing?.regular_price?.amount ?? 0,
           stockQuantity: product.stock?.quantity,
-          available: product.stock?.status !== 'out_of_stock',
+          available: product.stock?.status === 'in_stock' || (product.stock?.status === 'on_backorder' && product.stock.backorders_allowed === true),
         } : undefined} />
         {discount !== null && (
-          <span className="absolute left-3 top-3 rounded-md bg-[#f5b400] px-2 py-1 text-xs font-bold text-primary-foreground">
+          <span className="absolute start-3 top-3 rounded-md bg-[#f5b400] px-2 py-1 text-xs font-bold text-primary-foreground">
             -{discount}%
           </span>
         )}
       </div>
       <div className="flex min-w-0 flex-1 flex-col p-2.5 sm:p-4">
-        {(product.brand?.name || product.seller?.name) && <p className="mb-1 truncate text-xs font-medium text-muted-foreground">{product.brand?.name || product.seller?.name}</p>}
+        {(product.brand?.name || product.seller?.name) && <p className="mb-1 truncate text-xs font-medium text-muted-foreground"><T text={product.brand?.name || product.seller?.name || ''} /></p>}
         {product.brand?.name && product.seller?.name && <p className="mb-1 truncate text-[11px] text-muted-foreground"><T text="Sold by" /> {product.seller.name}</p>}
         <h2 className="line-clamp-2 min-h-10 text-sm leading-5 text-foreground sm:text-[15px]"><Link href={`/product/${product.id}`} className="transition hover:text-shop-accent"><T text={name} /></Link></h2>
         {Boolean(product.average_rating && product.rating_count) && (
@@ -86,11 +87,11 @@ export default function ProductCard({ product, swipeImages = true }: { product: 
         <div className="mt-auto flex flex-wrap items-baseline gap-x-2 gap-y-1 pt-3">
           {product.pricing?.on_sale && salePrice?.formatted ? (
             <>
-              <span className="font-bold text-foreground">{salePrice.formatted}</span>
-              {regularPrice?.formatted && <span className="text-xs text-muted-foreground line-through">{regularPrice.formatted}</span>}
+              <span className="font-bold text-foreground"><Money value={salePrice} /></span>
+              {regularPrice?.formatted && <span className="text-xs text-muted-foreground line-through"><Money value={regularPrice} /></span>}
             </>
           ) : (
-            <span className="font-bold text-foreground">{regularPrice?.formatted ?? <T text="Price unavailable" />}</span>
+            <span className="font-bold text-foreground">{regularPrice ? <Money value={regularPrice} /> : <T text="Price unavailable" />}</span>
           )}
         </div>
         {product.id && <ProductCompareButton productId={String(product.id)} />}

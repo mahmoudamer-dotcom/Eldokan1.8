@@ -1,0 +1,11 @@
+#eldokan-story-picker { max-width: 760px; padding-bottom: 16px; border-bottom: 1px solid #dcdcde; }
+#eldokan-story-picker input[type=search] { width: 100%; max-width: 560px; min-height: 38px; }
+#eldokan-story-seller-results, #eldokan-story-product-results { max-height: 330px; overflow-y: auto; }
+.eldokan-story-result { display: block; width: 100%; padding: 12px; margin-bottom: 6px; border: 1px solid #dcdcde; border-radius: 6px; background: #fff; cursor: pointer; text-align: start; }
+.eldokan-story-result:hover, .eldokan-story-result:focus-visible { border-color: #2271b1; background: #f0f6fc; outline: 2px solid #2271b1; outline-offset: -2px; }
+.eldokan-story-product-card { display: flex; align-items: center; gap: 16px; }
+.eldokan-story-product-card img { width: 72px; height: 72px; object-fit: contain; background: #fff; border-radius: 6px; }
+.eldokan-story-product-card p { margin: 4px 0; }
+#eldokan-story-product-preview:not(:empty) { margin-top: 16px; padding: 16px; border: 1px solid #2271b1; border-radius: 8px; background: #f0f6fc; }
+#eldokan-story-product-preview h4 { margin-top: 0; }
+#eldokan-story-picker-status { margin: 12px 0; }

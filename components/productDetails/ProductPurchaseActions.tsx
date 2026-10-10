@@ -1,4 +1,5 @@
 'use client'
+import Money from '@/components/i18n/Money'
 
 import { useMemo, useState } from 'react'
 import type { Attribute, Variation } from '@eldokan/customer-api-client'
@@ -49,17 +50,17 @@ export default function ProductPurchaseActions({ productId, productType, attribu
   return <div className="mt-6 space-y-4">
     {productType === 'variable' && <div className="space-y-3 rounded-xl bg-background p-4">
       {variableAttributes.length ? variableAttributes.map((attribute) => <label key={attributeKey(attribute)} className="block text-sm font-semibold text-foreground">
-        {attribute.name}
+        {t(attribute.name)}
         <select value={selections[attributeKey(attribute)] ?? ''} onChange={(event) => {
           const value = event.target.value
           setSelections((current) => ({ ...current, [attributeKey(attribute)]: value }))
           setQuantity(1)
         }} className="mt-1 w-full rounded-lg border border-input bg-card px-3 py-2.5 font-normal">
           <option value="">{t('Choose an option')}</option>
-          {attribute.options.map((option) => <option key={`${option.id ?? option.slug}`} value={option.id ?? option.slug}>{option.name}</option>)}
+          {attribute.options.map((option) => <option key={`${option.id ?? option.slug}`} value={option.id ?? option.slug}>{t(option.name)}</option>)}
         </select>
       </label>) : <p className="text-sm text-shop-accent">{t('No purchasable variation choices are available.')}</p>}
-      {selectedVariation && <p className="text-sm font-semibold">{selectedMoney?.formatted ?? t('Price unavailable')}</p>}
+      {selectedVariation && <p className="text-sm font-semibold">{selectedMoney ? <Money value={selectedMoney} /> : t('Price unavailable')}</p>}
     </div>}
     <div className="flex flex-wrap items-center gap-3">
       <label htmlFor="product-quantity" className="text-sm font-semibold text-foreground">{t('Quantity')}</label>

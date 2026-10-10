@@ -21,6 +21,14 @@ const OpenSans = localFont({
   variable: '--font-openSans',
 });
 
+const cairo = localFont({
+  src: '../public/fonts/Cairo-Variable.ttf',
+  display: 'swap',
+  variable: '--font-arabic',
+  weight: '200 1000',
+  preload: false,
+});
+
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale()
   const content = locale === 'ar'
@@ -36,10 +44,11 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang={locale}
       dir={locale === 'ar' ? 'rtl' : 'ltr'}
-      className={`${OpenSans.variable} h-full antialiased${theme === 'dark' ? ' dark' : ''}`}
+      className={`${OpenSans.variable} ${cairo.variable} h-full antialiased${theme === 'dark' ? ' dark' : ''}`}
     >
       <body className="flex min-h-screen flex-col overflow-x-clip bg-background text-foreground">
         <LocaleProvider initialLocale={locale} initialTheme={theme}>
+          <a href="#main-content" className="skip-link">{locale === 'ar' ? 'انتقل إلى المحتوى' : 'Skip to content'}</a>
           <CartProvider>
             <WishlistProvider>
               <ComparisonProvider>
@@ -47,7 +56,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
               <Suspense fallback={<div className="h-[180px] shrink-0 bg-card" aria-hidden="true" />}>
                 <SiteHeader />
               </Suspense>
-              <div className="flex flex-1 flex-col">{children}</div>
+              <div id="main-content" tabIndex={-1} className="flex flex-1 flex-col outline-none">{children}</div>
               <Suspense fallback={<footer className="min-h-40 border-t bg-background" aria-label={locale === 'ar' ? 'جارٍ تحميل تذييل الموقع' : 'Loading site footer'} />}>
                 <Footer />
               </Suspense>

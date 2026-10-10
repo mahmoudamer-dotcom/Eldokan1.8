@@ -1,0 +1,276 @@
+/**
+ * Paymob Affordability Widget — storefront wrapper styles.
+ *
+ * The visual widget itself is rendered by the official Paymob Widget SDK inside
+ * a Shadow DOM root, so its internal markup is isolated from the host page and
+ * we only need a thin container rule here (spacing + width) plus layout fixes
+ * for the expanded plans panel that the SDK portals to document.body.
+ */
+.paymob-aw-widget-host {
+	display: block;
+	width: 100%;
+	margin: 20px 0;
+	font-family: inherit;
+}
+
+.paymob-aw-widget-host--cart {
+	margin: 0 0 16px;
+}
+
+.paymob-aw-cart-widget-source {
+	display: none !important;
+}
+
+.wc-block-cart .paymob-aw-widget-host--cart,
+.wp-block-woocommerce-cart .paymob-aw-widget-host--cart {
+	width: 100%;
+}
+
+.paymob-aw-widget-mount {
+	display: block;
+	width: 100%;
+	min-height: 0;
+}
+
+:root {
+	--paymob-aw-expanded-modal-top: 0px;
+	--paymob-aw-header-offset: 0px;
+}
+
+html body.admin-bar {
+	--paymob-aw-expanded-modal-top: var(--wp-admin--admin-bar--height, 32px);
+	--paymob-aw-header-offset: var(--wp-admin--admin-bar--height, 32px);
+}
+
+@media screen and (max-width: 782px) {
+	html body.admin-bar {
+		--paymob-aw-expanded-modal-top: var(--wp-admin--admin-bar--height, 46px);
+		--paymob-aw-header-offset: var(--wp-admin--admin-bar--height, 46px);
+	}
+}
+
+body.paymob-aw-panel-open {
+	overflow: hidden;
+}
+
+html body div[class*="modal_root"],
+html body #paymob-aw-expanded-modal {
+	position: fixed !important;
+	inset: auto !important;
+	top: var(--paymob-aw-expanded-modal-top, 0px) !important;
+	right: 0 !important;
+	bottom: 0 !important;
+	left: 0 !important;
+	width: auto !important;
+	height: auto !important;
+	transform: none !important;
+	z-index: 1000001 !important;
+}
+
+html body div[class*="modal_root"] [class*="modal_panelDesktop"],
+html body #paymob-aw-expanded-modal [class*="modal_panelDesktop"] {
+	position: absolute !important;
+	top: 0 !important;
+	right: 0 !important;
+	bottom: 0 !important;
+	left: auto !important;
+	width: min(550px, 100vw) !important;
+	height: 100% !important;
+	max-height: 100% !important;
+	margin: 0 !important;
+	z-index: 1000001 !important;
+	display: flex !important;
+	flex-direction: column !important;
+	overflow: hidden !important;
+}
+
+html body div[class*="modal_root"] [class*="modal_panelMobile"],
+html body #paymob-aw-expanded-modal [class*="modal_panelMobile"] {
+	max-height: min(80vh, calc(100vh - var(--paymob-aw-expanded-modal-top, 0px))) !important;
+}
+
+html body div[class*="modal_root"] [class*="modal_dialog"],
+html body #paymob-aw-expanded-modal [class*="modal_dialog"] {
+	display: flex !important;
+	flex-direction: column !important;
+	height: 100% !important;
+	max-height: 100% !important;
+	overflow: hidden !important;
+}
+
+html body div[class*="modal_root"] [class*="modal_dialogDesktop"],
+html body #paymob-aw-expanded-modal [class*="modal_dialogDesktop"] {
+	overflow: visible !important;
+}
+
+html body div[class*="modal_root"] [class*="modal_header"],
+html body #paymob-aw-expanded-modal [class*="modal_header"] {
+	display: flex !important;
+	align-items: center !important;
+	justify-content: space-between !important;
+	visibility: visible !important;
+	opacity: 1 !important;
+	min-height: 56px !important;
+	flex: 0 0 auto !important;
+	width: 100% !important;
+	box-sizing: border-box !important;
+	position: relative !important;
+	z-index: 5 !important;
+	overflow: visible !important;
+	background-color: #144dff !important;
+	color: #ffffff !important;
+	padding: 12px !important;
+}
+
+html body div[class*="modal_root"] [class*="modal_title"],
+html body #paymob-aw-expanded-modal [class*="modal_title"] {
+	display: block !important;
+	visibility: visible !important;
+	opacity: 1 !important;
+	flex: 1 1 auto !important;
+	min-width: 0 !important;
+	font-size: 14px !important;
+	font-weight: 600 !important;
+	line-height: 1.4 !important;
+	padding-right: 48px !important;
+	color: #ffffff !important;
+	-webkit-text-fill-color: #ffffff !important;
+	background: none !important;
+	background-image: none !important;
+	background-clip: border-box !important;
+	-webkit-background-clip: border-box !important;
+}
+
+html body div[class*="modal_root"] [class*="modal_poweredRow"],
+html body #paymob-aw-expanded-modal [class*="modal_poweredRow"] {
+	display: flex !important;
+	align-items: center !important;
+	visibility: visible !important;
+	opacity: 1 !important;
+	flex: 0 0 auto !important;
+	margin-right: 40px !important;
+}
+
+html body div[class*="modal_root"] [class*="modal_poweredLabel"],
+html body #paymob-aw-expanded-modal [class*="modal_poweredLabel"] {
+	color: #d0d5dd !important;
+	-webkit-text-fill-color: #d0d5dd !important;
+	background: none !important;
+	background-image: none !important;
+}
+
+html body div[class*="modal_root"] [class*="modal_logo"],
+html body #paymob-aw-expanded-modal [class*="modal_logo"] {
+	display: block !important;
+	visibility: visible !important;
+	opacity: 1 !important;
+}
+
+html body div[class*="modal_root"] [class*="modal_body"],
+html body #paymob-aw-expanded-modal [class*="modal_body"] {
+	position: relative !important;
+	top: auto !important;
+	flex: 1 1 auto !important;
+	min-height: 0 !important;
+	overflow-y: auto !important;
+}
+
+html body .paymob-aw-fallback-header {
+	display: flex !important;
+	align-items: center !important;
+	justify-content: space-between !important;
+	gap: 12px !important;
+	min-height: 56px !important;
+	padding: 12px 48px 12px 12px !important;
+	background-color: #144dff !important;
+	color: #ffffff !important;
+	box-sizing: border-box !important;
+	flex: 0 0 auto !important;
+	position: relative !important;
+	z-index: 6 !important;
+	width: 100% !important;
+	font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+}
+
+html body .paymob-aw-fallback-header__title {
+	flex: 1 1 auto !important;
+	min-width: 0 !important;
+	font-size: 14px !important;
+	font-weight: 600 !important;
+	line-height: 1.4 !important;
+	color: #ffffff !important;
+	-webkit-text-fill-color: #ffffff !important;
+	background: none !important;
+}
+
+html body .paymob-aw-fallback-header__brand {
+	display: flex !important;
+	align-items: center !important;
+	gap: 4px !important;
+	flex: 0 0 auto !important;
+}
+
+html body .paymob-aw-fallback-header__label {
+	font-size: 12px !important;
+	line-height: 1 !important;
+	color: #d0d5dd !important;
+	-webkit-text-fill-color: #d0d5dd !important;
+}
+
+html body .paymob-aw-fallback-header__logo {
+	display: block !important;
+	height: 17px !important;
+	width: auto !important;
+}
+
+html body .paymob-aw-fallback-header__close {
+	position: absolute !important;
+	top: 50% !important;
+	right: 12px !important;
+	transform: translateY(-50%) !important;
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	width: 40px !important;
+	height: 40px !important;
+	border: none !important;
+	border-radius: 50% !important;
+	background: #ffffff !important;
+	color: #101828 !important;
+	cursor: pointer !important;
+	box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18) !important;
+	font-size: 24px !important;
+	line-height: 1 !important;
+	padding: 0 !important;
+}
+
+html body .paymob-aw-fallback-header-present [class*="modal_header"],
+html body [class*="modal_panel"] > .paymob-aw-fallback-header ~ [role="dialog"] [class*="modal_header"] {
+	display: none !important;
+	height: 0 !important;
+	min-height: 0 !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	overflow: hidden !important;
+}
+
+html body div[class*="modal_root"] [class*="modal_closeFloatingDesktop"],
+html body div[class*="modal_root"] [class*="modal_closeFloatingMobile"],
+html body #paymob-aw-expanded-modal [class*="modal_closeFloatingDesktop"],
+html body #paymob-aw-expanded-modal [class*="modal_closeFloatingMobile"] {
+	display: flex !important;
+	visibility: visible !important;
+	opacity: 1 !important;
+	position: absolute !important;
+	top: 50% !important;
+	right: 12px !important;
+	left: auto !important;
+	transform: translateY(-50%) !important;
+	z-index: 5 !important;
+}
+
+@media ( max-width: 600px ) {
+	.paymob-aw-widget-host {
+		margin: 16px 0;
+	}
+}

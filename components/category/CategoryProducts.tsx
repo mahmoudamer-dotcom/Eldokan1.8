@@ -162,7 +162,7 @@ export default function CategoryProducts({
     setSort('')
   }
 
-  const sidebar = <aside className="h-fit rounded-2xl border border-border bg-card p-4 shadow-sm sm:p-5 lg:sticky lg:top-36" aria-label="Product filters">
+  const sidebar = <aside className="h-fit rounded-2xl border border-border bg-card p-4 shadow-sm sm:p-5" aria-label={t('Product filters')}>
     <div className="mb-5 flex items-center justify-between gap-2">
       <h2 className="text-lg font-bold text-foreground"><T text="Filters" /></h2>
       <button type="button" onClick={clearFilters} className="text-xs font-semibold text-shop-accent underline underline-offset-4"><T text="Clear filters" /></button>
@@ -203,8 +203,8 @@ export default function CategoryProducts({
     </div>
     {mobileOpen && <div className="mt-4 lg:hidden">{sidebar}</div>}
     <div dir={locale === 'ar' ? 'rtl' : 'ltr'} className="mt-6 grid items-start gap-5 lg:grid-cols-[250px_minmax(0,1fr)]">
-      <div className="hidden lg:block">{sidebar}</div>
-      <section aria-label="Category products" aria-busy={loading || loadingMore}>
+      <div className="hidden lg:sticky lg:top-48 lg:block lg:max-h-[calc(100dvh-13rem)] lg:overflow-y-auto">{sidebar}</div>
+      <section aria-label={t('Category products')} aria-busy={loading || loadingMore}>
         <div className="mb-4 hidden items-center justify-between lg:flex">
           <p className="text-sm text-muted-foreground">{displayedProducts.length} <T text="products" /></p>
           {loading && <span className="text-sm text-muted-foreground"><T text="Updating products" /></span>}

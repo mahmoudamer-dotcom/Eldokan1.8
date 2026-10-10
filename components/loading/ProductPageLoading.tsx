@@ -1,6 +1,5 @@
 'use client'
 
-import { useParams } from 'next/navigation'
 import { useLocale } from '@/components/i18n/LocaleProvider'
 
 function Block({ className = '' }: { className?: string }) {
@@ -20,7 +19,6 @@ function MiniProductSkeleton() {
 }
 
 export default function ProductPageLoading() {
-  const { id } = useParams<{ id: string }>()
   const { t } = useLocale()
 
   return (
@@ -30,7 +28,7 @@ export default function ProductPageLoading() {
         <span aria-hidden="true">/</span>
         <Block className="h-4 w-24" />
         <span aria-hidden="true">/</span>
-        <span className="font-medium text-muted-foreground">{t('Loading product')} {id ? `#${id}` : ''}</span>
+        <Block className="h-4 w-32 sm:w-48" />
       </nav>
 
       <section className="grid items-start gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(20rem,0.95fr)] lg:gap-8">

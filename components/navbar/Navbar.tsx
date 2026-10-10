@@ -1,11 +1,12 @@
 'use client'
 
+import { formatMoney } from '@/lib/format-money'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { CiHeart, CiUser } from 'react-icons/ci'
-import { ClipboardList, GitCompareArrows, Moon, Sun } from 'lucide-react'
+import { CiHeart } from 'react-icons/ci'
+import { GitCompareArrows, Moon, Sun } from 'lucide-react'
 import { IoLanguageOutline } from 'react-icons/io5'
 import { PiShoppingCartLight } from 'react-icons/pi'
 import { EldokanClientError, type CustomerAccount } from '@eldokan/customer-api-client'
@@ -15,6 +16,7 @@ import { useCart } from '@/components/cart/CartProvider'
 import type { Locale } from '@/lib/i18n'
 import { createEldokanApi } from '@/lib/eldokan-api'
 import AnnouncementTopBar from './AnnouncementTopBar'
+import AccountShortcuts from './AccountShortcuts'
 import { useShoppingChat } from '@/components/discovery/ShoppingChatProvider'
 import { useProductComparison } from '@/lib/use-product-comparison'
 import { useComparisonDrawer } from '@/components/productDetails/ComparisonProvider'
@@ -190,8 +192,8 @@ export default function Navbar() {
                   {results.map((result, index) => {
                     const name = result.name ?? result.title ?? t('Product')
                     const price = result.pricing?.on_sale
-                      ? result.pricing.sale_price?.formatted
-                      : result.pricing?.regular_price?.formatted
+                      ? formatMoney(result.pricing.sale_price, locale)
+                      : formatMoney(result.pricing?.regular_price, locale)
 
                     return (
                       <li key={result.id ?? result.slug ?? index} className="border-b last:border-0">
@@ -202,7 +204,7 @@ export default function Navbar() {
                             onClick={() => setQuery('')}
                           >
                             {result.image?.url && (
-                              <Image src={result.image.url} alt="" width={48} height={48} className="h-12 w-12 rounded object-cover" />
+                              <Image src={result.image.url} alt="" width={48} height={48} className="h-12 w-12 rounded-2xl object-cover" />
                             )}
                             <span className="min-w-0 flex-1 truncate">{name}</span>
                             {price && <span className="text-sm text-muted-foreground">{price}</span>}
@@ -238,14 +240,7 @@ export default function Navbar() {
           <Link href="/cart" aria-label={`${t('Shopping cart')}${visibleCartItemCount ? ` (${visibleCartItemCount})` : ''}`} title={t('Shopping cart')} className="flex size-8 shrink-0 min-[360px]:size-9 items-center justify-center rounded-full text-2xl text-foreground transition hover:bg-muted hover:text-[#C58A36] sm:size-10">
               <span className="relative"><PiShoppingCartLight /><CountBadge count={visibleCartItemCount} /></span>
             </Link>
-            <Link href="/orders" aria-label={t('My orders')} title={t('My orders')} className="flex size-8 shrink-0 min-[360px]:size-9 items-center justify-center rounded-full text-foreground transition hover:bg-muted hover:text-[#C58A36] sm:size-10">
-              <ClipboardList className="size-5" aria-hidden="true" />
-            </Link>
-            <Link href={customer ? '/account' : '/login'} aria-label={customer ? customer.display_name || customer.email : t('Account')} className="flex h-9 max-w-10 shrink-0 items-center justify-center gap-1 rounded-full px-1 text-foreground transition hover:bg-muted hover:text-[#C58A36] sm:h-10 sm:max-w-36 sm:px-2">
-              {customer
-                ? <><CiUser className="text-2xl sm:hidden" /><span className="hidden max-w-28 truncate text-sm font-semibold sm:inline">{customer.display_name || customer.first_name || customer.email}</span></>
-                : <CiUser className="text-2xl" />}
-            </Link>
+            <AccountShortcuts customer={customer} />
           </div>
         </nav>
       </div>
@@ -256,7 +251,7 @@ export default function Navbar() {
 function CountBadge({ count }: { count: number }) {
   if (!count) return null
   return (
-    <span aria-hidden="true" className="absolute -right-2 -top-1 grid min-h-4 min-w-4 place-items-center rounded-full bg-rose-600 px-1 text-[10px] font-bold leading-4 text-white">
+    <span aria-hidden="true" className="absolute -end-2 -top-1 grid min-h-4 min-w-4 place-items-center rounded-full bg-rose-600 px-1 text-[10px] font-bold leading-4 text-white">
       {count > 99 ? '99+' : count}
     </span>
   )

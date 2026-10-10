@@ -1,0 +1,83 @@
+.delete-card-icon img {
+	width: 24px;
+	/* Set the desired width of the icon */
+	height: 24px;
+	/* Set the desired height of the icon */
+	cursor: pointer;
+	/* Change cursor to pointer when hovering over the icon */
+	transition: opacity 0.2s ease-in-out;
+}
+
+.delete-card-icon img:hover {
+	opacity: 0.7;
+	/* Slightly dim the icon on hover */
+}
+
+.paymob-modal {
+	display: none;
+	/* Hidden by default */
+	position: fixed;
+	/* Stay in place */
+	z-index: 1000;
+	/* Sit on top */
+	left: 0;
+	top: 0;
+	width: 100%;
+	/* Full width */
+	height: 100%;
+	/* Full height */
+	background-color: rgba(0, 0, 0, 0.5);
+	/* Black with transparency */
+}
+
+.paymob-modal-content {
+	background-color: #fff;
+	margin: 15% auto;
+	/* 15% from the top and centered */
+	padding: 20px;
+	border: 1px solid #888;
+	width: 30%;
+	/* Width of the modal */
+	text-align: center;
+}
+
+.paymob-close {
+	color: #aaa;
+	float: right;
+	font-size: 28px;
+	font-weight: bold;
+}
+
+.paymob-close:hover,
+.paymob-close:focus {
+	color: #000;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.paymob-modal-content p {
+	font-size: 16px;
+	margin-bottom: 20px;
+}
+
+.paymob-modal-content .button {
+	padding: 10px 20px;
+	margin: 5px;
+	background-color: #e74c3c;
+	color: white;
+	border: none;
+	cursor: pointer;
+}
+
+.paymob-modal-content .button:hover {
+	background-color: #c0392b;
+}
+
+#paymob-cancel-delete {
+	background-color: #ccc;
+	color: black;
+}
+
+#paymob-cancel-delete:hover {
+	background-color: #bbb;
+}

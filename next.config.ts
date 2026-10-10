@@ -7,6 +7,10 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'www.eldokan.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'eldokan.com',
+      },
     ],
   },
   async headers() {
@@ -14,7 +18,7 @@ const nextConfig: NextConfig = {
       { key: 'X-Content-Type-Options', value: 'nosniff' },
       { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
       { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
-    ] }, { source: '/:section(account|cart|checkout|orders|wishlist|login|register|search)/:path*', headers: [
+    ] }, { source: '/:section(account|cart|checkout|orders|wishlist|login|register|search|forgot-password|reset-password)/:path*', headers: [
       { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
     ] }]
   },

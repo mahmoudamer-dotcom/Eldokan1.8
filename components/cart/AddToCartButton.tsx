@@ -52,15 +52,15 @@ export default function AddToCartButton({ product, compact = false }: AddToCartB
       aria-label={t(failed ? 'Unable to add to cart' : added ? 'Added to cart' : 'Add to cart')}
       title={t(failed ? 'Unable to add to cart' : added ? 'Added to cart' : 'Add to cart')}
       className={compact
-        ? 'absolute bottom-3 left-3 z-10 size-10 rounded-lg border-border bg-card/95 p-0 text-foreground shadow-sm disabled:opacity-100 disabled:text-muted-foreground hover:border-[#c58a36] hover:bg-card'
+        ? 'absolute bottom-3 start-3 z-10 size-10 rounded-lg border-border bg-card/95 p-0 text-foreground shadow-sm disabled:opacity-100 disabled:text-muted-foreground hover:border-[#c58a36] hover:bg-card'
         : 'h-12 rounded-full border-input font-semibold text-foreground hover:border-muted-foreground hover:bg-background'}
     >
       {compact
         ? failed ? <span className="text-xs font-bold text-danger-foreground" aria-hidden="true">!</span> : <Plus className="size-6" aria-hidden="true" />
-        : <><ShoppingBag className="mr-2 size-4" /><T text={added ? 'Added to cart' : 'Add to cart'} /></>}
+        : <><ShoppingBag className="me-2 size-4" /><T text={added ? 'Added to cart' : 'Add to cart'} /></>}
     </Button>
     {failed && <span role="alert" className={compact
-      ? 'absolute bottom-14 left-3 z-20 max-w-52 rounded-lg bg-danger-soft px-3 py-2 text-left text-xs text-danger-foreground shadow-md'
+      ? 'absolute bottom-14 start-3 z-20 max-w-52 rounded-lg bg-danger-soft px-3 py-2 text-start text-xs text-danger-foreground shadow-md'
       : 'mt-2 block text-sm text-danger-foreground'}>{error || t('Unable to add to cart. Try again.')}</span>}
   </>
 }

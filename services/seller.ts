@@ -1,6 +1,8 @@
+import { mapLimited } from '@/lib/map-limited'
 import { createEldokanApi } from '@/lib/eldokan-api'
-import { Products } from '@/services/product'
+import { adaptProductList } from '@/lib/catalog-adapters'
 import { getLocale } from '@/lib/server-locale'
+import { EldokanClientError } from '@eldokan/customer-api-client'
 
 const PRODUCTS_PER_PAGE = 48
 
@@ -16,18 +18,22 @@ export async function SellerDetails(id: string) {
   try {
     const result = await createEldokanApi(await getLocale()).sellers.get(id as `sel_${number}`)
     return result.data as SellerData
-  } catch {
-    return null
+  } catch (cause) {
+    if (cause instanceof EldokanClientError && cause.status === 404) return null
+    throw cause
   }
 }
 
 export async function SellerProducts(sellerId: string) {
-  const firstPage = await Products(undefined, { page: 1, perPage: PRODUCTS_PER_PAGE })
-  const remainingPages = await Promise.all(
-    Array.from({ length: Math.max(0, firstPage.meta.total_pages - 1) }, (_, index) =>
-      Products(undefined, { page: index + 2, perPage: PRODUCTS_PER_PAGE }),
-    ),
+  const firstPage = await SellerProductPage(sellerId)
+  const remainingPages = await mapLimited(
+    Array.from({ length: Math.max(0, firstPage.meta.total_pages - 1) }, (_, index) => index + 2), 4, page => SellerProductPage(sellerId, page),
   )
   return [firstPage.data, ...remainingPages.map((page) => page.data)].flat()
-    .filter((product) => String(product.seller?.id ?? '') === sellerId)
+}
+
+export async function SellerProductPage(sellerId: string, page = 1) {
+  try {
+    return { ...adaptProductList(await createEldokanApi(await getLocale()).sellers.products(sellerId as `sel_${number}`, { page, perPage: PRODUCTS_PER_PAGE })), unavailable: false }
+  } catch { return { data: [], meta: { total_pages: 1, total: 0 }, unavailable: true } }
 }

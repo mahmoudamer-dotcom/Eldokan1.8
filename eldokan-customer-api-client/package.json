@@ -1,6 +1,6 @@
 {
   "name": "@eldokan/customer-api-client",
-  "version": "0.6.0",
+  "version": "0.8.1",
   "private": true,
   "description": "Official framework-agnostic TypeScript client for ElDokan Customer API Contract v1.",
   "type": "module",
@@ -17,7 +17,10 @@
     "README.md",
     "START-HERE.md",
     "CHANGELOG.md",
-    "MAHMOUD-FRONTEND-HANDOFF.md"
+    "MAHMOUD-FRONTEND-HANDOFF.md",
+    "REVIEWS.md",
+    "COMMERCE.md",
+    "STORIES.md"
   ],
   "scripts": {
     "generate:types": "node scripts/generate-types.mjs",

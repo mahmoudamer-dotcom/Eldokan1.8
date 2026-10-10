@@ -1,3 +1,22 @@
+## 0.8.1 - 2026-10-10
+
+- Add typed StoriesResource for the optional ElDokan Stories 1.0.0 companion plugin.
+- See STORIES.md for bilingual titles, product artwork, scheduling and expiry.
+
+## 0.8.0 ? 2026-10-10
+
+- Add typed CommerceResource and OpenAPI operations for password recovery, customer returns, product alerts, saved selections, review feedback/images and sitemap pagination.
+- Extend home payload with optional category shelves and search metadata with optional resolved phrase.
+- Backend adapter 0.10.0; Bosta integration deferred.
+
+# 0.7.1
+
+Accept non-empty reviews shorter than ten characters. Adapter 0.9.1 matches this validation.
+
+# 0.7.0
+
+Moderated product/seller reviews, verified purchase eligibility, paginated seller products, and category best sellers. Adapter 0.9.0 required. See REVIEWS.md.
+
 # Changelog
 
 ## 0.6.0 — 2026-10-07

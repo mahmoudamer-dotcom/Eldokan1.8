@@ -6,7 +6,7 @@ export function createCustomerApiTransport(request: Request, onCookie: (cookie: 
     const separator = value.indexOf('=')
     if (separator <= 0) return
     const name = value.slice(0, separator)
-    if (name !== 'eldokan_order_recovery') jar.set(name, value)
+    if (name !== 'eldokan_order_recovery' && name !== 'eldokan_guest_order_history') jar.set(name, value)
   }
   request.headers.get('cookie')?.split(';').forEach(remember)
   const transport: typeof fetch = async (input, init) => {

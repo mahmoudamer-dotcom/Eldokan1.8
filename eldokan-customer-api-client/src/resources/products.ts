@@ -25,6 +25,11 @@ function assertPositiveInteger(value: number | undefined, name: string, max?: nu
 export class ProductsResource {
   constructor(private readonly http: EldokanHttpClient) {}
 
+  bestSelling(category: string, options: Pick<ProductListParams, 'perPage' | 'lang'> = {}): Promise<ProductListResponse> {
+    if (!category.trim()) validation('Category is required.', 'missing_category');
+    return this.list({ category, ...options, sort: 'best_selling', stockStatus: 'in_stock' });
+  }
+
   list(params: ProductListParams = {}): Promise<ProductListResponse> {
     assertPositiveInteger(params.page, 'page');
     assertPositiveInteger(params.perPage, 'per_page', 48);

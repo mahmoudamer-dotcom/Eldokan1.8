@@ -1,5 +1,5 @@
 import { createEldokanCustomerApiClient, EldokanClientError } from '@eldokan/customer-api-client'
-import type { AddressId, AddressCreate, AddressUpdate, CartItemId, ProductId, ProductListParams, VariationId, PurchaseInput, QuoteInput, OrderId, PaymentInput, SellerId, Language } from '@eldokan/customer-api-client'
+import type { AddressId, AddressCreate, AddressUpdate, CartItemId, ProductId, ProductListParams, VariationId, PurchaseInput, QuoteInput, OrderId, PaymentInput, SellerId, Language, ReviewId, ReviewInput, ReviewListParams } from '@eldokan/customer-api-client'
 import type { NextRequest } from 'next/server'
 import { appendCustomerApiCookies, createCustomerApiTransport } from '@/lib/customer-api-transport'
 
@@ -18,10 +18,13 @@ function errorResponse(error: unknown) {
   }
 
   if (error instanceof EldokanClientError) {
+    console.error('[eldokan/customer-api]', { code: error.code, kind: error.kind, status: error.status, requestId: error.requestId })
     const status = error.status ?? (error.kind === 'network' || error.kind === 'timeout' ? 502 : error.kind === 'validation' ? 400 : 500)
-    const message = error.kind === 'network' || error.kind === 'timeout'
-      ? 'The storefront server could not reach the Eldokan customer API. Check ELDOKAN_API_BASE_URL and server connectivity.'
-      : error.message
+    const message = error.kind === 'timeout'
+      ? 'The store took too long to respond. Refresh shipping and payment to try again.'
+      : error.kind === 'network'
+        ? 'Could not connect to the store. Please try again shortly.'
+        : error.message
     return Response.json({
       success: false,
       error: { code: error.code, message, ...(error.issues.length ? { issues: error.issues } : {}) },
@@ -55,9 +58,10 @@ async function handleRequest(request: NextRequest, context: RouteContext, cookie
     return Response.json({ success: false, error: { code: 'invalid_origin', message: 'Request origin is not allowed.' }, meta: { request_id: null } }, { status: 403 })
   }
 
+  const transport = createCustomerApiTransport(request, (cookie) => cookies.push(cookie))
   const api = createEldokanCustomerApiClient({
     baseUrl: process.env.ELDOKAN_API_BASE_URL?.trim() || DEFAULT_API_BASE_URL,
-    fetch: createCustomerApiTransport(request, (cookie) => cookies.push(cookie)),
+    fetch: transport,
   })
 
   const langValue = request.nextUrl.searchParams.get('lang')
@@ -74,10 +78,60 @@ async function handleRequest(request: NextRequest, context: RouteContext, cookie
 
   try {
     let result: unknown
-    if (endpoint === 'health' && method === 'GET') {
+    const reviewRoute = /^(products|sellers)\/(prd_[1-9][0-9]*|sel_[1-9][0-9]*)\/reviews(?:\/(mine|rev_[1-9][0-9]*))?$/.exec(endpoint)
+    const sellerProductsRoute = /^sellers\/(sel_[1-9][0-9]*)\/products$/.exec(endpoint)
+    const returnRoute = /^orders\/(ord_[a-f0-9]{64})\/returns$/.exec(endpoint)
+    const feedbackRoute = /^reviews\/(rev_[1-9][0-9]*)\/(feedback|images)$/.exec(endpoint)
+    if (endpoint === 'auth/forgot-password' && method === 'POST') result = await api.commerce.forgotPassword((await request.json()).email)
+    else if (endpoint === 'auth/reset-password' && method === 'POST') result = await api.commerce.resetPassword(await request.json())
+    else if (endpoint === 'catalog/sitemap' && method === 'GET') result = await api.commerce.sitemap(Number(request.nextUrl.searchParams.get('page') ?? 1))
+    else if (returnRoute || feedbackRoute || endpoint === 'me/decision' || endpoint.startsWith('me/product-alerts')) {
+      if (isMutation && !await verifyCsrf()) return Response.json({ success: false, error: { code: 'invalid_csrf', message: 'Refresh your session and try again.' } }, { status: 403 })
+      if (returnRoute && method === 'GET') result = await api.commerce.returns(returnRoute[1] as OrderId)
+      else if (returnRoute && method === 'POST') result = await api.commerce.requestReturn(returnRoute[1] as OrderId, await request.json())
+      else if (feedbackRoute && method === 'POST') {
+        const input = await request.json()
+        result = feedbackRoute[2] === 'images' ? await api.commerce.addReviewImage(feedbackRoute[1], input.image) : await api.commerce.feedback(feedbackRoute[1], input.action, input.reason)
+      } else if (endpoint === 'me/decision' && method === 'GET') result = await api.commerce.decision()
+      else if (endpoint === 'me/decision' && method === 'POST') result = await api.commerce.saveDecision(await request.json())
+      else if (endpoint === 'me/product-alerts' && method === 'GET') result = await api.commerce.alerts()
+      else if (endpoint === 'me/product-alerts' && method === 'POST') result = await api.commerce.saveAlert(await request.json())
+      else if (/^me\/product-alerts\/prd_[1-9][0-9]*$/.test(endpoint) && method === 'DELETE') result = await api.commerce.removeAlert(endpoint.split('/')[2] as ProductId)
+      else return Response.json({ success: false, error: { code: 'not_found', message: 'Route not found.' } }, { status: 404 })
+    } else if (reviewRoute) {
+      const target = reviewRoute[2] as ProductId | SellerId
+      const reviewId = reviewRoute[3]
+      if ((reviewRoute[1] === 'products') !== target.startsWith('prd_')) {
+        return Response.json({ success: false, error: { code: 'invalid_review_target', message: 'Invalid review target.' } }, { status: 400 })
+      }
+      if (method === 'GET' && reviewId === 'mine') result = await api.reviews.mine(target)
+      else if (method === 'GET' && !reviewId) result = await api.reviews.list(target, {
+        page: request.nextUrl.searchParams.has('page') ? Number(request.nextUrl.searchParams.get('page')) : undefined,
+        perPage: request.nextUrl.searchParams.has('per_page') ? Number(request.nextUrl.searchParams.get('per_page')) : undefined,
+        rating: request.nextUrl.searchParams.has('rating') ? Number(request.nextUrl.searchParams.get('rating')) : undefined,
+        sort: (request.nextUrl.searchParams.get('sort') ?? 'newest') as ReviewListParams['sort'], lang,
+      })
+      else if ((method === 'POST' && !reviewId) || ((method === 'PATCH' || method === 'DELETE') && reviewId?.startsWith('rev_'))) {
+        const session = await api.auth.session()
+        if (request.headers.get('x-eldokan-csrf') !== session.data.csrf_token) return Response.json({ success: false, error: { code: 'invalid_csrf', message: 'Refresh your session and try again.' } }, { status: 403 })
+        if (method === 'DELETE') result = await api.reviews.remove(target, reviewId as ReviewId)
+        else {
+          const input = await request.json() as ReviewInput
+          result = method === 'POST' ? await api.reviews.create(target, input) : await api.reviews.update(target, reviewId as ReviewId, input)
+        }
+      } else return Response.json({ success: false, error: { code: 'method_not_allowed', message: 'Method not allowed.' } }, { status: 405 })
+    } else if (sellerProductsRoute && method === 'GET') {
+      result = await api.sellers.products(sellerProductsRoute[1] as SellerId, {
+        page: request.nextUrl.searchParams.has('page') ? Number(request.nextUrl.searchParams.get('page')) : undefined,
+        perPage: request.nextUrl.searchParams.has('per_page') ? Number(request.nextUrl.searchParams.get('per_page')) : undefined,
+        sort: (request.nextUrl.searchParams.get('sort') ?? 'newest') as ProductListParams['sort'], lang,
+      })
+    } else if (endpoint === 'health' && method === 'GET') {
       result = await api.health.get()
     } else if (endpoint === 'home' && method === 'GET') {
       result = await api.home.get({ lang })
+    } else if (endpoint === 'stories' && method === 'GET') {
+      result = await api.stories.list({ lang })
     } else if (endpoint === 'categories' && method === 'GET') {
       result = await api.categories.list({ parent: request.nextUrl.searchParams.get('parent') ?? undefined, lang })
     } else if (endpoint.startsWith('categories/') && endpoint.endsWith('/filters') && method === 'GET') {
@@ -212,6 +266,19 @@ async function handleRequest(request: NextRequest, context: RouteContext, cookie
       result = await api.checkout.placeOrder(await request.json(), { lang })
     } else if (endpoint === 'orders' && method === 'GET') {
       result = await api.orders.list({ page: Number(request.nextUrl.searchParams.get('page') ?? 1), perPage: Number(request.nextUrl.searchParams.get('per_page') ?? 20), lang })
+    } else if (/^orders\/ord_[a-f0-9]{64}\/cancel$/.test(endpoint) && method === 'POST') {
+      if (!(await verifyCsrf())) return Response.json({ success: false, error: { code: 'invalid_csrf', message: 'Refresh your session and try again.' }, meta: { request_id: null } }, { status: 403 })
+      const input = await request.json() as { reason_code?: unknown; details?: unknown }
+      if (!input || typeof input !== 'object' || Array.isArray(input) || Object.keys(input).some((key) => !['reason_code', 'details'].includes(key)) || typeof input.reason_code !== 'string' || !['changed_mind', 'ordered_by_mistake', 'delivery_time', 'found_better_price', 'other'].includes(input.reason_code) || (input.details !== undefined && (typeof input.details !== 'string' || [...input.details].length > 500))) return Response.json({ success: false, error: { code: 'cancellation_reason_invalid', message: 'Choose a cancellation reason and use at most 500 characters.' }, meta: { request_id: null } }, { status: 422 })
+      const base = process.env.ELDOKAN_API_BASE_URL?.trim() || DEFAULT_API_BASE_URL
+      const upstream = await transport(`${base.replace(/\/$/, '')}/${endpoint}${lang ? `?lang=${lang}` : ''}`, {
+        // Like the SDK's other server requests, do not forward the browser Origin
+        // to WordPress. Browser origin and CSRF were verified above; native order
+        // ownership and CSRF are verified again by the Customer API.
+        method: 'POST', headers: { 'Content-Type': 'application/json', 'X-ElDokan-CSRF': request.headers.get('x-eldokan-csrf')! },
+        body: JSON.stringify(input), signal: AbortSignal.timeout(15000),
+      })
+      return Response.json(await upstream.json(), { status: upstream.status, headers: { 'Cache-Control': 'private, no-store' } })
     } else if (endpoint.startsWith('orders/') && endpoint.endsWith('/payment') && method === 'POST') {
       const orderId = decodeURIComponent(endpoint.slice('orders/'.length, -'/payment'.length)) as OrderId
       const credential = request.headers.get('x-eldokan-order-access')

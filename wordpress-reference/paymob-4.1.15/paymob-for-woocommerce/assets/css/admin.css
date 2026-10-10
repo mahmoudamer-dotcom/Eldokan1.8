@@ -1,0 +1,1529 @@
+.loader_paymob {
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	z-index: 9999;
+    display: none;
+	background: url('../img/loading.gif') 50% 50% no-repeat rgb(249,249,249);
+}
+.success_load{
+	display:none;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	z-index: 9999;
+	font-size: 300px;
+	color:green;
+
+}
+.failed_load{
+	display:none;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	z-index: 9999;
+	font-size: 300px;
+	color:red;
+}
+.paymob-valid{
+	color:green;
+	display: none;
+	font-size: x-large;
+	padding-top: 2px;
+}
+.paymob-not-valid{
+	color:red;
+	display: none;
+	font-size: x-large;
+	padding-top: 2px;
+}
+.red-star {
+	color: red;
+	font-size: 20px;
+}
+
+#config-note-accordion div ol li {
+	margin-bottom: 10px;
+	color: #555;
+}
+
+#config-note-accordion div ol li a {
+	color: #0073aa;
+	text-decoration: none;
+	transition: color 0.3s ease;
+}
+#config-note-accordion div a {
+	color: #0073aa;
+	text-decoration: none;
+	transition: color 0.3s ease;
+}
+
+#config-note-accordion div ol li a:hover {
+	color: #005177;
+}
+
+#config-note-accordion div ol ol li {
+	color: #666;
+	list-style: disc inside;
+	margin-bottom: 5px;
+}
+#extra-accordion div ul li {
+	color: #666;
+	list-style: disc;
+	margin-bottom: 10px;
+}
+
+#config-note-accordion .ui-accordion-header ,
+#callback-accordion .ui-accordion-header,
+#has-items-accordion .ui-accordion-header,
+#save-changes-accordion .ui-accordion-header,
+#extra-accordion .ui-accordion-header {
+	font-weight: bolder;
+	color: white;
+	background: #3586c2;
+}
+#config-note-accordion div,
+#callback-accordion div,
+#has-items-accordion div,
+#save-changes-accordion div ,
+#extra-accordion div {
+	background: #f4f9fc;
+}
+
+.paymob-connect-div {
+    margin-left: 7%;
+    padding: 20px;
+    border: 2px solid #e0e0e0; /* Subtle border */
+    border-radius: 15px; /* Rounded corners */
+    background: linear-gradient(135deg, #ffffff, #f9f9f9); /* Gradient background */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06); /* Soft shadow */
+    text-align: center;
+    width: 70%;
+    animation: fadeInSlideUp 1.5s ease-in-out;
+    opacity: 0;
+    transform: translateY(20px);
+    animation-fill-mode: forwards;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover transitions */
+}
+
+.paymob-connect-div:hover {
+    transform: translateY(-5px); /* Slight lift on hover */
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05); /* Enhanced shadow on hover */
+}
+
+
+@keyframes fadeInSlideUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+.manual-setup-button{
+    cursor: pointer;
+}
+.paymob-reconnect-div{
+padding: 15px;
+/*  border: 1px outset white;*/
+  text-align: center;
+}
+.paymob-mainconf-div{
+  background-color: white;  
+  padding: 15px;  
+
+}
+.paymob-connect-div div{
+  padding-top: 15px;
+  align-content:center;
+/*  width:70%;*/
+  padding:5% 9% 0 5%; 
+/*  padding-left:50%;*/
+}
+#manual_setup div {
+  padding-top: 15px;
+  align-content: center;
+  padding: 5%;
+}
+.paymob-img {
+    width: 100%; /* Make the image responsive and take up the full width of the container */
+    height: auto; /* Maintain the aspect ratio */
+    max-width: 600px; /* Optional: You can set a maximum width if desired */
+    margin: 0 auto; /* Center the image horizontally */
+}
+
+/* Modal Overlay */
+.manualsetup-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+/* Show modal */
+.manualsetup-modal.show {
+    display: flex; /* or 'block', depending on your needs */
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Modal Content Box */
+.manualsetup-modal-content {
+    background: linear-gradient(145deg, #e6f2ff, #e6f2ff);
+    padding: 40px 30px;
+    border-radius: 15px;
+    /* width: 90%; */
+    max-width: 50%;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+    animation: popIn 0.3s ease-out;
+    color: #605757;
+    /* font-family: 'Arial', sans-serif; */
+    text-align: center;
+    margin: 10% 30% 30% 30%;
+    /* float: left;  */
+    
+}
+
+@keyframes popIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Header styling */
+.manualsetup-modal-content h2 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+    color: #605757;
+}
+
+.manualsetupmodal-description {
+    font-size: 16px;
+    margin-bottom: 20px;
+    color: #605757;
+}
+
+/* Modal Callbacks Section */
+.modal-callback {
+    margin-bottom: 25px;
+    text-align: left;
+    font-size: 18px;
+}
+
+.modal-callback label {
+    font-size: 16px;
+    color: #605757;
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.modal-callback p {
+    color: #928888;
+    background-color: rgba(255, 255, 255, 16.1);
+    padding: 10px;
+    border-radius: 10px;
+    font-style: italic;
+    font-size: 15px;
+}
+
+/* Input Fields */
+input[type="text"] {
+    width: 100%;
+    padding: 6px;
+    margin-top: 15px;
+    border-radius: 10px;
+    border: 1px solid #060606;
+    font-size: 15px;
+    color: #2c3338;
+    background-color: #fff;
+    transition: 0.3s ease-in-out;
+}
+
+input[type="text"]:focus {
+    border-color: #f3ecef;
+    outline: none;
+    box-shadow: 0 0 10px rgba(255, 51, 133, 0.5);
+}
+
+/* Modal Buttons */
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    gap: 20px;
+}
+
+button {
+    padding: 12px 25px;
+    border-radius: 50px;
+    background-color: #3586c2;  /* Light Blue background */
+    color: #fff;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+}
+
+button:hover {
+    background-color: #87CEEB;  /* Lighter blue on hover */
+    transform: translateY(-2px);
+}
+
+button:focus {
+    outline: none;
+}
+
+#modal_close_button {
+    background-color: #871b1b;
+}
+
+#modal_close_button:hover {
+    background-color: #888;
+}
+
+button:active {
+    transform: translateY(1px);
+}
+
+/* Custom Scrollbar Styling */
+.manualsetup-modal-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.manualsetup-modal-content::-webkit-scrollbar-thumb {
+    background-color: #ff3385;
+    border-radius: 10px;
+}
+
+.manualsetup-modal-content::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+}
+
+/* Modal Close Button */
+#manualsetupmodal_close_button {
+    background-color: #871b1b;
+}
+
+#manualsetupmodal_close_button:hover {
+    background-color: #871b1b;
+}
+
+/* Submit Button (Dark Blue) */
+button#modal_submit_button {
+    background-color: #005bb5; /* Dark Blue submit button */
+}
+
+button#modal_submit_button:hover {
+    background-color: #004085; /* Darker blue on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .manualsetup-modal-content {
+        padding: 20px;
+        width: 95%;
+        max-width: 100%;
+    }
+    .manualsetup-modal-content h2 {
+        font-size: 25px;
+    }
+    .manualsetupmodal-description {
+        font-size: 14px;
+    }
+    input[type="text"] {
+        font-size: 16px;
+        padding: 12px;
+    }
+    button {
+        font-size: 16px;
+        padding: 10px 20px;
+    }
+}
+/* Mode Toggle Container (Compact, smaller space) */
+.mode-toggle-container {
+    width: 100%;
+    margin-top: 15px;
+    display: flex;
+    justify-content: flex-start; /* Align the switch and label closely */
+    align-items: center;
+}
+
+/* Label for Mode Toggle */
+.mode-toggle-container label {
+    font-size: 16px;
+    color: #605757;
+    font-weight: bold;
+    margin-right: 5px; /* Reduce space between the label and switch */
+}
+
+/* Switch Styling */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px; /* Smaller width */
+    height: 28px; /* Smaller height */
+}
+
+/* Hide the default checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* The slider (background of the switch) */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+/* The circle inside the slider */
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px; /* Smaller circle */
+    width: 20px; /* Smaller circle */
+    border-radius: 50%;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+}
+
+/* When the switch is checked, change the background color */
+input:checked + .slider {
+    background-color: #3586c2;
+}
+
+/* When the switch is checked, move the circle */
+input:checked + .slider:before {
+    transform: translateX(22px); /* Adjust for smaller size */
+}
+
+/* Optional: Add text for Live/ Test Mode */
+#mode-status {
+    font-size: 14px; /* Smaller font size */
+    font-weight: bold;
+    color: #605757;
+    margin-left: 10px;
+}
+
+/* Input Fields */
+input[type="text"] {
+    width: 100%;
+    padding: 6px;
+    margin-top: 15px;
+    border-radius: 10px;
+    border: 1px solid #060606;
+    font-size: 15px;
+    color: #2c3338;
+    background-color: #fff;
+    transition: 0.3s ease-in-out;
+}
+
+input[type="text"]:focus {
+    border-color: #0f0f0f;
+    outline: none;
+    box-shadow: 0 0 10px rgba(255, 51, 133, 0.5);
+}
+
+/* Modal Buttons */
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    gap: 20px;
+}
+
+/* disconnect model */
+
+
+/* Modal Overlay */
+.disconnect-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+/* Show modal */
+.disconnect-modal.show {
+    display: flex; /* or 'block', depending on your needs */
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Modal Content Box */
+.disconnect-modal-content {
+    background: linear-gradient(145deg, #e6f2ff, #e6f2ff);
+    padding: 40px 30px;
+    border-radius: 15px;
+    /* width: 90%; */
+    max-width: 50%;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+    animation: popIn 0.3s ease-out;
+    color: #605757;
+    /* font-family: 'Arial', sans-serif; */
+    text-align: center;
+    margin: 10% 30% 30% 30%;
+    /* float: left;  */
+}
+
+@keyframes popIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Header styling */
+.disconnect-modal-content h2 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+    color: #605757;
+}
+
+.disconnectmodal-description {
+    font-size: 16px;
+    margin-bottom: 20px;
+    color: #605757;
+}
+
+/* Modal Callbacks Section */
+.modal-callback {
+    margin-bottom: 25px;
+    text-align: left;
+    font-size: 18px;
+}
+
+.modal-callback label {
+    font-size: 16px;
+    color: #605757;
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.modal-callback p {
+    color: #2c3338;
+    background-color: rgba(255, 255, 255, 16.1);
+    padding: 10px;
+    border-radius: 10px;
+    font-style: italic;
+    font-size: 15px;
+}
+
+/* Input Fields */
+input[type="text"] {
+    width: 100%;
+    padding: 6px;
+    margin-top: 15px;
+    border-radius: 10px;
+    border: 1px solid #060606;
+    font-size: 15px;
+    color: #2c3338;
+    background-color: #fff;
+    transition: 0.3s ease-in-out;
+}
+
+input[type="text"]:focus {
+    border-color: #f3ecef;
+    outline: none;
+    box-shadow: 0 0 10px rgba(255, 51, 133, 0.5);
+}
+
+/* Modal Buttons */
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    gap: 20px;
+}
+
+button {
+    padding: 12px 25px;
+    border-radius: 50px;
+    background-color: #3586c2;  /* Light Blue background */
+    color: #fff;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+}
+
+button:hover {
+    background-color: #87CEEB;  /* Lighter blue on hover */
+    transform: translateY(-2px);
+}
+
+button:focus {
+    outline: none;
+}
+
+#modal_close_button {
+    background-color: #871b1b;
+}
+
+#modal_close_button:hover {
+    background-color: #871b1b;
+}
+
+button:active {
+    transform: translateY(1px);
+}
+
+/* Custom Scrollbar Styling */
+.disconnect-modal-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.disconnect-modal-content::-webkit-scrollbar-thumb {
+    background-color: #ff3385;
+    border-radius: 10px;
+}
+
+.disconnect-modal-content::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+}
+
+/* Modal Close Button */
+#disconnectmodal_close_button {
+    background-color: #871b1b;
+}
+
+#disconnectmodal_close_button:hover {
+    background-color: #871b1b;
+}
+
+/* Submit Button (Dark Blue) */
+button#modal_submit_button {
+    background-color: #005bb5; /* Dark Blue submit button */
+}
+
+button#modal_submit_button:hover {
+    background-color: #004085; /* Darker blue on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .disconnect-modal-content {
+        padding: 20px;
+        width: 95%;
+        max-width: 100%;
+    }
+    .disconnect-modal-content h2 {
+        font-size: 25px;
+    }
+    .disconnectmodal-description {
+        font-size: 14px;
+    }
+    input[type="text"] {
+        font-size: 16px;
+        padding: 12px;
+    }
+    button {
+        font-size: 16px;
+        padding: 10px 20px;
+    }
+}
+/* Mode Toggle Container (Compact, smaller space) */
+.mode-toggle-container {
+    width: 100%;
+    margin-top: 15px;
+    display: flex;
+    justify-content: flex-start; /* Align the switch and label closely */
+    align-items: center;
+}
+
+/* Label for Mode Toggle */
+.mode-toggle-container label {
+    font-size: 16px;
+    color: #605757;
+    font-weight: bold;
+    margin-right: 5px; /* Reduce space between the label and switch */
+}
+
+/* Switch Styling */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px; /* Smaller width */
+    height: 28px; /* Smaller height */
+}
+
+/* Hide the default checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* The slider (background of the switch) */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+/* The circle inside the slider */
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px; /* Smaller circle */
+    width: 20px; /* Smaller circle */
+    border-radius: 50%;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+}
+
+/* When the switch is checked, change the background color */
+input:checked + .slider {
+    background-color: #3586c2;
+}
+
+/* When the switch is checked, move the circle */
+input:checked + .slider:before {
+    transform: translateX(22px); /* Adjust for smaller size */
+}
+
+/* Optional: Add text for Live/ Test Mode */
+#mode-status {
+    font-size: 14px; /* Smaller font size */
+    font-weight: bold;
+    color: #605757;
+    margin-left: 10px;
+}
+
+/* Input Fields */
+input[type="text"] {
+    width: 100%;
+    padding: 6px;
+    margin-top: 15px;
+    border-radius: 10px;
+    border: 1px solid #060606;
+    font-size: 15px;
+    color: #2c3338;
+    background-color: #fff;
+    transition: 0.3s ease-in-out;
+}
+
+input[type="text"]:focus {
+    border-color: #f3ecef;
+    outline: none;
+    box-shadow: 0 0 10px rgba(255, 51, 133, 0.5);
+}
+
+/* Modal Buttons */
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    gap: 20px;
+}
+
+.switch-mode {
+    padding-bottom:20px;
+    padding-top:5px;
+float:right;
+/*    margin-left:70%;*/
+}
+
+
+/* change mode model */
+
+
+/* Modal Overlay */
+.changemode-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+/* Show modal */
+.changemode-modal.show {
+    display: flex; /* or 'block', depending on your needs */
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Modal Content Box */
+.changemode-modal-content {
+    background: linear-gradient(145deg, #e6f2ff, #e6f2ff);
+    padding: 40px 30px;
+    border-radius: 15px;
+    /* width: 90%; */
+    max-width: 50%;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+    animation: popIn 0.3s ease-out;
+    color: #605757;
+    /* font-family: 'Arial', sans-serif; */
+    text-align: center;
+    margin: 10% 30% 30% 30%;
+    /* float: left;  */
+}
+
+@keyframes popIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Header styling */
+.changemode-modal-content h2 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+    color: #605757;
+}
+
+.changemodemodal-description {
+    font-size: 16px;
+    margin-bottom: 20px;
+    color: #605757;
+}
+
+/* Modal Callbacks Section */
+.modal-callback {
+    margin-bottom: 25px;
+    text-align: left;
+    font-size: 18px;
+}
+
+.modal-callback label {
+    font-size: 16px;
+    color: #605757;
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.modal-callback p {
+    color: #2c3338;
+    background-color: rgba(255, 255, 255, 16.1);
+    padding: 10px;
+    border-radius: 10px;
+    font-style: italic;
+    font-size: 15px;
+}
+
+/* Input Fields */
+input[type="text"] {
+    width: 100%;
+    padding: 6px;
+    margin-top: 15px;
+    border-radius: 10px;
+    border: 1px solid #060606;
+    font-size: 15px;
+    color: #2c3338;
+    background-color: #fff;
+    transition: 0.3s ease-in-out;
+}
+
+input[type="text"]:focus {
+    border-color: #f3ecef;
+    outline: none;
+    box-shadow: 0 0 10px rgba(255, 51, 133, 0.5);
+}
+
+/* Modal Buttons */
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    gap: 20px;
+}
+
+button {
+    padding: 12px 25px;
+    border-radius: 50px;
+    background-color: #3586c2;  /* Light Blue background */
+    color: #fff;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+}
+
+button:hover {
+    background-color: #87CEEB;  /* Lighter blue on hover */
+    transform: translateY(-2px);
+}
+
+button:focus {
+    outline: none;
+}
+
+#modal_close_button {
+    background-color: #871b1b;
+}
+
+#modal_close_button:hover {
+    background-color: #871b1b;
+}
+
+button:active {
+    transform: translateY(1px);
+}
+
+/* Custom Scrollbar Styling */
+.changemode-modal-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.changemode-modal-content::-webkit-scrollbar-thumb {
+    background-color: #ff3385;
+    border-radius: 10px;
+}
+
+.changemode-modal-content::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+}
+
+/* Modal Close Button */
+#changemodemodal_close_button {
+    background-color: #871b1b;
+}
+
+#changemodemodal_close_button:hover {
+    background-color: #ff2222;
+}
+
+/* Submit Button (Dark Blue) */
+button#modal_submit_button {
+    background-color: #005bb5; /* Dark Blue submit button */
+}
+
+button#modal_submit_button:hover {
+    background-color: #004085; /* Darker blue on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .changemode-modal-content {
+        padding: 20px;
+        width: 95%;
+        max-width: 100%;
+    }
+    .changemode-modal-content h2 {
+        font-size: 25px;
+    }
+    .changemodemodal-description {
+        font-size: 14px;
+    }
+    input[type="text"] {
+        font-size: 16px;
+        padding: 12px;
+    }
+    button {
+        font-size: 16px;
+        padding: 10px 20px;
+    }
+}
+/* Mode Toggle Container (Compact, smaller space) */
+.mode-toggle-container {
+    width: 100%;
+    margin-top: 15px;
+    display: flex;
+    justify-content: flex-start; /* Align the switch and label closely */
+    align-items: center;
+}
+
+/* Label for Mode Toggle */
+.mode-toggle-container label {
+    font-size: 16px;
+    color: #605757;
+    font-weight: bold;
+    margin-right: 5px; /* Reduce space between the label and switch */
+}
+
+/* Switch Styling */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px; /* Smaller width */
+    height: 28px; /* Smaller height */
+}
+
+/* Hide the default checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* The slider (background of the switch) */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+/* The circle inside the slider */
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px; /* Smaller circle */
+    width: 20px; /* Smaller circle */
+    border-radius: 50%;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+}
+
+/* When the switch is checked, change the background color */
+input:checked + .slider {
+    background-color: #3586c2;
+}
+
+/* When the switch is checked, move the circle */
+input:checked + .slider:before {
+    transform: translateX(22px); /* Adjust for smaller size */
+}
+
+/* Optional: Add text for Live/ Test Mode */
+#mode-status {
+    font-size: 14px; /* Smaller font size */
+    font-weight: bold;
+    color: #605757;
+    margin-left: 10px;
+}
+
+/* Input Fields */
+input[type="text"] {
+    width: 100%;
+    padding: 6px;
+    margin-top: 15px;
+    border-radius: 10px;
+    border: 1px solid #060606;
+    font-size: 15px;
+    color: #2c3338;
+    background-color: #fff;
+    transition: 0.3s ease-in-out;
+}
+
+input[type="text"]:focus {
+    border-color: #f3ecef;
+    outline: none;
+    box-shadow: 0 0 10px rgba(255, 51, 133, 0.5);
+}
+
+/* Modal Buttons */
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    gap: 20px;
+}
+
+.silderMode
+{
+    background-color:#3586c2;
+}
+
+/* Style the tab */
+.popup-tab {
+    margin-top:20px;
+  overflow: hidden;
+/*  border: 1px solid #ccc;*/
+  background-color: transparent;
+    color: #3586c2;
+
+}
+
+/* Style the buttons inside the tab */
+.popup-tab button {
+/*  background-color: inherit;*/
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+  background-color: white;
+color: #3586c2;
+}
+
+/* Change background color of buttons on hover */
+.popup-tab button:hover {
+    background-color: #3586c2;
+    color: white;
+}
+
+
+/* Create an active/current tablink class */
+.active {
+    background-color: #3586c2 !important;
+    color: white !important;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  /* padding: 6px 12px; */
+/*  border: 1px solid #ccc;*/
+  border-top: none;
+}
+
+
+/* Basic styling for the Sections */
+/* Basic styling for the ul and li */
+.subsubsub {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 15px; /* Reduced space between items */
+    background-color: #ffffff; /* Set background color of the list to white */
+    border-radius: 8px; /* More rounded corners */
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    transition: all 0.3s ease-in-out; /* Smooth transition for the whole list */
+}
+
+/* Styling for each list item */
+.subsubsub li {
+    display: inline-block;
+    padding: 6px 12px; /* Reduced padding to decrease height */
+    background-color: #ffffff; /* Set background color of the list items to white */
+    border-radius: 6px; /* Rounded corners for individual items */
+    transition: all 0.3s ease;
+    cursor: pointer; /* Pointer cursor on hover */
+    text-align: center; /* Center the text */
+    font-size: 13px; /* Smaller font size */
+}
+
+/* Styling for links */
+.subsubsub a {
+    text-decoration: none;
+    color: #3586c2; /* Link color matches your desired color */
+    font-weight: 600; /* Slightly bolder text for better readability */
+    display: inline-block;
+    transition: color 0.3s ease, transform 0.3s ease;
+    font-size: 13px; /* Smaller font size for links */
+}
+
+/* Hover effects for each list item */
+.subsubsub li:hover {
+    transform: scale(1.05); /* Slight scaling effect */
+    background-color: #e0f4fe; /* Light blue background on hover */
+}
+
+/* Hover effects for links */
+.subsubsub li a:hover {
+    color: #ffffff; /* White text on hover */
+    background-color: #3586c2; /* Match the link color with background */
+    border-radius: 5px; /* Rounded corners for links */
+    padding: 4px 10px; /* Slight padding for the active link effect */
+}
+
+/* Style for the 'current' class to highlight active page */
+.subsubsub li .current {
+    color: #ffffff;
+    background-color: #3586c2; /* Blue background for active item */
+    border-radius: 6px; /* Rounded corners for active item */
+    padding: 6px 12px; /* Maintain consistent padding for the active item */
+    font-weight: 700; /* Bold text for active item */
+}
+
+/* Add an animation for smooth transition of the list */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.subsubsub {
+/*    animation: fadeIn 0.7s ease-out;*/
+}
+
+
+.form-table{
+    background-color: white;
+    margin-right: 5px!important; 
+    border: 15px solid white; /* White border with a thickness of 2px */
+    border-radius: 4px; /* Optional: makes the corners rounded */
+    padding: 4px; /* Optional: adds space inside the border */
+
+}
+
+
+
+button.woocommerce-save-button {
+    color: #ffffff;
+    background-color: #3586c2 !important; /* Blue background for active item */
+    color: #ffffff; /* White text */
+    border: 2px solid #3586c2; /* Slightly darker green border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px 20px; /* Adjust padding */
+    font-size: 16px; /* Larger font size */
+    font-weight: bold; /* Bold text */
+    cursor: pointer; /* Pointer cursor for better UX */
+    transition: all 0.3s ease-in-out; /* Smooth hover effect */
+   
+    
+}
+
+button.woocommerce-save-button:hover {
+    background-color: #3586c2; /* Darker green on hover */
+    border-color: #3586c2; /* Darker border on hover */
+    
+}
+
+/* Style for all buttons with the 'connection_buttons' class */
+.connection_buttons {
+    background: #007bff; /* Blue background */
+    color: #ffffff; /* White text */
+    border: 1px solid #0056b3; /* Darker blue border */
+    border-radius: 5px; /* Slightly rounded corners */
+    padding: 10px 20px; /* Adjust padding */
+    font-size: 14px; /* Adjust font size */
+    font-weight: 600; /* Slightly bold text */
+    cursor: pointer; /* Pointer cursor on hover */
+    text-transform: uppercase; /* Uppercase text */
+    transition: all 0.3s ease; /* Smooth transition */
+    outline: none; /* Remove focus outline */
+}
+
+/* Hover effect for buttons with 'connection_buttons' class */
+.connection_buttons:hover {
+    background: #0056b3; /* Darker blue on hover */
+    border-color: #003366; /* Even darker border */
+    transform: translateY(-2px); /* Lift effect */
+}
+#disconnect_paymob:hover {
+    background: #0056b3; /* Darker blue on hover */
+    color: #ffffff;
+    border-color: #003366; /* Even darker border */
+    transform: translateY(-2px); /* Lift effect */
+}
+/* Active effect for buttons with 'connection_buttons' class */
+.connection_buttons:active {
+    background: #003366; /* Darkest blue for active state */
+    border-color: #001a33; /* Dark border */
+    transform: translateY(2px); /* Button press effect */
+}
+
+/* Add specific style for Manual Setup button */
+.connection_buttons.manual-setup-button {
+    background:  #3586c2; /* Green background */
+    border-color:  #3586c2; /* Green border */
+}
+
+/* Hover effect for Manual Setup button */
+.connection_buttons.manual-setup-button:hover {
+    background:  #3586c2; /* Darker green on hover */
+    border-color:  #3586c2; /* Darker green border */
+}
+
+/* Active effect for Manual Setup button */
+.connection_buttons.manual-setup-button:active {
+    background:  #3586c2; /* Even darker green */
+    border-color:  #3586c2; /* Darker green border */
+}
+.wrap{
+    background-color: white;
+}
+
+.select2-container {
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+}
+
+.select2-container .select2-selection--multiple {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    min-height: 38px;
+    padding: 5px;
+}
+
+.select2-container .select2-selection--multiple .select2-selection__choice {
+    background-color: #007cba; /* WordPress admin blue */
+    color: #fff;
+    border-radius: 4px;
+    margin: 2px;
+}
+
+#paymob_pixel:after {
+    content: 'New';
+    color: #fff;
+    background-color: #ff5722;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 2px 5px;
+    border-radius: 3px;
+    margin-left: 5px;
+    display: inline-block;
+}
+
+ .wp-submenu li a[href="#paymob_pixel"] {
+    color: #e46d29 !important;
+    font-weight: bold;
+}
+
+
+.woocommerce table.form-table .select2-container{
+    max-width: 400px !important;
+}
+
+/* Container for the tab links */
+.paymob-admin-tab {
+    display: flex;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.paymob-admin-tab .tablinks {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: #ffffff !important;
+    color: #2c7bbf !important;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    box-shadow: 0 3px 6px rgba(44, 123, 191, 0.3);
+    border-top: 1px solid #2c7bbf;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+   
+.paymob-admin-tab .tablinks:hover {
+    background-color: #2c7bbf !important; /* Active = blue */
+    color: #ffffff !important; /* Active text = white */
+    transform: scale(1.05); /* Slight scaling effect */
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+   
+.paymob-admin-tab .tablinks.active {
+    background-color: #2c7bbf !important; /* Active = blue */
+    color: #ffffff !important; /* Active text = white */
+    font-weight: 700;
+    box-shadow: 0 3px 6px rgba(44, 123, 191, 0.3);
+    border: 0.25px solid #2c7bbf;
+    border-bottom: #ffffff; /* Optional: make it blend into the content below */
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.paymob-admin-tab .tablinks .paymob-tab-new-badge {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-left: 0;
+    padding: 2px 7px;
+    background: linear-gradient(135deg, #edf2ff, #d0dbff) !important;
+    color: #144dff !important;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    border-radius: 999px;
+    border: 1px solid #b8c9ff;
+    text-transform: uppercase;
+    line-height: 1;
+    vertical-align: middle;
+}
+
+.paymob-admin-tab .tablinks.active .paymob-tab-new-badge,
+.paymob-admin-tab .tablinks:hover .paymob-tab-new-badge {
+    background: rgba(255, 255, 255, 0.18) !important;
+    color: #ffffff !important;
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Instant Refund notice on Edit Order (refund actions row) */
+.wc-order-data-row .paymob-ir-refund-notice,
+.paymob-ir-refund-notice {
+	clear: both !important;
+	float: none !important;
+	display: block !important;
+	width: 100% !important;
+	max-width: 100%;
+	box-sizing: border-box;
+	margin: 20px 0 4px !important;
+	padding: 0 !important;
+	background: transparent !important;
+	border: 0 !important;
+	box-shadow: none !important;
+}
+
+.paymob-ir-refund-notice__inner {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	width: 100%;
+	box-sizing: border-box;
+	padding: 8px 12px;
+	background: #fff8e5;
+	border: 1px solid #f0c36d;
+	border-left: 4px solid #dba617;
+	border-radius: 6px;
+	text-align: left;
+	direction: ltr;
+}
+
+.paymob-ir-refund-notice__badge {
+	flex: 0 0 22px;
+	width: 22px;
+	height: 22px;
+	margin-top: 0;
+	border-radius: 50%;
+	background: #dba617;
+	color: #fff;
+	font-size: 12px;
+	font-weight: 700;
+	line-height: 22px;
+	text-align: center;
+}
+
+.paymob-ir-refund-notice__body {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.paymob-ir-refund-notice__title {
+	margin: 0 0 4px !important;
+	padding: 0 !important;
+	color: #1d2327;
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 1.3;
+}
+
+.paymob-ir-refund-notice__list {
+	margin: 0 !important;
+	padding: 0 !important;
+	list-style: none !important;
+}
+
+.paymob-ir-refund-notice__list li {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 4px 12px;
+	margin: 0;
+	padding: 2px 0;
+	border-top: 1px solid rgba(219, 166, 23, 0.2);
+}
+
+.paymob-ir-refund-notice__list li:first-child {
+	border-top: 0;
+	padding-top: 0;
+}
+
+.paymob-ir-refund-notice__label {
+	color: #50575e;
+	font-size: 12px;
+	line-height: 1.3;
+}
+
+.paymob-ir-refund-notice__value {
+	color: #1d2327;
+	font-size: 12px;
+	font-weight: 600;
+	white-space: nowrap;
+}
+
+.paymob-ir-refund-notice__value .woocommerce-Price-amount {
+	font-weight: 600;
+}

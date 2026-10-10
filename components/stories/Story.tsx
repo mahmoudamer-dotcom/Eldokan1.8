@@ -1,5 +1,7 @@
 'use client'
 
+import { formatMoney } from '@/lib/format-money'
+import type { Locale } from '@/lib/i18n'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
@@ -11,8 +13,11 @@ import { useLocale } from '@/components/i18n/LocaleProvider'
 type SellerStory = {
   sellerId: string
   sellerName: string
+  title?: string
   product: HomeProduct
 }
+
+export type ManagedStory = { id: string; title: string; image: { url: string; alt: string } | null; product: HomeProduct }
 
 function getImage(product: HomeProduct) {
   if (product.image?.url) return product.image.url
@@ -20,15 +25,21 @@ function getImage(product: HomeProduct) {
   return typeof image === 'string' ? image : image?.url ?? undefined
 }
 
-function getPrice(product: HomeProduct, t: (value: string) => string) {
-  if (product.pricing?.on_sale && product.pricing.sale_price?.formatted) return product.pricing.sale_price.formatted
-  return product.pricing?.regular_price?.formatted ?? t('View product for price')
+function getPrice(product: HomeProduct, t: (value: string) => string, locale: Locale) {
+  if (product.pricing?.on_sale && product.pricing.sale_price?.formatted) return formatMoney(product.pricing.sale_price, locale)
+  return product.pricing?.regular_price ? formatMoney(product.pricing.regular_price, locale) : t('View product for price')
 }
 
-export default function Story({ products }: { products: HomeProduct[] }) {
-  const { t } = useLocale()
+export default function Story({ products, managedStories }: { products: HomeProduct[]; managedStories?: ManagedStory[] | null }) {
+  const { t, locale } = useLocale()
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
-  const stories = useMemo(() => {
+  const stories = useMemo<SellerStory[]>(() => {
+    if (managedStories) return managedStories.map(story => ({
+      sellerId: story.id,
+      sellerName: story.product.seller?.name || story.title,
+      title: story.title,
+      product: story.image ? { ...story.product, image: story.image } : story.product,
+    }))
     const bySeller = new Map<string, SellerStory>()
 
     for (const product of products) {
@@ -45,7 +56,7 @@ export default function Story({ products }: { products: HomeProduct[] }) {
     }
 
     return [...bySeller.values()].slice(0, 10)
-  }, [products])
+  }, [products, managedStories])
 
   const activeStory = activeIndex === null ? null : stories[activeIndex]
   if (stories.length === 0) return null
@@ -54,8 +65,8 @@ export default function Story({ products }: { products: HomeProduct[] }) {
     <>
       <section aria-labelledby="seller-stories-title" className="space-y-4">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-shop-accent">{t('Products and offers from our sellers')}</p>
-          <h2 id="seller-stories-title" className="mt-1 text-xl font-bold text-foreground sm:text-2xl ">{t('Seller stories')}</h2>
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-shop-accent">{managedStories ? locale === 'ar' ? 'اكتشف المنتجات والعروض' : 'Discover products and offers' : t('Products and offers from our sellers')}</p>
+          <h2 id="seller-stories-title" className="mt-1 text-xl font-bold text-foreground sm:text-2xl ">{managedStories ? locale === 'ar' ? 'قصص الدكان' : 'Eldokan stories' : t('Seller stories')}</h2>
         </div>
         <div className="category-scrollbar-hidden flex gap-5 overflow-x-auto pb-2 sm:gap-7">
           {stories.map((story, index) => {
@@ -65,10 +76,11 @@ export default function Story({ products }: { products: HomeProduct[] }) {
             <button key={story.sellerId} type="button" onClick={() => setActiveIndex(index)} aria-label={`${t('View')} ${story.sellerName} ${t('featured product')}`} className="group flex w-[76px] shrink-0 flex-col items-center gap-2 text-center">
                 <span className="grid size-[76px] place-items-center rounded-full bg-gradient-to-br from-[#f5b400] via-[#ef7540] to-[#d73565] p-[3px] transition duration-200 group-hover:scale-105">
                   <span className="relative grid size-full place-items-center overflow-hidden rounded-full border-[3px] border-white bg-muted">
-                    {image ? <Image src={image} alt="" fill sizes="76px" className="object-cover" /> : <ShoppingBag className="size-7 text-shop-accent" aria-hidden="true" />}
+                    {image ? <Image src={image} alt="" fill sizes="76px" className="rounded-full object-cover" /> : <ShoppingBag className="size-7 text-shop-accent" aria-hidden="true" />}
                   </span>
                 </span>
                 <span className="w-full truncate text-xs font-medium text-foreground group-hover:text-foreground">{story.sellerName}</span>
+                {story.title && <span className="w-full truncate text-[11px] text-muted-foreground">{story.title}</span>}
               </button>
             )
           })}
@@ -81,7 +93,7 @@ export default function Story({ products }: { products: HomeProduct[] }) {
 }
 
 function StoryViewer({ stories, startIndex, onClose }: { stories: SellerStory[]; startIndex: number; onClose: () => void }) {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   const { viewportRef, api, selectedIndex: activeIndex, direction } = useSwipeCarousel(stories.length, startIndex)
   const activeStory = stories[activeIndex] ?? stories[0]
   return (
@@ -101,7 +113,12 @@ function StoryViewer({ stories, startIndex, onClose }: { stories: SellerStory[];
                   </div>
 
                   <div className="relative z-10 flex items-center justify-between gap-3 px-4 pt-4">
-                    <span className="truncate text-sm font-semibold">{activeStory.sellerName}</span>
+                    <div className="min-w-0">
+                      {activeStory.product.seller?.id
+                        ? <Link href={`/seller/${activeStory.product.seller.id}`} onClick={onClose} className="block truncate text-sm font-semibold text-white hover:underline">{activeStory.sellerName}</Link>
+                        : <span className="block truncate text-sm font-semibold">{activeStory.sellerName}</span>}
+                      {activeStory.title && <p className="mt-1 line-clamp-2 text-xs text-white/80">{activeStory.title}</p>}
+                    </div>
                     <button type="button" onClick={onClose} aria-label={t('Close story')} className="grid size-9 shrink-0 place-items-center rounded-full bg-black/30 transition hover:bg-black/50">
                       <X className="size-5" />
                     </button>
@@ -110,7 +127,7 @@ function StoryViewer({ stories, startIndex, onClose }: { stories: SellerStory[];
                   <div className="relative z-10 flex shrink-0 flex-col items-center justify-center px-7 py-4 text-center">
                     {getImage(activeStory.product) ? (
                       <div className="relative size-44 shrink-0 overflow-hidden rounded-2xl bg-white/10 shadow-xl sm:size-64">
-                        <Image src={getImage(activeStory.product)!} alt={activeStory.product.name} fill sizes="(max-width: 640px) 52vw, 256px" className="object-contain p-3" />
+                        <Image src={getImage(activeStory.product)!} alt={activeStory.product.name} fill sizes="(max-width: 640px) 52vw, 256px" className="rounded-2xl object-contain p-3" />
                       </div>
                     ) : (
                       <ShoppingBag className="size-24 text-[#ffd45f]" strokeWidth={1.2} aria-hidden="true" />
@@ -119,7 +136,7 @@ function StoryViewer({ stories, startIndex, onClose }: { stories: SellerStory[];
                       <span className="mt-5 rounded-full bg-[#f5b400] px-3 py-1.5 text-[10px] font-extrabold tracking-wide text-primary-foreground">{t('ON SALE')}</span>
                     )}
                     <h3 className="mt-4 line-clamp-3 text-xl font-extrabold leading-tight sm:text-2xl">{activeStory.product.name}</h3>
-                    <p className="mt-2 text-lg font-bold text-white">{getPrice(activeStory.product, t)}</p>
+                    <p className="mt-2 text-lg font-bold text-white">{getPrice(activeStory.product, t, locale)}</p>
                   </div>
 
                   <div className="relative z-10 p-5">

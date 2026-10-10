@@ -1,3 +1,4 @@
+import T from '@/components/i18n/T'
 import * as React from "react"
 import { mergeProps } from "@base-ui/react/merge-props"
 import { useRender } from "@base-ui/react/use-render"
@@ -81,7 +82,7 @@ function BreadcrumbSeparator({
       data-slot="breadcrumb-separator"
       role="presentation"
       aria-hidden="true"
-      className={cn("[&>svg]:size-3.5", className)}
+      className={cn("[&>svg]:size-3.5 rtl:[&>svg]:rotate-180", className)}
       {...props}
     >
       {children ?? (
@@ -108,7 +109,7 @@ function BreadcrumbEllipsis({
     >
       <MoreHorizontalIcon
       />
-      <span className="sr-only">More</span>
+      <span className="sr-only"><T text="More" /></span>
     </span>
   )
 }

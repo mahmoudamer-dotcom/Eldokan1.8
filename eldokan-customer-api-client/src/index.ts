@@ -1,13 +1,18 @@
+import { CommerceResource } from './resources/commerce.js';
+export * from './resources/commerce.js';
 import { EldokanHttpClient } from './client.js';
 import type { EldokanClientConfig } from './config.js';
 import { CategoriesResource } from './resources/categories.js';
 import { HealthResource } from './resources/health.js';
 import { HomeResource } from './resources/home.js';
+import { StoriesResource } from './resources/stories.js';
+export * from './resources/stories.js';
 import { ProductsResource } from './resources/products.js';
 import { SearchResource } from './resources/search.js';
 import { BrandsResource } from './resources/brands.js';
 import { TagsResource } from './resources/tags.js';
 import { SellersResource } from './resources/sellers.js';
+import { ReviewsResource } from './resources/reviews.js';
 import { AuthResource } from './resources/auth.js';
 import { AccountResource } from './resources/account.js';
 import { WishlistResource } from './resources/wishlist.js';
@@ -29,14 +34,17 @@ export * from './types.js';
  * Keep frontend components behind this class; do not call backend-specific endpoints directly.
  */
 export class EldokanCustomerApiClient {
+  readonly commerce: CommerceResource;
   readonly health: HealthResource;
   readonly home: HomeResource;
+  readonly stories: StoriesResource;
   readonly products: ProductsResource;
   readonly categories: CategoriesResource;
   readonly search: SearchResource;
   readonly brands: BrandsResource;
   readonly tags: TagsResource;
   readonly sellers: SellersResource;
+  readonly reviews: ReviewsResource;
   readonly auth: AuthResource;
   readonly account: AccountResource;
   readonly wishlist: WishlistResource;
@@ -48,14 +56,17 @@ export class EldokanCustomerApiClient {
   constructor(config: EldokanClientConfig) {
     const http = new EldokanHttpClient(config);
     const customerSession = new CustomerSessionState();
+    this.commerce = new CommerceResource(http, customerSession);
     this.health = new HealthResource(http);
     this.home = new HomeResource(http);
+    this.stories = new StoriesResource(http);
     this.products = new ProductsResource(http);
     this.categories = new CategoriesResource(http);
     this.search = new SearchResource(http);
     this.brands = new BrandsResource(http);
     this.tags = new TagsResource(http);
     this.sellers = new SellersResource(http);
+    this.reviews = new ReviewsResource(http, customerSession);
     this.auth = new AuthResource(http, customerSession);
     this.account = new AccountResource(http, customerSession);
     this.wishlist = new WishlistResource(http, customerSession);

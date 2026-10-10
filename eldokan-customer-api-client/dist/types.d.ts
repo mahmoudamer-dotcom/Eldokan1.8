@@ -1,5 +1,70 @@
 export * from './generated/types.js';
 export type Language = 'ar' | 'en';
+export type ReviewId = `rev_${number}`;
+export interface CustomerReview {
+    id: ReviewId;
+    author: string;
+    rating: number;
+    title: string;
+    comment: string;
+    created_at: string;
+    verified_purchase: boolean;
+    status: 'approved' | 'pending';
+    helpful_count?: number;
+    images?: {
+        url: string;
+        alt: string;
+    }[];
+}
+export interface ReviewInput {
+    rating: number;
+    title?: string;
+    comment: string;
+}
+export interface ReviewListParams extends LanguageOptions {
+    page?: number;
+    perPage?: number;
+    rating?: number;
+    sort?: 'newest' | 'highest' | 'lowest';
+}
+export interface ReviewSummary {
+    average: number | null;
+    count: number;
+    distribution: Record<string, number>;
+}
+export interface ReviewListResponse {
+    success: true;
+    data: {
+        items: CustomerReview[];
+        summary: ReviewSummary;
+    };
+    meta: {
+        request_id: string;
+        page: number;
+        per_page: number;
+        total: number;
+        total_pages: number;
+    };
+}
+export interface ReviewMineResponse {
+    success: true;
+    data: {
+        can_review: boolean;
+        reason: string | null;
+        review: CustomerReview | null;
+    };
+    meta: {
+        request_id: string;
+    };
+}
+export interface ReviewResponse {
+    success: true;
+    data: CustomerReview;
+    meta: {
+        request_id: string;
+    };
+}
+export type SellerProfileResponse = import('./generated/types.js').SellerPublicResponse;
 export type StockStatus = 'in_stock' | 'out_of_stock' | 'on_backorder';
 export type ProductSort = 'newest' | 'price_asc' | 'price_desc' | 'best_selling' | 'rating' | 'relevance';
 export type ProductId = `prd_${number}`;

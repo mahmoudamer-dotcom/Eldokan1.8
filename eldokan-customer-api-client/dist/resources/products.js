@@ -16,6 +16,11 @@ export class ProductsResource {
     constructor(http) {
         this.http = http;
     }
+    bestSelling(category, options = {}) {
+        if (!category.trim())
+            validation('Category is required.', 'missing_category');
+        return this.list({ category, ...options, sort: 'best_selling', stockStatus: 'in_stock' });
+    }
     list(params = {}) {
         assertPositiveInteger(params.page, 'page');
         assertPositiveInteger(params.perPage, 'per_page', 48);

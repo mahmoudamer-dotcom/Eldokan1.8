@@ -1,3 +1,7 @@
+import ProductStructuredData from '@/components/seo/ProductStructuredData'
+import { getStorefrontUrl } from '@/lib/site-url'
+import { Suspense } from 'react'
+import type { ProductDetailData } from '@/types/product'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import ParentImage from '@/components/ParentImage/ParentImage'
@@ -23,6 +27,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   if (!product) return { title: locale === 'ar' ? 'المنتج غير متاح | الدكان' : 'Product unavailable | Eldokan', robots: { index: false, follow: false } }
   const description = `${product.name} · ${product.pricing.on_sale ? product.pricing.sale_price.formatted : product.pricing.regular_price.formatted}`
   return { title: `${product.name} | ${locale === 'ar' ? 'الدكان' : 'Eldokan'}`, description,
+    alternates: getStorefrontUrl() ? { canonical: new URL(`/product/${product.id}`, getStorefrontUrl()).toString() } : undefined,
     openGraph: { title: product.name, description, type: 'website', images: product.images.slice(0, 1).map((image) => ({ url: image.url, alt: product.name })) },
     twitter: { card: 'summary_large_image', title: product.name, description, images: product.images.slice(0, 1).map((image) => image.url) } }
 }
@@ -41,6 +46,42 @@ export default async function ProductPage({
 
   if (!product?.id) notFound()
 
+  const category = product.categories?.[0]
+  return (
+    <>
+      <main className="container mx-auto  px-4 pb-12">
+        <ProductStructuredData product={product} />
+        <ProductViewTracker product={product} />
+        <nav aria-label={translate('Breadcrumb', locale)} className="flex flex-wrap items-center gap-2 py-5 text-sm text-muted-foreground">
+          <Link href="/" className="transition hover:text-foreground"><T text="Home" /></Link>
+          <span aria-hidden="true">/</span>
+          {category && (
+            <>
+              <Link href={`/category/${encodeURIComponent(category.slug || category.name)}`} className="transition hover:text-foreground"><T text={translateCatalogName(category.name, locale)} /></Link>
+              <span aria-hidden="true">/</span>
+            </>
+          )}
+          <span className="line-clamp-1 font-medium text-foreground">{product.name}</span>
+        </nav>
+
+        <ReturnToJourney />
+        <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(20rem,0.95fr)] lg:gap-8">
+          <div className="min-w-0 rounded-2xl border border-border bg-card p-3 sm:p-5">
+            <ParentImage data={product} />
+          </div>
+          <div><ProductDetails data={product} /></div>
+        </div>
+<DescriptionProduct data={product} />
+        <ProductReviews key={String(product.id)} productId={String(product.id)} />
+        <Suspense fallback={<div className="mt-10 h-64 animate-pulse rounded-2xl bg-muted" aria-hidden="true" />}>
+          <ProductRecommendations product={product} locale={locale} />
+        </Suspense>
+      </main>
+    </>
+  )
+}
+
+async function ProductRecommendations({ product, locale }: { product: ProductDetailData; locale: 'ar' | 'en' }) {
   const category = product.categories?.[0]
   const [allProductsResponse, categoryResponse] = await Promise.all([
     Products(),
@@ -61,43 +102,21 @@ export default async function ProductPage({
     return Boolean(normalizedName(product.name) && normalizedName(listing.name ?? listing.title) === normalizedName(product.name))
   }
   const otherSellerOffers = listings.filter((listing) =>
-    isSameProduct(listing) && String(listing.id) !== String(product.id),
+    isSameProduct(listing) && String(listing.id) !== String(product.id)
+      && Boolean(product.seller?.id && listing.seller?.id)
+      && String(listing.seller?.id) !== String(product.seller?.id),
   )
   const relatedProducts = categoryProducts
     .filter((listing) => listing.stock?.status === 'in_stock' && !isSameProduct(listing))
     .slice(0, 10)
 
-  return (
-    <>
-      <main className="container mx-auto  px-4 pb-12">
-        <ProductViewTracker product={product} />
-        <nav aria-label={translate('Breadcrumb', locale)} className="flex flex-wrap items-center gap-2 py-5 text-sm text-muted-foreground">
-          <Link href="/" className="transition hover:text-foreground"><T text="Home" /></Link>
-          <span aria-hidden="true">/</span>
-          {category && (
-            <>
-              <Link href={`/category/${encodeURIComponent(category.slug || category.name)}`} className="transition hover:text-foreground"><T text={translateCatalogName(category.name, locale)} /></Link>
-              <span aria-hidden="true">/</span>
-            </>
-          )}
-          <span className="line-clamp-1 font-medium text-foreground">{product.name}</span>
-        </nav>
-
-        <ReturnToJourney />
-        <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(20rem,0.95fr)] lg:gap-8">
-          <div className="min-w-0 rounded-2xl border border-border bg-card p-3 sm:p-5">
-            <ParentImage data={product} />
-          </div>
-          <ProductDetails data={product} />
-        </div>
-<DescriptionProduct data={product} />
-        <ProductReviews key={String(product.id)} productId={String(product.id)} />
+  return <>
         {category && (
           <section className="mt-10" aria-labelledby="related-products-title">
             <div className="mb-5">
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-shop-accent"><T text="More to explore" /></p>
               <h2 id="related-products-title" className="mt-1 text-xl font-bold text-foreground sm:text-2xl"><T text="Related products" /></h2>
-              <p className="mt-1 text-sm text-muted-foreground"><T text="More picks from" /> {category?.name ?? <T text="this collection" />}</p>
+              <p className="mt-1 text-sm text-muted-foreground"><T text="More picks from" /> {category ? translateCatalogName(category.name, locale) : <T text="this collection" />}</p>
             </div>
             {relatedProducts.length > 0 ? <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4 xl:grid-cols-5">
               {relatedProducts.map((relatedProduct, index) => <ProductCard key={relatedProduct.id ?? index} product={relatedProduct} />)}
@@ -121,7 +140,5 @@ export default async function ProductPage({
           </section>
         )}
 
-      </main>
-    </>
-  )
+</>
 }

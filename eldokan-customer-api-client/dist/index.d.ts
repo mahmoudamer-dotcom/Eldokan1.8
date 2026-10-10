@@ -1,12 +1,17 @@
+import { CommerceResource } from './resources/commerce.js';
+export * from './resources/commerce.js';
 import type { EldokanClientConfig } from './config.js';
 import { CategoriesResource } from './resources/categories.js';
 import { HealthResource } from './resources/health.js';
 import { HomeResource } from './resources/home.js';
+import { StoriesResource } from './resources/stories.js';
+export * from './resources/stories.js';
 import { ProductsResource } from './resources/products.js';
 import { SearchResource } from './resources/search.js';
 import { BrandsResource } from './resources/brands.js';
 import { TagsResource } from './resources/tags.js';
 import { SellersResource } from './resources/sellers.js';
+import { ReviewsResource } from './resources/reviews.js';
 import { AuthResource } from './resources/auth.js';
 import { AccountResource } from './resources/account.js';
 import { WishlistResource } from './resources/wishlist.js';
@@ -25,14 +30,17 @@ export * from './types.js';
  * Keep frontend components behind this class; do not call backend-specific endpoints directly.
  */
 export declare class EldokanCustomerApiClient {
+    readonly commerce: CommerceResource;
     readonly health: HealthResource;
     readonly home: HomeResource;
+    readonly stories: StoriesResource;
     readonly products: ProductsResource;
     readonly categories: CategoriesResource;
     readonly search: SearchResource;
     readonly brands: BrandsResource;
     readonly tags: TagsResource;
     readonly sellers: SellersResource;
+    readonly reviews: ReviewsResource;
     readonly auth: AuthResource;
     readonly account: AccountResource;
     readonly wishlist: WishlistResource;

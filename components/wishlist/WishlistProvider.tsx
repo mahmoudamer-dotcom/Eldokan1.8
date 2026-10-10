@@ -7,6 +7,7 @@ import { createEldokanApi } from '@/lib/eldokan-api'
 import { toStoreProduct } from '@/lib/catalog-adapters'
 import type { StoreProduct } from '@/components/productCard/ProductCard'
 import { useLocale } from '@/components/i18n/LocaleProvider'
+import { translate } from '@/lib/i18n'
 
 type WishlistContextValue = {
   products: StoreProduct[]
@@ -46,7 +47,7 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
         setSignedIn(false)
         setError('')
       } else {
-        setError('Unable to load your favorites.')
+        setError(translate('Unable to load your favorites.', locale))
       }
     } finally {
       if (sequence === loadSequence.current) setReady(true)
@@ -74,7 +75,7 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
       setError('')
     } catch (cause) {
       if (cause instanceof EldokanClientError && cause.status === 401) setSignedIn(false)
-      setError('Unable to update your favorites.')
+      setError(translate('Unable to update your favorites.', locale))
       throw cause
     }
   }, [products, locale])

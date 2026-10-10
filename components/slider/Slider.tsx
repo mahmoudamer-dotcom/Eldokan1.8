@@ -1,6 +1,6 @@
 'use client'
 
-import Image from 'next/image'
+import Image, { getImageProps } from 'next/image'
 import Link from 'next/link'
 import { useEffect } from 'react'
 import { useSwipeCarousel } from '@/lib/use-swipe-carousel'
@@ -25,7 +25,7 @@ function ctaHref(slide: HomeHeroSlide) {
     case 'product':
       return `/product/${encodeURIComponent(value)}`
     default:
-      return value.startsWith('/') ? value : '/#products'
+      return value.startsWith('/') && !value.startsWith('//') && !value.includes('\\') ? value : '/#products'
   }
 }
 
@@ -72,13 +72,14 @@ export default function Slider({
               {hasImage && (
                 <>
                   <picture className="absolute inset-0 -z-20">
-                    {mobileImage && <source media="(max-width: 640px)" srcSet={mobileImage} />}
+                    {mobileImage && <source media="(max-width: 640px)" srcSet={getImageProps({ src: mobileImage, alt: '', fill: true, sizes: '100vw' }).props.srcSet} />}
                     {(desktopImage || mobileImage) && (
                       <Image
                         src={desktopImage ?? mobileImage!}
                         alt=""
                         fill
-                        priority={index === 0}
+                        loading={index === 0 ? 'eager' : 'lazy'}
+                        fetchPriority={index === 0 ? 'high' : 'auto'}
                         draggable={false}
                         sizes="100vw"
                         className="object-cover"

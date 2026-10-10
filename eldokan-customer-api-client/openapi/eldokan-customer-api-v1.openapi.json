@@ -3,8 +3,8 @@
   "info": {
     "title": "ElDokan Customer API",
     "version": "1.0.0",
-    "description": "Frozen Customer API adapter 0.8.0, Contract v1. Native credentialed customer cookies; Guest Cart sessions; header-only Guest Order capability. All responses private, no-store. Checkout and payment HTTP 200 can contain issues; browser return is not payment proof. Real staging acceptance remains required.",
-    "x-backend-version": "0.8.0",
+    "description": "Frozen Customer API adapter 0.8.0, Contract v1. Native credentialed customer cookies; Guest Cart sessions; header-only Guest Order capability. All responses private, no-store. Checkout and payment HTTP 200 can contain issues; browser return is not payment proof. Real staging acceptance remains required. Adapter 0.9.0 adds moderated verified-purchase reviews, seller reviews, paginated seller products and category best sellers. Adapter 0.10.0 adds password recovery, customer returns, product alerts, saved decision profiles, review images and feedback, diagnostics and catalog sitemap. Bosta integration is deferred.",
+    "x-backend-version": "0.10.0",
     "x-contract-version": "v1"
   },
   "servers": [
@@ -133,15 +133,6 @@
           "400": {
             "$ref": "#/components/responses/Error"
           },
-          "409": {
-            "$ref": "#/components/responses/Error"
-          },
-          "422": {
-            "$ref": "#/components/responses/Error"
-          },
-          "429": {
-            "$ref": "#/components/responses/Error"
-          },
           "401": {
             "$ref": "#/components/responses/Error"
           },
@@ -149,6 +140,15 @@
             "$ref": "#/components/responses/Error"
           },
           "404": {
+            "$ref": "#/components/responses/Error"
+          },
+          "409": {
+            "$ref": "#/components/responses/Error"
+          },
+          "422": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
             "$ref": "#/components/responses/Error"
           },
           "503": {
@@ -248,12 +248,6 @@
           "401": {
             "$ref": "#/components/responses/Error"
           },
-          "422": {
-            "$ref": "#/components/responses/Error"
-          },
-          "429": {
-            "$ref": "#/components/responses/Error"
-          },
           "403": {
             "$ref": "#/components/responses/Error"
           },
@@ -261,6 +255,12 @@
             "$ref": "#/components/responses/Error"
           },
           "409": {
+            "$ref": "#/components/responses/Error"
+          },
+          "422": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
             "$ref": "#/components/responses/Error"
           },
           "503": {
@@ -339,10 +339,10 @@
               }
             }
           },
-          "401": {
+          "400": {
             "$ref": "#/components/responses/Error"
           },
-          "400": {
+          "401": {
             "$ref": "#/components/responses/Error"
           },
           "403": {
@@ -435,13 +435,13 @@
               }
             }
           },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
           "401": {
             "$ref": "#/components/responses/Error"
           },
           "403": {
-            "$ref": "#/components/responses/Error"
-          },
-          "400": {
             "$ref": "#/components/responses/Error"
           },
           "404": {
@@ -530,10 +530,10 @@
               }
             }
           },
-          "401": {
+          "400": {
             "$ref": "#/components/responses/Error"
           },
-          "400": {
+          "401": {
             "$ref": "#/components/responses/Error"
           },
           "403": {
@@ -634,22 +634,22 @@
               }
             }
           },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
           "401": {
             "$ref": "#/components/responses/Error"
           },
           "403": {
             "$ref": "#/components/responses/Error"
           },
-          "422": {
-            "$ref": "#/components/responses/Error"
-          },
-          "400": {
-            "$ref": "#/components/responses/Error"
-          },
           "404": {
             "$ref": "#/components/responses/Error"
           },
           "409": {
+            "$ref": "#/components/responses/Error"
+          },
+          "422": {
             "$ref": "#/components/responses/Error"
           },
           "429": {
@@ -742,22 +742,22 @@
               }
             }
           },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
           "401": {
             "$ref": "#/components/responses/Error"
           },
           "403": {
             "$ref": "#/components/responses/Error"
           },
-          "422": {
-            "$ref": "#/components/responses/Error"
-          },
-          "400": {
-            "$ref": "#/components/responses/Error"
-          },
           "404": {
             "$ref": "#/components/responses/Error"
           },
           "409": {
+            "$ref": "#/components/responses/Error"
+          },
+          "422": {
             "$ref": "#/components/responses/Error"
           },
           "429": {
@@ -850,22 +850,22 @@
               }
             }
           },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
           "401": {
             "$ref": "#/components/responses/Error"
           },
           "403": {
             "$ref": "#/components/responses/Error"
           },
-          "422": {
-            "$ref": "#/components/responses/Error"
-          },
-          "400": {
-            "$ref": "#/components/responses/Error"
-          },
           "404": {
             "$ref": "#/components/responses/Error"
           },
           "409": {
+            "$ref": "#/components/responses/Error"
+          },
+          "422": {
             "$ref": "#/components/responses/Error"
           },
           "429": {
@@ -954,10 +954,10 @@
               }
             }
           },
-          "401": {
+          "400": {
             "$ref": "#/components/responses/Error"
           },
-          "400": {
+          "401": {
             "$ref": "#/components/responses/Error"
           },
           "403": {
@@ -1076,10 +1076,10 @@
           "404": {
             "$ref": "#/components/responses/Error"
           },
-          "422": {
+          "409": {
             "$ref": "#/components/responses/Error"
           },
-          "409": {
+          "422": {
             "$ref": "#/components/responses/Error"
           },
           "429": {
@@ -1285,9 +1285,6 @@
           "400": {
             "$ref": "#/components/responses/Error"
           },
-          "503": {
-            "$ref": "#/components/responses/Error"
-          },
           "401": {
             "$ref": "#/components/responses/Error"
           },
@@ -1304,6 +1301,9 @@
             "$ref": "#/components/responses/Error"
           },
           "429": {
+            "$ref": "#/components/responses/Error"
+          },
+          "503": {
             "$ref": "#/components/responses/Error"
           }
         },
@@ -1412,6 +1412,12 @@
           "403": {
             "$ref": "#/components/responses/Error"
           },
+          "404": {
+            "$ref": "#/components/responses/Error"
+          },
+          "409": {
+            "$ref": "#/components/responses/Error"
+          },
           "422": {
             "$ref": "#/components/responses/Error"
           },
@@ -1419,12 +1425,6 @@
             "$ref": "#/components/responses/Error"
           },
           "503": {
-            "$ref": "#/components/responses/Error"
-          },
-          "404": {
-            "$ref": "#/components/responses/Error"
-          },
-          "409": {
             "$ref": "#/components/responses/Error"
           }
         },
@@ -1548,13 +1548,13 @@
           "404": {
             "$ref": "#/components/responses/Error"
           },
+          "409": {
+            "$ref": "#/components/responses/Error"
+          },
           "422": {
             "$ref": "#/components/responses/Error"
           },
           "429": {
-            "$ref": "#/components/responses/Error"
-          },
-          "409": {
             "$ref": "#/components/responses/Error"
           },
           "503": {
@@ -1647,9 +1647,6 @@
           "403": {
             "$ref": "#/components/responses/Error"
           },
-          "429": {
-            "$ref": "#/components/responses/Error"
-          },
           "404": {
             "$ref": "#/components/responses/Error"
           },
@@ -1657,6 +1654,9 @@
             "$ref": "#/components/responses/Error"
           },
           "422": {
+            "$ref": "#/components/responses/Error"
+          },
+          "429": {
             "$ref": "#/components/responses/Error"
           },
           "503": {
@@ -1756,13 +1756,13 @@
           "404": {
             "$ref": "#/components/responses/Error"
           },
+          "409": {
+            "$ref": "#/components/responses/Error"
+          },
           "422": {
             "$ref": "#/components/responses/Error"
           },
           "429": {
-            "$ref": "#/components/responses/Error"
-          },
-          "409": {
             "$ref": "#/components/responses/Error"
           },
           "503": {
@@ -1867,13 +1867,13 @@
           "404": {
             "$ref": "#/components/responses/Error"
           },
+          "409": {
+            "$ref": "#/components/responses/Error"
+          },
           "422": {
             "$ref": "#/components/responses/Error"
           },
           "429": {
-            "$ref": "#/components/responses/Error"
-          },
-          "409": {
             "$ref": "#/components/responses/Error"
           },
           "503": {
@@ -2829,13 +2829,13 @@
           "400": {
             "$ref": "#/components/responses/Error"
           },
+          "404": {
+            "$ref": "#/components/responses/Error"
+          },
           "422": {
             "$ref": "#/components/responses/Error"
           },
           "503": {
-            "$ref": "#/components/responses/Error"
-          },
-          "404": {
             "$ref": "#/components/responses/Error"
           }
         },
@@ -2955,13 +2955,13 @@
           "400": {
             "$ref": "#/components/responses/Error"
           },
+          "404": {
+            "$ref": "#/components/responses/Error"
+          },
           "422": {
             "$ref": "#/components/responses/Error"
           },
           "503": {
-            "$ref": "#/components/responses/Error"
-          },
-          "404": {
             "$ref": "#/components/responses/Error"
           }
         },
@@ -4421,6 +4421,1559 @@
           }
         }
       ]
+    },
+    "/products/{product_id}/reviews": {
+      "parameters": [
+        {
+          "name": "product_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^prd_[1-9][0-9]*$"
+          }
+        }
+      ],
+      "get": {
+        "summary": "List approved reviews and aggregate stars",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 30
+            }
+          },
+          {
+            "name": "rating",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "newest",
+                "highest",
+                "lowest"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response; reviews are moderated before publication.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiReviewListResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a verified-purchase review pending moderation",
+        "security": [
+          {
+            "CustomerSession": [],
+            "CsrfToken": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiReviewInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful response; reviews are moderated before publication.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiReviewResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products/{product_id}/reviews/mine": {
+      "parameters": [
+        {
+          "name": "product_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^prd_[1-9][0-9]*$"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Current customer review and purchase eligibility",
+        "security": [
+          {
+            "CustomerSession": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response; reviews are moderated before publication.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiReviewMineResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products/{product_id}/reviews/{review_id}": {
+      "parameters": [
+        {
+          "name": "product_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^prd_[1-9][0-9]*$"
+          }
+        },
+        {
+          "name": "review_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^rev_[1-9][0-9]*$"
+          }
+        }
+      ],
+      "patch": {
+        "summary": "Edit own review; returns to moderation",
+        "security": [
+          {
+            "CustomerSession": [],
+            "CsrfToken": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiReviewInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response; reviews are moderated before publication.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiReviewResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete own review",
+        "security": [
+          {
+            "CustomerSession": [],
+            "CsrfToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "success",
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "deleted"
+                      ],
+                      "properties": {
+                        "deleted": {
+                          "type": "boolean",
+                          "enum": [
+                            true
+                          ]
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sellers/{seller_id}/reviews": {
+      "parameters": [
+        {
+          "name": "seller_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^sel_[1-9][0-9]*$"
+          }
+        }
+      ],
+      "get": {
+        "summary": "List approved reviews and aggregate stars",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 30
+            }
+          },
+          {
+            "name": "rating",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "newest",
+                "highest",
+                "lowest"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response; reviews are moderated before publication.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiReviewListResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a verified-purchase review pending moderation",
+        "security": [
+          {
+            "CustomerSession": [],
+            "CsrfToken": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiReviewInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful response; reviews are moderated before publication.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiReviewResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sellers/{seller_id}/reviews/mine": {
+      "parameters": [
+        {
+          "name": "seller_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^sel_[1-9][0-9]*$"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Current customer review and purchase eligibility",
+        "security": [
+          {
+            "CustomerSession": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response; reviews are moderated before publication.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiReviewMineResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sellers/{seller_id}/reviews/{review_id}": {
+      "parameters": [
+        {
+          "name": "seller_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^sel_[1-9][0-9]*$"
+          }
+        },
+        {
+          "name": "review_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^rev_[1-9][0-9]*$"
+          }
+        }
+      ],
+      "patch": {
+        "summary": "Edit own review; returns to moderation",
+        "security": [
+          {
+            "CustomerSession": [],
+            "CsrfToken": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiReviewInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response; reviews are moderated before publication.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiReviewResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete own review",
+        "security": [
+          {
+            "CustomerSession": [],
+            "CsrfToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "success",
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "deleted"
+                      ],
+                      "properties": {
+                        "deleted": {
+                          "type": "boolean",
+                          "enum": [
+                            true
+                          ]
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sellers/{seller_id}/products": {
+      "get": {
+        "summary": "Paginated catalog products owned by this seller",
+        "parameters": [
+          {
+            "name": "seller_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^sel_[1-9][0-9]*$"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/Lang"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 48,
+              "default": 24
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "newest",
+                "price_asc",
+                "price_desc",
+                "best_selling",
+                "rating",
+                "relevance"
+              ],
+              "default": "newest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response; reviews are moderated before publication.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/forgot-password": {
+      "post": {
+        "tags": [
+          "Commerce"
+        ],
+        "summary": "/auth/forgot-password post",
+        "description": "Public password recovery. Allowed origin and rate limits required. Reset requires a WordPress expiring, single-use reset key. Never reveals whether an email exists.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "accepted": {
+                          "type": "boolean",
+                          "enum": [
+                            true
+                          ]
+                        }
+                      },
+                      "required": [
+                        "accepted"
+                      ]
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "request_id": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "request_id"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Invalid input or missing authorization"
+          },
+          "5XX": {
+            "description": "Service unavailable"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                },
+                "required": [
+                  "email"
+                ]
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/auth/reset-password": {
+      "post": {
+        "tags": [
+          "Commerce"
+        ],
+        "summary": "/auth/reset-password post",
+        "description": "Public password recovery. Allowed origin and rate limits required. Reset requires a WordPress expiring, single-use reset key. Never reveals whether an email exists.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "reset": {
+                          "type": "boolean",
+                          "enum": [
+                            true
+                          ]
+                        }
+                      },
+                      "required": [
+                        "reset"
+                      ]
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "request_id": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "request_id"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Invalid input or missing authorization"
+          },
+          "5XX": {
+            "description": "Service unavailable"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "login": {
+                    "type": "string"
+                  },
+                  "key": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 10,
+                    "maxLength": 256
+                  }
+                },
+                "required": [
+                  "login",
+                  "key",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/orders/{order_id}/returns": {
+      "get": {
+        "tags": [
+          "Commerce"
+        ],
+        "summary": "/orders/{order_id}/returns get",
+        "description": "Adapter 0.10.0. Private mutations require a customer session, CSRF and an allowed origin. No payment or carrier action is inferred.",
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^ord_[a-f0-9]{64}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/CommerceReturnSummary"
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "request_id": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "request_id"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Invalid input or missing authorization"
+          },
+          "5XX": {
+            "description": "Service unavailable"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Commerce"
+        ],
+        "summary": "/orders/{order_id}/returns post",
+        "description": "Adapter 0.10.0. Private mutations require a customer session, CSRF and an allowed origin. No payment or carrier action is inferred.",
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^ord_[a-f0-9]{64}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/CommerceReturnSummary"
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "request_id": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "request_id"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Invalid input or missing authorization"
+          },
+          "5XX": {
+            "description": "Service unavailable"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "enum": [
+                      "damaged",
+                      "wrong_item",
+                      "missing_parts",
+                      "not_as_described",
+                      "changed_mind",
+                      "other"
+                    ]
+                  },
+                  "details": {
+                    "type": "string"
+                  },
+                  "lines": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "item_id": {
+                          "type": "integer",
+                          "minimum": 1
+                        },
+                        "quantity": {
+                          "type": "integer",
+                          "minimum": 1
+                        }
+                      },
+                      "required": [
+                        "item_id",
+                        "quantity"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "reason",
+                  "details",
+                  "lines"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/me/product-alerts": {
+      "get": {
+        "tags": [
+          "Commerce"
+        ],
+        "summary": "/me/product-alerts get",
+        "description": "Adapter 0.10.0. Private mutations require a customer session, CSRF and an allowed origin. No payment or carrier action is inferred.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/CommerceProductAlert"
+                          }
+                        }
+                      },
+                      "required": [
+                        "items"
+                      ]
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "request_id": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "request_id"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Invalid input or missing authorization"
+          },
+          "5XX": {
+            "description": "Service unavailable"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Commerce"
+        ],
+        "summary": "/me/product-alerts post",
+        "description": "Adapter 0.10.0. Private mutations require a customer session, CSRF and an allowed origin. No payment or carrier action is inferred.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/CommerceProductAlert"
+                          }
+                        }
+                      },
+                      "required": [
+                        "items"
+                      ]
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "request_id": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "request_id"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Invalid input or missing authorization"
+          },
+          "5XX": {
+            "description": "Service unavailable"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "product_id": {
+                    "type": "string"
+                  },
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "stock",
+                      "price"
+                    ]
+                  },
+                  "target_price": {
+                    "type": "number",
+                    "nullable": true
+                  }
+                },
+                "required": [
+                  "product_id",
+                  "kind"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/me/product-alerts/{product_id}": {
+      "delete": {
+        "tags": [
+          "Commerce"
+        ],
+        "summary": "/me/product-alerts/{product_id} delete",
+        "description": "Adapter 0.10.0. Private mutations require a customer session, CSRF and an allowed origin. No payment or carrier action is inferred.",
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^prd_[1-9][0-9]*$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/CommerceProductAlert"
+                          }
+                        }
+                      },
+                      "required": [
+                        "items"
+                      ]
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "request_id": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "request_id"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Invalid input or missing authorization"
+          },
+          "5XX": {
+            "description": "Service unavailable"
+          }
+        }
+      }
+    },
+    "/me/decision": {
+      "get": {
+        "tags": [
+          "Commerce"
+        ],
+        "summary": "/me/decision get",
+        "description": "Adapter 0.10.0. Private mutations require a customer session, CSRF and an allowed origin. No payment or carrier action is inferred.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/CommerceDecisionProfile"
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "request_id": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "request_id"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Invalid input or missing authorization"
+          },
+          "5XX": {
+            "description": "Service unavailable"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Commerce"
+        ],
+        "summary": "/me/decision post",
+        "description": "Adapter 0.10.0. Private mutations require a customer session, CSRF and an allowed origin. No payment or carrier action is inferred.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/CommerceDecisionProfile"
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "request_id": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "request_id"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Invalid input or missing authorization"
+          },
+          "5XX": {
+            "description": "Service unavailable"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommerceDecisionProfile"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reviews/{review_id}/feedback": {
+      "post": {
+        "tags": [
+          "Commerce"
+        ],
+        "summary": "/reviews/{review_id}/feedback post",
+        "description": "Adapter 0.10.0. Private mutations require a customer session, CSRF and an allowed origin. No payment or carrier action is inferred.",
+        "parameters": [
+          {
+            "name": "review_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^rev_[1-9][0-9]*$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "accepted": {
+                          "type": "boolean",
+                          "enum": [
+                            true
+                          ]
+                        },
+                        "helpful_count": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "accepted",
+                        "helpful_count"
+                      ]
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "request_id": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "request_id"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Invalid input or missing authorization"
+          },
+          "5XX": {
+            "description": "Service unavailable"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "helpful",
+                      "report"
+                    ]
+                  },
+                  "reason": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "action",
+                  "reason"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reviews/{review_id}/images": {
+      "post": {
+        "tags": [
+          "Commerce"
+        ],
+        "summary": "/reviews/{review_id}/images post",
+        "description": "Adapter 0.10.0. Private mutations require a customer session, CSRF and an allowed origin. No payment or carrier action is inferred.",
+        "parameters": [
+          {
+            "name": "review_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^rev_[1-9][0-9]*$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/CommerceReviewExtras"
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "request_id": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "request_id"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Invalid input or missing authorization"
+          },
+          "5XX": {
+            "description": "Service unavailable"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "image": {
+                    "type": "string",
+                    "maxLength": 4200000
+                  }
+                },
+                "required": [
+                  "image"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/catalog/sitemap": {
+      "get": {
+        "tags": [
+          "Commerce"
+        ],
+        "summary": "/catalog/sitemap get",
+        "description": "Adapter 0.10.0. Private mutations require a customer session, CSRF and an allowed origin. No payment or carrier action is inferred.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "updated_at": {
+                                "type": "string",
+                                "nullable": true
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "updated_at"
+                            ]
+                          }
+                        },
+                        "total_pages": {
+                          "type": "integer"
+                        },
+                        "categories": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "slug": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "slug"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "items",
+                        "total_pages",
+                        "categories"
+                      ]
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "request_id": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "request_id"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Invalid input or missing authorization"
+          },
+          "5XX": {
+            "description": "Service unavailable"
+          }
+        },
+        "security": []
+      }
     }
   },
   "components": {
@@ -4613,12 +6166,12 @@
             "minimum": 0,
             "maximum": 5,
             "nullable": true,
-            "description": "Customer-facing seller rating; null until the Phase 2 rating system is implemented."
+            "description": "Average of approved customer seller reviews; null when there are none."
           },
           "rating_count": {
             "type": "integer",
             "nullable": true,
-            "description": "Customer-facing seller rating count; null until the Phase 2 rating system is implemented."
+            "description": "Number of approved customer seller reviews."
           }
         },
         "additionalProperties": false
@@ -5622,6 +7175,27 @@
             "items": {
               "$ref": "#/components/schemas/HomeSection"
             }
+          },
+          "category_shelves": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "category",
+                "products"
+              ],
+              "properties": {
+                "category": {
+                  "$ref": "#/components/schemas/Category"
+                },
+                "products": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductCard"
+                  }
+                }
+              }
+            }
           }
         },
         "additionalProperties": false
@@ -5897,6 +7471,10 @@
               "total_pages": {
                 "type": "integer",
                 "minimum": 0
+              },
+              "resolved_search": {
+                "type": "string",
+                "nullable": true
               }
             },
             "additionalProperties": false
@@ -8856,6 +10434,454 @@
           "success",
           "data",
           "meta"
+        ]
+      },
+      "ApiReview": {
+        "type": "object",
+        "required": [
+          "id",
+          "author",
+          "rating",
+          "title",
+          "comment",
+          "created_at",
+          "verified_purchase",
+          "status"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^rev_[1-9][0-9]*$"
+          },
+          "author": {
+            "type": "string"
+          },
+          "rating": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
+          },
+          "title": {
+            "type": "string"
+          },
+          "comment": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "verified_purchase": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "approved",
+              "pending"
+            ]
+          }
+        }
+      },
+      "ApiReviewInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "rating",
+          "comment"
+        ],
+        "properties": {
+          "rating": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "comment": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          }
+        }
+      },
+      "ApiReviewSummary": {
+        "type": "object",
+        "required": [
+          "average",
+          "count",
+          "distribution"
+        ],
+        "properties": {
+          "average": {
+            "type": "number",
+            "nullable": true
+          },
+          "count": {
+            "type": "integer"
+          },
+          "distribution": {
+            "type": "object",
+            "required": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5"
+            ],
+            "properties": {
+              "1": {
+                "type": "integer"
+              },
+              "2": {
+                "type": "integer"
+              },
+              "3": {
+                "type": "integer"
+              },
+              "4": {
+                "type": "integer"
+              },
+              "5": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      },
+      "ApiReviewResponse": {
+        "type": "object",
+        "required": [
+          "success",
+          "data",
+          "meta"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "$ref": "#/components/schemas/ApiReview"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          }
+        }
+      },
+      "ApiReviewMineResponse": {
+        "type": "object",
+        "required": [
+          "success",
+          "data",
+          "meta"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "type": "object",
+            "required": [
+              "can_review",
+              "reason",
+              "review"
+            ],
+            "properties": {
+              "can_review": {
+                "type": "boolean"
+              },
+              "reason": {
+                "type": "string",
+                "nullable": true
+              },
+              "review": {
+                "$ref": "#/components/schemas/ApiReview",
+                "nullable": true
+              }
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          }
+        }
+      },
+      "ApiReviewListResponse": {
+        "type": "object",
+        "required": [
+          "success",
+          "data",
+          "meta"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "type": "object",
+            "required": [
+              "items",
+              "summary"
+            ],
+            "properties": {
+              "items": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ApiReview"
+                }
+              },
+              "summary": {
+                "$ref": "#/components/schemas/ApiReviewSummary"
+              }
+            }
+          },
+          "meta": {
+            "type": "object",
+            "required": [
+              "request_id",
+              "page",
+              "per_page",
+              "total",
+              "total_pages"
+            ],
+            "properties": {
+              "request_id": {
+                "type": "string"
+              },
+              "page": {
+                "type": "integer"
+              },
+              "per_page": {
+                "type": "integer"
+              },
+              "total": {
+                "type": "integer"
+              },
+              "total_pages": {
+                "type": "integer"
+              },
+              "resolved_search": {
+                "type": "string",
+                "nullable": true
+              }
+            }
+          }
+        }
+      },
+      "CommerceReturnRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "requested",
+              "approved",
+              "received",
+              "closed",
+              "rejected"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          },
+          "details": {
+            "type": "string"
+          },
+          "lines": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "item_id": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "quantity": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              },
+              "required": [
+                "item_id",
+                "quantity"
+              ]
+            }
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string"
+          },
+          "staff_note": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "state",
+          "reason",
+          "details",
+          "lines",
+          "created_at",
+          "updated_at"
+        ]
+      },
+      "CommerceReturnSummary": {
+        "type": "object",
+        "properties": {
+          "available": {
+            "type": "boolean"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "item_id": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "name": {
+                  "type": "string"
+                },
+                "quantity": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              },
+              "required": [
+                "item_id",
+                "name",
+                "quantity"
+              ]
+            }
+          },
+          "request": {
+            "$ref": "#/components/schemas/CommerceReturnRequest",
+            "nullable": true
+          },
+          "refunded_amount": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "available",
+          "items",
+          "request",
+          "refunded_amount",
+          "currency"
+        ]
+      },
+      "CommerceDecisionProfile": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string"
+          },
+          "budget": {
+            "type": "string"
+          },
+          "keywords": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string"
+          },
+          "compare_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "category",
+          "budget",
+          "keywords",
+          "priority",
+          "compare_ids"
+        ]
+      },
+      "CommerceProductAlert": {
+        "type": "object",
+        "properties": {
+          "product_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "stock",
+              "price"
+            ]
+          },
+          "target_price": {
+            "type": "number",
+            "nullable": true
+          },
+          "notified_at": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "product_id",
+          "name",
+          "kind",
+          "target_price",
+          "notified_at"
+        ]
+      },
+      "CommerceReviewExtras": {
+        "type": "object",
+        "properties": {
+          "helpful_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "alt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "url",
+                "alt"
+              ]
+            }
+          }
+        },
+        "required": [
+          "helpful_count",
+          "images"
         ]
       }
     },

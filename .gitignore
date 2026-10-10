@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+certificates
+/artifacts/.npm-cache/
+/artifacts/php-syntax/

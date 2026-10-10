@@ -1,0 +1,7 @@
+{
+  "activation": {
+    "skipVisitPages": [
+      "wp-admin/admin.php?page=paymob-error-logs"
+    ]
+  }
+}

@@ -64,14 +64,14 @@ export async function fetchCategoriesWithChildren() {
   }
 }
 
-export async function fetchCategoryBySlug(slug: string) {
+export const fetchCategoryBySlug = cache(async (slug: string) => {
   try {
     const api = createEldokanApi(await getLocale())
     return await retryApiRead(() => api.categories.get(slug))
   } catch {
     return null
   }
-}
+})
 
 export async function fetchCategoryFilters(slug: string) {
   try {

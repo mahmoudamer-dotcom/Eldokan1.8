@@ -19,7 +19,7 @@ export default function AnnouncementTopBar({ announcements }: AnnouncementTopBar
   const renderAnnouncements = (isDuplicate = false) => (
     <div
       dir="ltr"
-      className="flex min-w-[100vw] shrink-0 items-center justify-around"
+      className="announcement-top-bar__group flex min-w-[100vw] shrink-0 items-center justify-around"
       aria-hidden={isDuplicate || undefined}
     >
       {announcements.map((announcement, index) => (
@@ -38,6 +38,7 @@ export default function AnnouncementTopBar({ announcements }: AnnouncementTopBar
 
   return (
     <div
+      dir="ltr"
       className="announcement-top-bar w-full overflow-hidden bg-[#222222] py-2 text-sm text-white"
       role="region"
       aria-label={t('Store announcements')}

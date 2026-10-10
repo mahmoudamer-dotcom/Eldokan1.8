@@ -1,4 +1,5 @@
 "use client";
+import T from '@/components/i18n/T'
 import { useState } from "react";
 import ImagesSlider from "../imagesSlider/ImagesSlider";
 import ImageProduct from "../imagesProduct/ImageProduct";
@@ -10,7 +11,7 @@ export default function ParentImage({ data }: { data: { images: ProductImageData
   if (!data.images?.length) {
     return (
       <div className="flex aspect-square items-center justify-center rounded-xl bg-background text-sm text-muted-foreground">
-        Product images unavailable
+        <T text="Product images unavailable" />
       </div>
     );
   }

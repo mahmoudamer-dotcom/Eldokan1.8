@@ -1,0 +1,144 @@
+/**
+ * WooCommerce Blocks checkout: keep Paymob Pixel inside the payment column.
+ */
+
+.wc-block-checkout .wc-block-components-sidebar-layout {
+	align-items: flex-start;
+}
+
+.wc-block-checkout .wc-block-components-sidebar-layout .wc-block-components-main {
+	flex: 1 1 0%;
+	min-width: 0;
+	width: 0;
+	max-width: 100%;
+	overflow: visible;
+}
+
+.wc-block-checkout .wc-block-components-sidebar-layout .wc-block-components-sidebar {
+	flex: 0 0 auto;
+	min-width: 0;
+	position: relative;
+	z-index: 2;
+}
+
+.wc-block-checkout .wc-block-checkout__payment-method,
+.wc-block-checkout .wc-block-components-radio-control-accordion-option,
+.wc-block-checkout .wc-block-components-radio-control-accordion-content[data-payment-method="paymob-pixel"],
+.wc-block-checkout .wc-block-components-radio-control-accordion-content[data-payment-method="paymob-pixel"] .wc-block-components-payment-method-content {
+	max-width: 100%;
+	box-sizing: border-box;
+}
+
+.wc-block-checkout .wc-block-components-radio-control-accordion-content[data-payment-method="paymob-pixel"] {
+	overflow-x: auto;
+	overflow-y: visible;
+	-webkit-overflow-scrolling: touch;
+}
+
+.wc-block-checkout #paymob-elements {
+	display: block;
+	width: 100% !important;
+	max-width: 100% !important;
+	box-sizing: border-box;
+	overflow-x: auto !important;
+	overflow-y: visible !important;
+	-webkit-overflow-scrolling: touch;
+}
+
+.wc-block-checkout #paymob-elements > * {
+	max-width: 100% !important;
+	min-width: 0 !important;
+	box-sizing: border-box;
+}
+
+body.paymob-aw-show-place-order .wc-block-checkout__actions,
+body.paymob-aw-show-place-order .wp-block-woocommerce-checkout-actions-block {
+	display: block !important;
+	visibility: visible !important;
+	opacity: 1 !important;
+	height: auto !important;
+	max-height: none !important;
+	pointer-events: auto !important;
+}
+
+body.paymob-aw-show-place-order .wc-block-components-checkout-place-order-button,
+body.paymob-aw-show-place-order .wc-block-checkout__actions .wc-block-components-button,
+body.paymob-aw-show-place-order .wc-block-checkout__form .wc-block-components-button,
+body.paymob-aw-show-place-order .wc-block-checkout__form .wp-block-button__link,
+body.paymob-aw-show-place-order .wc-block-checkout__form button[type="submit"] {
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	width: 100% !important;
+	visibility: visible !important;
+	opacity: 1 !important;
+	height: auto !important;
+	max-height: none !important;
+	pointer-events: auto !important;
+	text-align: center !important;
+}
+
+body.paymob-aw-show-place-order .wc-block-components-checkout-place-order-button .wc-block-components-checkout-place-order-button__text,
+body.paymob-aw-show-place-order .wc-block-components-checkout-place-order-button .wc-block-components-button__text {
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	width: 100% !important;
+	text-align: center !important;
+}
+
+body.paymob-aw-show-place-order .wc-block-components-checkout-place-order-button:disabled,
+body.paymob-aw-show-place-order .wc-block-checkout__form .wc-block-components-button:disabled {
+	opacity: 1 !important;
+	cursor: pointer !important;
+}
+
+body.paymob-aw-show-place-order .wc-block-checkout__actions,
+body.paymob-aw-show-place-order .wp-block-woocommerce-checkout-actions-block {
+	position: relative;
+	z-index: 20;
+}
+
+.wc-block-checkout #paymob-elements iframe {
+	max-width: 100% !important;
+	width: 100% !important;
+}
+
+/* Let Paymob payment-method rows wrap instead of spilling sideways */
+.wc-block-checkout #paymob-elements div {
+	max-width: 100%;
+	box-sizing: border-box;
+}
+
+/* Classic checkout */
+.woocommerce-checkout #paymob-elements,
+.payment_method_paymob-pixel .payment_box {
+	max-width: 100%;
+	box-sizing: border-box;
+	overflow-x: auto;
+}
+
+.woocommerce-checkout #paymob-elements > * {
+	max-width: 100%;
+	box-sizing: border-box;
+}
+
+/* Paymob Pixel OTP / 3DS must stay above Woo processing overlay */
+body.paymob-otp-active #paymob-loading-indicator {
+	display: none !important;
+}
+
+body > [role="dialog"],
+body > [aria-modal="true"],
+body > div[class*="modal"],
+body > div[class*="Modal"],
+body > div[class*="overlay"]:not(#paymob-loading-indicator),
+#paymob-elements [role="dialog"],
+#paymob-elements [aria-modal="true"] {
+	z-index: 10050 !important;
+}
+
+#paymob-loading-indicator {
+	z-index: 9990 !important;
+	pointer-events: none;
+}

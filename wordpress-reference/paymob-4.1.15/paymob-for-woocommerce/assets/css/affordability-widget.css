@@ -1,0 +1,830 @@
+/* Paymob Affordability Widget admin UI */
+
+.paymob-tab-new-badge {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	margin-left: 6px;
+	padding: 2px 7px;
+	background: linear-gradient(135deg, #edf2ff, #d0dbff);
+	color: #144dff;
+	font-size: 10px;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	border-radius: 999px;
+	border: 1px solid #b8c9ff;
+	text-transform: uppercase;
+}
+
+.paymob-aw-page {
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+	max-width: 760px;
+	margin: 16px 0 32px;
+	color: #101828;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.paymob-aw-page * {
+	box-sizing: border-box;
+}
+
+.paymob-aw-page--dimmed .paymob-aw-card:not(.paymob-aw-header):not(.paymob-aw-notice),
+.paymob-aw-page--dimmed .paymob-aw-notice + .paymob-aw-card {
+	opacity: 0.55;
+	filter: grayscale(15%);
+	pointer-events: none;
+	user-select: none;
+}
+
+.paymob-aw-page--dimmed input,
+.paymob-aw-page--dimmed select,
+.paymob-aw-page--dimmed button:not(.paymob-aw-preview__cta) {
+	cursor: not-allowed;
+}
+
+/* Soft lock: everything below the Enable Widget toggle is non-interactive
+ * until the merchant turns the widget on. The header card, the Enable widget
+ * row, and any notice block stay fully interactive so the toggle is reachable. */
+.paymob-aw-page--enable-locked .paymob-aw-section {
+	opacity: 0.55;
+	filter: grayscale(15%);
+	pointer-events: none;
+	user-select: none;
+	transition: opacity 0.18s ease, filter 0.18s ease;
+}
+
+.paymob-aw-page--enable-locked .paymob-aw-section input,
+.paymob-aw-page--enable-locked .paymob-aw-section select,
+.paymob-aw-page--enable-locked .paymob-aw-section button:not(.paymob-aw-preview__cta),
+.paymob-aw-page--enable-locked .paymob-aw-section label {
+	cursor: not-allowed;
+}
+
+.paymob-aw-card {
+	background: #ffffff;
+	border: 1px solid #eaecf0;
+	border-radius: 14px;
+	padding: 22px 24px;
+	box-shadow: 0 6px 20px rgba(16, 24, 40, 0.05);
+}
+
+.paymob-aw-header {
+	display: flex;
+	gap: 16px;
+	align-items: flex-start;
+}
+
+.paymob-aw-header__icon {
+	flex: 0 0 44px;
+	width: 44px;
+	height: 44px;
+	border-radius: 12px;
+	background: linear-gradient(135deg, #144dff, #081f66);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0 6px 18px rgba(20, 77, 255, 0.35);
+}
+
+.paymob-aw-header__title {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 6px;
+}
+
+.paymob-aw-header__title h2 {
+	margin: 0;
+	font-size: 18px;
+	font-weight: 700;
+	color: #101828;
+}
+
+.paymob-aw-badge--new {
+	padding: 2px 8px;
+	border-radius: 999px;
+	background: #edf2ff;
+	color: #144dff;
+	font-size: 11px;
+	font-weight: 700;
+	border: 1px solid #b8c9ff;
+}
+
+.paymob-aw-header__desc {
+	margin: 0 0 8px;
+	font-size: 13px;
+	line-height: 1.55;
+	color: #475467;
+}
+
+.paymob-aw-header__availability {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	margin: 0;
+	font-size: 13px;
+	color: #475467;
+}
+
+.paymob-aw-header__availability strong {
+	color: #101828;
+	font-weight: 600;
+}
+
+.paymob-aw-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 24px;
+}
+
+.paymob-aw-row--inline {
+	padding: 0;
+	background: transparent;
+	border: 0;
+	box-shadow: none;
+}
+
+.paymob-aw-row__text h3,
+.paymob-aw-row__text h4 {
+	margin: 0 0 4px;
+	font-size: 14px;
+	font-weight: 600;
+	color: #101828;
+}
+
+.paymob-aw-row__text p {
+	margin: 0;
+	font-size: 12.5px;
+	color: #667085;
+	line-height: 1.5;
+}
+
+.paymob-aw-toggle {
+	position: relative;
+	display: inline-block;
+	width: 40px;
+	height: 22px;
+	cursor: pointer;
+}
+
+.paymob-aw-toggle input[type="checkbox"] {
+	opacity: 0;
+	width: 0;
+	height: 0;
+	position: absolute;
+}
+
+.paymob-aw-toggle__slider {
+	position: absolute;
+	inset: 0;
+	background-color: #d0d5dd;
+	border-radius: 999px;
+	transition: background-color 0.2s ease;
+}
+
+.paymob-aw-toggle__slider::before {
+	content: "";
+	position: absolute;
+	left: 3px;
+	top: 3px;
+	width: 16px;
+	height: 16px;
+	background: #ffffff;
+	border-radius: 999px;
+	transition: transform 0.2s ease;
+	box-shadow: 0 1px 3px rgba(16, 24, 40, 0.2);
+}
+
+.paymob-aw-toggle input[type="checkbox"]:checked + .paymob-aw-toggle__slider {
+	background-color: #144dff;
+}
+
+.paymob-aw-toggle input[type="checkbox"]:checked + .paymob-aw-toggle__slider::before {
+	transform: translateX(18px);
+}
+
+.paymob-aw-toggle input[type="checkbox"]:focus + .paymob-aw-toggle__slider {
+	box-shadow: 0 0 0 3px rgba(20, 77, 255, 0.25);
+}
+
+.paymob-aw-notice {
+	display: flex;
+	gap: 12px;
+	padding: 14px 16px;
+	border-radius: 12px;
+	border: 1px solid #fedf89;
+	background: #fffaeb;
+}
+
+.paymob-aw-notice--warning .paymob-aw-notice__icon {
+	flex: 0 0 28px;
+	width: 28px;
+	height: 28px;
+	border-radius: 999px;
+	background: #fef0c7;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.paymob-aw-notice__body strong {
+	display: block;
+	margin-bottom: 4px;
+	color: #93370d;
+	font-size: 13px;
+	font-weight: 700;
+}
+
+.paymob-aw-notice__body p {
+	margin: 0;
+	font-size: 12.5px;
+	color: #b54708;
+	line-height: 1.55;
+}
+
+.paymob-aw-notice__body a {
+	color: #93370d;
+	text-decoration: underline;
+}
+
+.paymob-aw-section__head {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 16px;
+}
+
+.paymob-aw-section__icon {
+	flex: 0 0 32px;
+	width: 32px;
+	height: 32px;
+	border-radius: 8px;
+	background: #f9fafb;
+	border: 1px solid #eaecf0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.paymob-aw-section__head h3 {
+	margin: 0;
+	font-size: 14px;
+	font-weight: 600;
+	color: #101828;
+}
+
+.paymob-aw-field {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.paymob-aw-field + .paymob-aw-field,
+.paymob-aw-row--inline + .paymob-aw-field--conditional {
+	margin-top: 14px;
+}
+
+.paymob-aw-field label,
+.paymob-aw-field__label {
+	font-size: 13px;
+	font-weight: 600;
+	color: #344054;
+}
+
+.paymob-aw-field__label {
+	display: inline-flex;
+	align-items: baseline;
+	flex-wrap: nowrap;
+	gap: 4px;
+	margin: 0 0 8px;
+}
+
+.paymob-aw-field--integration .paymob-aw-field__label abbr.required,
+.paymob-aw-field--integration .paymob-aw-field__label span.required:not(.paymob-aw-req) {
+	display: none !important;
+}
+
+.paymob-aw-field--integration {
+	gap: 4px;
+}
+
+.paymob-aw-field--integration .paymob-aw-field__label {
+	margin-bottom: 0;
+}
+
+.paymob-aw-integration-control {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	max-width: 25rem;
+}
+
+.paymob-aw-req {
+	color: #d63638;
+	font-weight: 700;
+	font-size: 13px;
+	line-height: 1;
+	flex: 0 0 auto;
+}
+
+.paymob-aw-select-wrap {
+	position: relative;
+	display: block;
+	width: 100%;
+	max-width: 25rem;
+}
+
+.paymob-aw-select-wrap::before,
+.paymob-aw-select-wrap::after {
+	content: none !important;
+	display: none !important;
+}
+
+.paymob-aw-select-chevron {
+	position: absolute;
+	top: 1px;
+	right: 1px;
+	bottom: 1px;
+	width: 38px;
+	pointer-events: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-left: 1px solid #eaecf0;
+	border-radius: 0 9px 9px 0;
+	background: linear-gradient(180deg, #fafbfc 0%, #f4f6f9 100%);
+	color: #667085;
+	transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.paymob-aw-select-wrap--disabled .paymob-aw-select-chevron {
+	background: #f9fafb;
+	color: #98a2b3;
+}
+
+.paymob-aw-select-wrap:hover .paymob-aw-select-chevron {
+	background: #edf2ff;
+	border-left-color: #d0dbff;
+	color: #144dff;
+}
+
+.paymob-aw-select-wrap:has(.paymob-aw-select:focus) .paymob-aw-select-chevron {
+	background: #edf2ff;
+	border-left-color: #b8c9ff;
+	color: #144dff;
+}
+
+.paymob-aw-page .paymob-aw-select-wrap .paymob-aw-select,
+.paymob-aw-page .paymob-aw-input {
+	width: 100%;
+	padding: 11px 46px 11px 14px;
+	border: 1px solid #d0d5dd;
+	border-radius: 10px;
+	background: #ffffff !important;
+	background-image: none !important;
+	color: #101828;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 1.4;
+	min-height: 44px;
+	max-width: 100%;
+	box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+	transition: border-color 0.15s ease, box-shadow 0.15s ease;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}
+
+.paymob-aw-select-wrap:hover .paymob-aw-select:not(:disabled) {
+	border-color: #b8c9ff;
+}
+
+.paymob-aw-page .paymob-aw-select-wrap .paymob-aw-select::-ms-expand {
+	display: none;
+}
+
+.paymob-aw-page .paymob-aw-select {
+	cursor: pointer;
+}
+
+.paymob-aw-page .paymob-aw-input {
+	padding-right: 12px;
+}
+
+.paymob-aw-page .paymob-aw-select-wrap .paymob-aw-select:focus,
+.paymob-aw-page .paymob-aw-input:focus {
+	outline: none;
+	border-color: #144dff !important;
+	box-shadow: 0 0 0 3px rgba(20, 77, 255, 0.18) !important;
+}
+
+.paymob-aw-page .paymob-aw-select-wrap .paymob-aw-select[disabled] {
+	background-color: #f9fafb !important;
+	color: #98a2b3;
+	cursor: not-allowed;
+	opacity: 1;
+}
+
+.paymob-aw-page .paymob-aw-select option {
+	color: #101828;
+}
+
+.paymob-aw-page .paymob-aw-select option[value=""] {
+	color: #98a2b3;
+	font-weight: 400;
+}
+
+.wp-core-ui .paymob-aw-page .paymob-aw-select-wrap .paymob-aw-select {
+	background: #ffffff !important;
+	background-image: none !important;
+	border-color: #d0d5dd;
+	border-radius: 10px;
+	line-height: 1.4;
+	max-width: 100%;
+	font-weight: 500;
+}
+
+.wp-core-ui .paymob-aw-page .paymob-aw-select-wrap .paymob-aw-select:focus {
+	border-color: #144dff !important;
+	box-shadow: 0 0 0 3px rgba(20, 77, 255, 0.18) !important;
+}
+
+.paymob-aw-select-wrap--placeholder .paymob-aw-select,
+.wp-core-ui .paymob-aw-page .paymob-aw-select-wrap--placeholder .paymob-aw-select {
+	color: #98a2b3 !important;
+	font-weight: 400 !important;
+	opacity: 0.82;
+}
+
+.paymob-aw-select-wrap--placeholder .paymob-aw-select:focus,
+.wp-core-ui .paymob-aw-page .paymob-aw-select-wrap--placeholder .paymob-aw-select:focus {
+	color: #98a2b3 !important;
+	font-weight: 400 !important;
+	opacity: 0.82;
+}
+
+/* Prevent WooCommerce / WordPress admin required-field indicators bleeding into custom UI. */
+body.woocommerce_page_wc-settings .paymob-aw-field--integration abbr.required,
+body.woocommerce_page_wc-settings .paymob-aw-field--integration span.required:not(.paymob-aw-req),
+.paymob-aw-page abbr.required,
+.paymob-aw-page span.required:not(.paymob-aw-req),
+.paymob-aw-page td::after,
+.paymob-aw-page th::after,
+.paymob-aw-page .form-required::after,
+.paymob-aw-field--integration > abbr.required,
+.paymob-aw-field--integration > span.required:not(.paymob-aw-req),
+.paymob-aw-field--integration .paymob-aw-integration-control abbr.required,
+.paymob-aw-field--integration .paymob-aw-integration-control span.required,
+.paymob-aw-field--integration .paymob-aw-select-wrap + abbr.required,
+.paymob-aw-field--integration .paymob-aw-select-wrap + span.required,
+.paymob-aw-field abbr.required:not(.paymob-aw-req),
+.paymob-aw-page .red-star,
+.paymob-aw-field--integration .red-star,
+.paymob-aw-field--integration .paymob-aw-select-wrap .red-star {
+	content: none !important;
+	display: none !important;
+	visibility: hidden !important;
+	height: 0 !important;
+	width: 0 !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	overflow: hidden !important;
+	font-size: 0 !important;
+	line-height: 0 !important;
+	border: 0 !important;
+}
+
+.paymob-aw-help {
+	display: inline-flex;
+	align-items: flex-start;
+	gap: 6px;
+	margin: 4px 0 0;
+	font-size: 12px;
+	color: #667085;
+	line-height: 1.55;
+}
+
+.paymob-aw-help svg {
+	flex-shrink: 0;
+	margin-top: 2px;
+}
+
+.paymob-aw-help--center {
+	justify-content: center;
+	text-align: center;
+	margin-top: 12px;
+}
+
+.paymob-aw-field--conditional[hidden] {
+	display: none !important;
+}
+
+.paymob-aw-themes {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 12px;
+}
+
+.paymob-aw-theme-card {
+	position: relative;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 12px 14px;
+	border: 1px solid #eaecf0;
+	border-radius: 12px;
+	background: #ffffff;
+	cursor: pointer;
+	transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.paymob-aw-theme-card input[type="radio"] {
+	position: absolute;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.paymob-aw-theme-card:hover {
+	border-color: #b8c9ff;
+}
+
+.paymob-aw-theme-card__swatch {
+	flex: 0 0 32px;
+	width: 32px;
+	height: 32px;
+	border-radius: 8px;
+	border: 1px solid rgba(16, 24, 40, 0.08);
+}
+
+.paymob-aw-theme-card__swatch--primary {
+	background: #144dff;
+}
+
+.paymob-aw-theme-card__swatch--light {
+	background: #d0dbff;
+}
+
+.paymob-aw-theme-card__swatch--dark {
+	background: #081f66;
+}
+
+.paymob-aw-theme-card__text {
+	display: flex;
+	flex-direction: column;
+	line-height: 1.4;
+}
+
+.paymob-aw-theme-card__text strong {
+	font-size: 13px;
+	color: #101828;
+}
+
+.paymob-aw-theme-card__text small {
+	font-size: 11.5px;
+	color: #667085;
+}
+
+.paymob-aw-theme-card__check {
+	position: absolute;
+	top: 50%;
+	right: 14px;
+	transform: translateY(-50%);
+	width: 18px;
+	height: 18px;
+	border-radius: 999px;
+	background: #144dff;
+	display: none;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0 0 0 3px rgba(20, 77, 255, 0.18);
+}
+
+.paymob-aw-theme-card input[type="radio"]:checked + .paymob-aw-theme-card__swatch + .paymob-aw-theme-card__text + .paymob-aw-theme-card__check {
+	display: inline-flex;
+}
+
+.paymob-aw-theme-card input[type="radio"]:checked ~ .paymob-aw-theme-card__text strong {
+	color: #144dff;
+}
+
+.paymob-aw-theme-card:has(input[type="radio"]:checked) {
+	border-color: #144dff;
+	box-shadow: 0 0 0 3px rgba(20, 77, 255, 0.12);
+}
+
+.paymob-aw-preview-wrap {
+	margin-top: 18px;
+	padding: 0;
+	background: transparent;
+	border-radius: 0;
+	border: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.paymob-aw-preview-label {
+	font-size: 10.5px;
+	font-weight: 700;
+	letter-spacing: 0.12em;
+	color: #98a2b3;
+}
+
+.paymob-aw-preview {
+	position: relative;
+	overflow: visible;
+	max-width: 100%;
+}
+
+.paymob-aw-preview--primary {
+	--paymob-aw-preview-frame: #144dff;
+	--paymob-aw-preview-cta: #144dff;
+	--paymob-aw-preview-accent: #144dff;
+	--paymob-aw-preview-header-text: #ffffff;
+	--paymob-aw-preview-powered-text: #d0dbff;
+}
+
+.paymob-aw-preview--light {
+	--paymob-aw-preview-frame: #d0dbff;
+	--paymob-aw-preview-cta: #144dff;
+	--paymob-aw-preview-accent: #144dff;
+	--paymob-aw-preview-header-text: #101828;
+	--paymob-aw-preview-powered-text: #667085;
+}
+
+.paymob-aw-preview--dark {
+	--paymob-aw-preview-frame: #081f66;
+	--paymob-aw-preview-cta: #144dff;
+	--paymob-aw-preview-accent: #144dff;
+	--paymob-aw-preview-header-text: #ffffff;
+	--paymob-aw-preview-powered-text: #d0dbff;
+}
+
+.paymob-aw-preview__shell {
+	border-radius: 16px;
+	overflow: hidden;
+	padding: 0;
+	background: var(--paymob-aw-preview-frame);
+}
+
+.paymob-aw-preview__top {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 12px 16px 10px;
+	background: var(--paymob-aw-preview-frame);
+}
+
+.paymob-aw-preview__pill {
+	margin: 0;
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 1.5;
+	letter-spacing: 0.16px;
+	color: var(--paymob-aw-preview-header-text);
+}
+
+.paymob-aw-preview__powered {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	font-size: 12px;
+	line-height: 1;
+}
+
+.paymob-aw-preview__powered span {
+	color: var(--paymob-aw-preview-powered-text);
+}
+
+.paymob-aw-preview__logo {
+	display: block;
+	width: 60px;
+	height: 16px;
+	object-fit: contain;
+}
+
+.paymob-aw-preview--primary .paymob-aw-preview__logo,
+.paymob-aw-preview--dark .paymob-aw-preview__logo {
+	filter: brightness(0) invert(1);
+}
+
+.paymob-aw-preview__card {
+	background: #ffffff;
+	border-radius: 12px;
+	margin: 0 3px 3px;
+	padding: 16px 16px 14px;
+}
+
+.paymob-aw-preview__body {
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 12px;
+	position: relative;
+	min-height: 108px;
+}
+
+.paymob-aw-preview__content {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	flex: 1 1 auto;
+	min-width: 0;
+	z-index: 1;
+}
+
+.paymob-aw-preview__copy {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.paymob-aw-preview__title {
+	margin: 0;
+	color: #344054;
+	font-size: 16px;
+	font-weight: 500;
+	line-height: 1.4;
+}
+
+.paymob-aw-preview__subtitle {
+	margin: 0;
+	color: #344054;
+	font-size: 16px;
+	line-height: 1.4;
+}
+
+.paymob-aw-preview__subtitle strong {
+	color: #101828;
+	font-weight: 700;
+}
+
+.paymob-aw-preview__cta {
+	align-self: flex-start;
+	margin-top: 0;
+	padding: 10px 16px;
+	border: 0;
+	border-radius: 999px;
+	background: var(--paymob-aw-preview-cta);
+	color: #ffffff;
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 1.2;
+	cursor: default;
+}
+
+.paymob-aw-preview__visual {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex: 0 0 110px;
+	width: 110px;
+	height: 90px;
+	z-index: 0;
+	overflow: visible;
+}
+
+.paymob-aw-preview__illustration-img {
+	display: block;
+	width: 110px;
+	height: auto;
+	max-height: 90px;
+	object-fit: contain;
+	mix-blend-mode: screen;
+}
+
+#mainform .paymob-aw-page + p.submit,
+#mainform .paymob-aw-page ~ p.submit {
+	margin-top: 8px;
+}
+
+#wpbody-content .form-table#paymob_affordability_widget_tabs,
+#wpbody-content .form-table#paymob_affordability_widget_tabs ~ table.form-table:empty {
+	display: none;
+}
+
+@media (max-width: 782px) {
+	.paymob-aw-themes {
+		grid-template-columns: 1fr;
+	}
+
+	.paymob-aw-preview__body {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	.paymob-aw-preview__visual {
+		width: 88px;
+		height: 72px;
+		flex-basis: 88px;
+	}
+
+	.paymob-aw-preview__illustration-img {
+		width: 88px;
+		max-height: 72px;
+	}
+}

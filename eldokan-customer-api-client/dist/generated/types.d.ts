@@ -40,11 +40,11 @@ export interface SellerPublic {
     name: string;
     slug: string;
     /**
-     * Customer-facing seller rating; null until the Phase 2 rating system is implemented.
+     * Average of approved customer seller reviews; null when there are none.
      */
     rating: number | null;
     /**
-     * Customer-facing seller rating count; null until the Phase 2 rating system is implemented.
+     * Number of approved customer seller reviews.
      */
     rating_count: number | null;
 }
@@ -232,6 +232,10 @@ export interface PromoBanner {
 }
 export interface Home {
     sections: Array<HomeSection>;
+    category_shelves?: Array<{
+        category: Category;
+        products: Array<ProductCard>;
+    }>;
 }
 export interface Suggestion {
     id: `prd_${number}`;
@@ -291,6 +295,7 @@ export interface ProductListResponse {
         per_page: number;
         total: number;
         total_pages: number;
+        resolved_search?: string | null;
     };
 }
 export interface ProductDetailResponse {
@@ -1021,5 +1026,105 @@ export interface PaymentResponse {
     success: true;
     data: Payment;
     meta: Meta;
+}
+export interface ApiReview {
+    id: string;
+    author: string;
+    rating: number;
+    title: string;
+    comment: string;
+    created_at: string;
+    verified_purchase: boolean;
+    status: "approved" | "pending";
+}
+export interface ApiReviewInput {
+    rating: number;
+    title?: string;
+    comment: string;
+}
+export interface ApiReviewSummary {
+    average: number | null;
+    count: number;
+    distribution: {
+        1: number;
+        2: number;
+        3: number;
+        4: number;
+        5: number;
+    };
+}
+export interface ApiReviewResponse {
+    success: true;
+    data: ApiReview;
+    meta: Meta;
+}
+export interface ApiReviewMineResponse {
+    success: true;
+    data: {
+        can_review: boolean;
+        reason: string | null;
+        review: ApiReview | null;
+    };
+    meta: Meta;
+}
+export interface ApiReviewListResponse {
+    success: true;
+    data: {
+        items: Array<ApiReview>;
+        summary: ApiReviewSummary;
+    };
+    meta: {
+        request_id: string;
+        page: number;
+        per_page: number;
+        total: number;
+        total_pages: number;
+        resolved_search?: string | null;
+    };
+}
+export interface CommerceReturnRequest {
+    id: string;
+    state: "requested" | "approved" | "received" | "closed" | "rejected";
+    reason: string;
+    details: string;
+    lines: Array<{
+        item_id: number;
+        quantity: number;
+    }>;
+    created_at: string;
+    updated_at: string;
+    staff_note?: string;
+}
+export interface CommerceReturnSummary {
+    available: boolean;
+    items: Array<{
+        item_id: number;
+        name: string;
+        quantity: number;
+    }>;
+    request: CommerceReturnRequest | null;
+    refunded_amount: string;
+    currency: string;
+}
+export interface CommerceDecisionProfile {
+    category: string;
+    budget: string;
+    keywords: string;
+    priority: string;
+    compare_ids: Array<string>;
+}
+export interface CommerceProductAlert {
+    product_id: string;
+    name: string;
+    kind: "stock" | "price";
+    target_price: number | null;
+    notified_at: string | null;
+}
+export interface CommerceReviewExtras {
+    helpful_count: number;
+    images: Array<{
+        url: string;
+        alt: string;
+    }>;
 }
 //# sourceMappingURL=types.d.ts.map

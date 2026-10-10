@@ -3,14 +3,15 @@ import { getLocale } from '@/lib/server-locale'
 import type { Brand, ProductCard } from '@eldokan/customer-api-client'
 import { retryApiRead } from '@/lib/retry-api-read'
 import { fetchCatalogBrands } from '@/lib/catalog-brands'
+import { cache } from 'react'
 
-export async function Brands() {
+export const Brands = cache(async () => {
   try {
     return await fetchCatalogBrands(await getLocale())
   } catch {
     return []
   }
-}
+})
 
 export async function PopularBrands(limit = 8) {
   try {

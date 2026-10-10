@@ -56,3 +56,26 @@
 ## حدود المراجعة
 
 الحزمة `eldokan-customer-api-client-0.6.0.tgz` تحتوي مكتبة TypeScript/JavaScript ومستندات؛ لا تحتوي PHP للسيرفر. طلب health من بيئة التطوير الحالية مُنع برمز الشبكة `EACCES`؛ لذلك لا نستنتج أن الموقع متوقف. لم يتم إنشاء طلب تجريبي أو إجراء دفع حقيقي، ولا يمكن تأكيد نجاح Paymob حتى يمر السيناريو على السيرفر.
+
+## مراجعة مصدر PHP المرسل في 8 أكتوبر 2026
+
+وصلت إضافة `eldokan-customer-api-v0.8.0.zip` وتمت مراجعة كود Checkout وPaymob الحقيقي. هذا يحدّث حدود المراجعة القديمة أعلاه التي كانت تستند إلى SDK فقط.
+
+- طرق `flat_rate` و`free_shipping` و`local_pickup` مدعومة؛ الطرق الأخرى تحتاج تصنيفًا صريحًا. كل shipping package يجب أن يقدم rate متوافقًا.
+- Paymob يتطلب 4.1.15 حرفيًا، وخيارات frontend origin HTTPS وcallback profile وgateway. ملف المدير لا يوفر شاشة إعداد لهذه الخيارات؛ جهزنا إضافة إعداد منفصلة باستخدام خياراته وفلتره الأصليين.
+- عولج تعارض الرجوع للضيف إلى صفحة `/orders/ord_…` التي كانت تتطلب تسجيل الدخول، مع إبقاء بيانات الوصول في BFF والتحقق من تطابق رقم الطلب.
+- عولج اختلاف `payment.issue`: PHP يرجع string بينما SDK يتوقع Issue object.
+- لم يتم تثبيت أو تفعيل شيء على WordPress البعيد، ولا تأكيد Checkout أو دفع حقيقي. خطوات المسؤول والملف الجاهز في [CHECKOUT-SETUP.md](CHECKOUT-SETUP.md).
+
+## متابعة الواجهة في 10 أكتوبر 2026
+
+تمت إضافة الفاتورة إلى صفحة الطلب في سجل الطلبات، وتحديث حالة الدفع تلقائيًا بطلبات قراءة محدودة. أُصلح منع شراء جديد بعد انتهاء الطلب المحفوظ، مع التحقق من حالة الطلب على السيرفر قبل إنهاء محاولة الاستعادة الحالية، وحفظ وصول الضيف لآخر 3 طلبات على نفس المتصفح في كوكي HttpOnly لمدة 24 ساعة.
+
+لم يتغير محول Paymob أو Callback أو حساب أسعار الشحن في PHP. ما زالت تجربة Sandbox كاملة مطلوبة لتأكيد: خيارات الشحن والإجمالي، ظهور Paymob، التحويل إلى صفحة الدفع، وصول Accept TRANSACTION والتحقق من HMAC، والعودة إلى حالة paid في قراءة الطلب.
+
+لم يمكن قراءة health من أداة التصفح في هذه المتابعة؛ لا توجد استجابة HTTP يمكن اعتمادها لإثبات تعطل السيرفر. لا تطلبوا إرسال مفاتيح Paymob أو بيانات وصول الضيف أو رابط جلسة الدفع لتشخيص المشكلة.
+## Local payment options extension — 10 October 2026
+
+The user confirmed shipping works after the local 0.8.1 singleton-context fix, then requested COD, card and bank installments in checkout. The frontend now renders native available choices and re-quotes payment selection through the local 0.8.2 extension. Checkout Setup 0.1.3 maps public card/installment options to distinct native hosted single-integration Paymob gateways and exposes an explicit WooCommerce COD toggle. Existing COD restrictions and the audited native callback remain active.
+
+See `wordpress/eldokan-customer-api-options/eldokan-customer-api/PAYMENT-OPTIONS.md` for additive API fields, deployment, source changes and runtime limits. Bank/plan selection is still on Paymob; a complete bank-plan selector inside Next.js is not implemented. Individual payment option support requires both prepared ZIP updates and correctly configured native integrations. PHP execution and sandbox payment checks remain outstanding; TypeScript and targeted ESLint passed.

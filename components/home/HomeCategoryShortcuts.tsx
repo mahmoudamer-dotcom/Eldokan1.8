@@ -23,7 +23,7 @@ export default async function HomeCategoryShortcuts({ categories }: { categories
             <Link
               key={category.id}
               href={`/category/${category.slug || encodeURIComponent(category.name)}`}
-              className="group relative isolate flex min-h-32 items-end overflow-hidden rounded-2xl bg-gradient-to-br from-[#fff2c9] to-[#f5d477] dark:from-shop-soft dark:to-card p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md sm:min-h-36"
+              className="group relative isolate flex min-h-32 items-end overflow-hidden rounded-2xl border border-border bg-muted p-4 transition hover:-translate-y-0.5 hover:border-primary hover:shadow-md sm:min-h-36"
             >
               {image && (
                 <Image

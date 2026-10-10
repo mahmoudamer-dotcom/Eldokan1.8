@@ -1,3 +1,9 @@
+## Client 0.8.0 / adapter 0.10.0
+
+Commerce extensions: see COMMERCE.md. Existing checkout and order resources are preserved.
+
+> Release 0.7.0: see [REVIEWS.md](REVIEWS.md) for the review and seller APIs added in adapter 0.9.0.
+
 # @eldokan/customer-api-client
 
 Official framework-agnostic TypeScript client for **ElDokan Customer API Contract v1**.
