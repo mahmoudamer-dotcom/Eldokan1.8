@@ -66,3 +66,6 @@ Test.zip
 
 # Documentation stays local; the repo holds code only.
 *.md
+
+# WordPress plugin sources are deployed to WordPress separately; not needed to run the storefront.
+/wordpress/
