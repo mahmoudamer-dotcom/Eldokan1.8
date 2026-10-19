@@ -31,7 +31,7 @@ const nextConfig: NextConfig = {
       // Browsers ignore HSTS over plain HTTP, so local development is unaffected.
       { key: 'Strict-Transport-Security', value: 'max-age=31536000' },
       { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
-    ] }, { source: '/:section(account|cart|checkout|orders|wishlist|login|register|search|forgot-password|reset-password)/:path*', headers: [
+    ] }, { source: '/:section(account|cart|checkout|orders|invoice|wishlist|login|register|search|forgot-password|reset-password)/:path*', headers: [
       { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
     ] }]
   },

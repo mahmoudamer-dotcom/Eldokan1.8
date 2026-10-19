@@ -39,10 +39,13 @@ function InfoCard({ title, children }: { title: string; children: ReactNode }) {
   </div>
 }
 
-export default function OrderInvoice({ order }: { order: OrderDetail }) {
+/** `shared` renders the read-only copy opened from the invoice QR code (no sign-in). */
+export default function OrderInvoice({ order, shared = false }: { order: OrderDetail; shared?: boolean }) {
   const { locale } = useLocale()
   const ar = locale === 'ar'
   const text = (en: string, arabic: string) => ar ? arabic : en
+  const rawKey = (order as OrderDetail & { invoice_key?: unknown }).invoice_key
+  const invoiceKey = typeof rawKey === 'string' && /^[a-f0-9]{32}$/.test(rawKey) ? rawKey : null
   const paid = order.payment_status === 'paid'
   const savedPlan = (order as OrderDetail & { installment_plan?: { id: string; provider: string; selected_quote?: { tenure: number; monthly_amount: number; currency: string; decimals: number; provider_confirmed: false } } | null }).installment_plan
   const installment = order.payment_method === 'paymob' && savedPlan?.provider === 'paymob' && /^[1-9][0-9]{0,9}$/.test(savedPlan.id) ? savedPlan : null
@@ -74,11 +77,11 @@ export default function OrderInvoice({ order }: { order: OrderDetail }) {
         <div className="flex flex-wrap items-start gap-3">
           <InfoCard title={text('Customer', 'العميل')}>
             <strong className="font-semibold">{order.address.first_name} {order.address.last_name}</strong>
-            <span dir="ltr">{order.address.phone}</span>
-            <span dir="ltr">{order.address.email}</span>
+            {order.address.phone && <span dir="ltr">{order.address.phone}</span>}
+            {order.address.email && <span dir="ltr">{order.address.email}</span>}
           </InfoCard>
           <InfoCard title={text('Deliver to', 'عنوان التوصيل')}>
-            <strong className="font-semibold">{order.address.street_address}</strong>
+            {order.address.street_address && <strong className="font-semibold">{order.address.street_address}</strong>}
             {order.address.address_extra && <span>{order.address.address_extra}</span>}
             <span>{order.address.city}</span>
             <span>{getEgyptGovernorateLabel(order.address.state, locale)}</span>
@@ -123,12 +126,14 @@ export default function OrderInvoice({ order }: { order: OrderDetail }) {
         </aside>}
 
         <footer className="grid gap-4 border-t border-dashed border-neutral-300 pt-5 sm:grid-cols-2">
-          <InvoiceQr path={`/orders/${order.id}`} title={text('Track this order', 'تابع طلبك')} caption={text('Scan to open this order, its status and invoice.', 'امسح الكود لفتح الطلب وحالته والفاتورة.')} />
+          {invoiceKey
+            ? <InvoiceQr path={`/invoice/${order.id}?k=${invoiceKey}`} title={text('Invoice PDF', 'الفاتورة PDF')} caption={text('Scan to open and save this invoice as a PDF. No sign-in needed.', 'امسح الكود لفتح الفاتورة وحفظها PDF من غير تسجيل دخول.')} />
+            : <InvoiceQr path={`/orders/${order.id}`} title={text('Track this order', 'تابع طلبك')} caption={text('Scan to open this order, its status and invoice.', 'امسح الكود لفتح الطلب وحالته والفاتورة.')} />}
           <InvoiceQr path="/policies/returns" title={text('Returns & refunds', 'سياسة الاسترجاع')} caption={text('Scan to read how to return an item and get a refund.', 'امسح الكود لمعرفة طريقة الاسترجاع واسترداد المبلغ.')} />
         </footer>
         <p className="break-all text-[10px] leading-4 text-neutral-400">{text('Reference', 'المرجع')}: {order.id}</p>
       </div>
     </section>
-    {paid && <button type="button" onClick={() => window.print()} className="print:hidden mt-4 rounded-lg bg-[#f5b400] px-5 py-3 font-semibold text-primary-foreground">{text('Print / save invoice', 'طباعة / حفظ الفاتورة')}</button>}
+    {paid && !shared && <button type="button" onClick={() => window.print()} className="print:hidden mt-4 rounded-lg bg-[#f5b400] px-5 py-3 font-semibold text-primary-foreground">{text('Print / save invoice', 'طباعة / حفظ الفاتورة')}</button>}
   </>
 }
