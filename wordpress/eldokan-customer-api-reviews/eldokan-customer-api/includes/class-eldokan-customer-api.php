@@ -201,7 +201,7 @@ final class ElDokan_Customer_API {
         }
         // End A3 placement routes.
         // A4 private orders.
-        foreach (['/orders'=>['GET','order_list'], '/orders/(?P<order_id>[^/]+)'=>['GET','order_detail'], '/orders/(?P<order_id>[^/]+)/payment'=>['POST','order_payment'], '/orders/(?P<order_id>[^/]+)/cancel'=>['POST','order_cancel']] as $path=>$definition) {
+        foreach (['/orders'=>['GET','order_list'], '/orders/(?P<order_id>[^/]+)'=>['GET','order_detail'], '/orders/(?P<order_id>[^/]+)/payment'=>['POST','order_payment'], '/orders/(?P<order_id>[^/]+)/cancel'=>['POST','order_cancel'], '/orders/(?P<order_id>[^/]+)/update'=>['POST','order_update']] as $path=>$definition) {
             register_rest_route(self::REST_NAMESPACE, $path, ['methods'=>$definition[0], 'permission_callback'=>'__return_true', 'callback'=>[__CLASS__,$definition[1]], 'args'=>self::language_args()]);
         }
         // End A4 private orders.
@@ -603,6 +603,7 @@ final class ElDokan_Customer_API {
     public static function order_list(WP_REST_Request $request) { return self::run_localized($request, static function()use($request){return self::placement_result(ElDokan_Customer_API_Order_Read::listing($request));}); }
     public static function order_detail(WP_REST_Request $request) { return self::run_localized($request, static function()use($request){return self::placement_result(ElDokan_Customer_API_Order_Read::get($request));}); }
     public static function order_payment(WP_REST_Request $request) { return self::run_localized($request, static function()use($request){return self::placement_result(ElDokan_Customer_API_Order_Read::pay($request));}); }
+    public static function order_update(WP_REST_Request $request) { return self::run_localized($request, static function()use($request){return self::placement_result(ElDokan_Customer_API_Order_Edit::update($request));}); }
     public static function order_cancel(WP_REST_Request $request) { return self::run_localized($request, static function()use($request){return self::placement_result(ElDokan_Customer_API_Order_Cancellation::cancel($request));}); }
     // End A4 private order callbacks.
 

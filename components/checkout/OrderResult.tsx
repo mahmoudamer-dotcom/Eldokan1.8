@@ -6,10 +6,11 @@ import Link from 'next/link'
 import { useCallback, useEffect, useState } from 'react'
 import type { OrderDetail } from '@eldokan/customer-api-client'
 import { paymentIssueCode } from '@/lib/payment-issue'
-import { canRecoverPayment, orderStatusLabel, paymentStatusLabel } from '@/lib/order-status'
+import { canRecoverPayment, orderNumber, orderStatusLabel, paymentStatusLabel } from '@/lib/order-status'
 import { useLocale } from '@/components/i18n/LocaleProvider'
 import { useCart } from '@/components/cart/CartProvider'
 import OrderInvoice from './OrderInvoice'
+import OrderEdit from './OrderEdit'
 import { useOrderStatus } from './useOrderStatus'
 
 type Envelope = { success: true; data: OrderDetail }
@@ -107,13 +108,14 @@ export default function OrderResult({ expectedOrderId }: { expectedOrderId?: str
     <p role="status" className={paid ? 'font-semibold text-success-foreground' : 'font-semibold text-shop-accent'}>{paid ? text('Payment confirmed by the order service', 'تم تأكيد الدفع من خدمة الطلبات') : `${text('Order saved · ', 'تم حفظ الطلب · ')}${paymentStatusLabel(order.payment_status, locale)}`}</p>
     <h1 className="mt-2 text-2xl font-bold">{text('Order details', 'تفاصيل الطلب')}</h1>
     <dl className="mt-5 grid gap-3 border-b pb-5 text-sm sm:grid-cols-2">
-      <div><dt className="text-muted-foreground">{text('Order reference', 'رقم الطلب')}</dt><dd className="break-all font-semibold">{order.id}</dd></div>
+      <div><dt className="text-muted-foreground">{text('Order number', 'رقم الطلب')}</dt><dd className="break-all font-semibold"><bdi>{orderNumber(order)}</bdi></dd></div>
       <div><dt className="text-muted-foreground">{text('Order status', 'حالة الطلب')}</dt><dd className="font-semibold">{orderStatusLabel(order.status, locale)}</dd></div>
       <div><dt className="text-muted-foreground">{text('Payment status', 'حالة الدفع')}</dt><dd className="font-semibold">{paymentStatusLabel(order.payment_status, locale)}</dd></div>
       <div><dt className="text-muted-foreground">{text('Total', 'الإجمالي')}</dt><dd className="font-semibold"><Money value={order.total} /></dd></div>
     </dl>
     {watching && <p role="status" className="mt-4 rounded-lg bg-shop-soft p-3 text-sm text-shop-accent">{text('Checking for payment confirmation automatically…', 'جارٍ متابعة تأكيد الدفع تلقائيًا…')}</p>}
     <OrderProgress status={order.status} fulfillments={order.fulfillments} />
+    <OrderEdit order={order} busy={busy || refreshing} onBusy={setBusy} onRefresh={refresh} />
     <OrderInvoice order={order} />
     <div className="mt-5 flex flex-wrap gap-3 print:hidden">
       {recoverable && <button type="button" disabled={busy || refreshing} onClick={() => void recoverPayment()} className="rounded-lg bg-[#f5b400] px-5 py-3 font-semibold text-primary-foreground disabled:opacity-50">{busy ? text('Recovering…', 'جارٍ الاستعادة…') : text('Recover hosted payment', 'استعادة الدفع')}</button>}

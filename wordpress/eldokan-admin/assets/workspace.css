@@ -1,0 +1,251 @@
+/* ElDokan Staff UI, rc.3. Every selector is contained by the exact screen marker. */
+.eda-admin-screen {
+    --eda-blue: #2255c8;
+    --eda-blue-2: #1947ad;
+    --eda-violet: #61728c;
+    --eda-text: #172b45;
+    --eda-muted: #52647b;
+    --eda-border: #dce3ed;
+    --eda-radius: 12px;
+    --eda-shadow-sm: 0 2px 4px rgb(24 44 76 / 3%);
+    background: #f3f5f9;
+}
+.eda-admin-screen .eda,
+.eda-admin-screen .eda-workspace,
+.eda-admin-screen.post-type-eldokan_story #wpbody-content > .wrap {
+    max-width: 1600px;
+    margin-block: 20px;
+    margin-inline: 0 20px;
+    color: var(--eda-text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, Arial, sans-serif;
+    font-size: 13px;
+    line-height: 1.6;
+}
+.eda-admin-screen .eda-workspace { position: relative; z-index: 30; margin-block-end: 16px; }
+.eda-admin-screen .eda-workspace-heading { display: flex; align-items: center; gap: 12px; padding-block: 4px 14px; color: var(--eda-muted); font-size: 12px; }
+.eda-admin-screen .eda-workspace-brand { font-size: 21px; font-weight: 750; letter-spacing: -.6px; color: #152a43; }
+.eda-admin-screen .eda-rc { margin-inline-start: auto; color: #77581d; background: #fff8e8; border: 1px solid #e8d4a4; border-radius: 6px; padding: 3px 9px; font-size: 11px; }
+.eda-admin-screen .eda-workspace-nav { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; padding: 7px; border: 1px solid var(--eda-border); border-radius: 12px; background: #fff; box-shadow: var(--eda-shadow-sm); }
+.eda-admin-screen .eda-workspace-nav a,
+.eda-admin-screen .eda-workspace-nav summary { display: inline-flex; align-items: center; gap: 7px; padding: 8px 11px; color: #41546e; font-size: 12px; font-weight: 600; text-decoration: none; border-radius: 7px; cursor: pointer; white-space: nowrap; }
+.eda-admin-screen .eda-workspace-nav a:hover,
+.eda-admin-screen .eda-workspace-nav summary:hover { background: #f0f4fa; color: #173f8e; }
+.eda-admin-screen .eda-workspace-nav a[aria-current="page"],
+.eda-admin-screen .eda-nav-group[data-current] > summary { color: #1947ad; background: #eaf0fc; }
+.eda-admin-screen .eda-nav-count { padding: 0 6px; border-radius: 5px; background: #fff0d6; color: #754b04; font-variant-numeric: tabular-nums; }
+.eda-admin-screen .eda-nav-group { position: relative; }
+.eda-admin-screen .eda-nav-group:not([open]) > .eda-nav-menu { display: none; }
+.eda-admin-screen .eda [hidden] { display: none !important; }
+.eda-admin-screen .eda-nav-group summary::after { content: "⌄"; font-size: 13px; }
+.eda-admin-screen .eda-nav-menu { position: absolute; inset-block-start: calc(100% + 7px); inset-inline-end: 0; z-index: 40; display: grid; min-width: 215px; padding: 6px; border: 1px solid var(--eda-border); border-radius: 10px; background: #fff; box-shadow: 0 12px 28px rgb(24 44 76 / 12%); }
+.eda-admin-screen .eda-skip-link { position: absolute; inset-block-start: -10000px; }
+.eda-admin-screen .eda-skip-link:focus { inset-block-start: 0; z-index: 50; padding: 12px; background: #fff; }
+.eda-admin-screen #eda-main { scroll-margin-block-start: 40px; }
+.eda-admin-screen .eda-hero { min-height: 0; padding: 21px 24px; margin-block-end: 20px; align-items: center; gap: 16px; color: var(--eda-text); background: #fff; border: 1px solid var(--eda-border); border-inline-start: 4px solid #2255c8; border-radius: 12px; box-shadow: var(--eda-shadow-sm); overflow: visible; }
+.eda-admin-screen .eda-hero::after,
+.eda-admin-screen .eda-stat-card::after { display: none; }
+.eda-admin-screen .eda-hero h1 { color: var(--eda-text); font-size: clamp(22px, 2vw, 28px); line-height: 1.3; letter-spacing: -.02em; }
+.eda-admin-screen .eda-hero p { color: var(--eda-muted); font-size: 13px; margin-block-start: 7px; }
+.eda-admin-screen .eda-eyebrow,
+.eda-admin-screen .eda-card-kicker { color: #52647b; font-size: 10px; letter-spacing: .07em; margin-block-end: 5px; }
+.eda-admin-screen .eda-version-pill,
+.eda-admin-screen .eda-user-pill { color: #41546e; background: #f4f6fa; border: 1px solid var(--eda-border); border-radius: 6px; min-height: 28px; padding: 4px 8px; backdrop-filter: none; font-weight: 500; }
+.eda-admin-screen .eda-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 205px), 1fr)); gap: 12px; }
+.eda-admin-screen .eda-card,
+.eda-admin-screen .eda-mini { padding: 20px; border-radius: 12px; min-width: 0; }
+.eda-admin-screen .eda-card h2 { font-size: 16px; line-height: 1.5; }
+.eda-admin-screen .eda-card > strong,
+.eda-admin-screen .eda-mini strong { font-size: 22px; font-variant-numeric: tabular-nums; }
+.eda-admin-screen .eda-stat-card { min-height: 112px; padding: 18px; gap: 12px; margin-block-end: 0; }
+.eda-admin-screen .eda-stat-card:hover,
+.eda-admin-screen .eda-operation-link:hover,
+.eda-admin-screen .eda .button-primary:hover { transform: none; }
+.eda-admin-screen .eda-stat-icon,
+.eda-admin-screen .eda-operation-icon { width: 36px; height: 36px; border-radius: 9px; background: #f0f4fb; color: #2255c8; border-color: #e2e9f5; }
+.eda-admin-screen .eda-stat-copy small { color: #52647b; font-size: 12px; font-weight: 500; }
+.eda-admin-screen .eda-stat-copy strong { font-size: 24px; margin-block: 7px 8px; font-variant-numeric: tabular-nums; }
+.eda-admin-screen .eda-chart-card { min-height: 330px; }
+.eda-admin-screen .eda-chart-wrap { height: 245px; max-width: 380px; }
+.eda-admin-screen .eda-operation-grid { grid-template-columns: repeat(auto-fit,minmax(min(100%,215px),1fr)); }
+.eda-admin-screen .eda-operation-link { min-height: 76px; padding: 12px; box-shadow: none; }
+.eda-admin-screen .eda-section-head { gap: 12px; flex-wrap: wrap; }
+.eda-admin-screen .eda-table-scroll { width: 100%; max-width: 100%; overflow-x: auto; border-radius: 9px; margin: 0; padding: 0; overscroll-behavior-inline: contain; }
+.eda-admin-screen .eda-table-scroll:has(.eda-table) { max-block-size: 72vh; overflow: auto; }
+.eda-admin-screen .eda-table,
+.eda-admin-screen .eda .widefat { border: 1px solid var(--eda-border); border-radius: 9px; font-size: 12px; box-shadow: none; }
+.eda-admin-screen .eda-table th,
+.eda-admin-screen .eda .widefat th { position: static; text-align: start; font-size: 11px; line-height: 1.6; font-weight: 650; letter-spacing: 0; text-transform: none; color: #41546e; background: #f5f7fa; padding: 11px 12px; border: 0; border-block-end: 1px solid var(--eda-border); border-radius: 0; white-space: nowrap; }
+.eda-admin-screen .eda-table td,
+.eda-admin-screen .eda .widefat td { padding: 12px; border-block-end: 1px solid #e8edf3; line-height: 1.6; vertical-align: top; overflow-wrap: anywhere; }
+.eda-admin-screen .eda-table td small { color: #52647b; }
+.eda-admin-screen .eda-table tbody tr:hover td { background: #f6f9fd; }
+.eda-admin-screen .eda-table tbody tr:focus-within td { background: #edf3ff; }
+.eda-admin-screen .eda-table th { position: sticky; inset-block-start: 0; z-index: 1; }
+.eda-admin-screen .eda .button { min-height: 34px; padding: 3px 11px; border-radius: 6px; font-size: 12px; line-height: 26px; font-weight: 600; }
+.eda-admin-screen .eda .button-primary { background: #2255c8 !important; border-color: #2255c8 !important; box-shadow: none !important; }
+.eda-admin-screen .eda .button-primary:hover { background: #1947ad !important; }
+.eda-admin-screen .eda .button-small { min-height: 30px; padding: 1px 9px; }
+.eda-admin-screen .eda-badge { font-size: 11px; padding: 4px 8px; font-weight: 600; line-height: 1.4; }
+.eda-admin-screen .eda-badge.eda-pending { background: #fff7e5; color: #795000; border-color: #e8cf92; }
+.eda-admin-screen .eda-badge.green { color: #11613f; }
+.eda-admin-screen .eda-read-only { color: #52647b; }
+.eda-admin-screen .eda :is(input[type="text"],input[type="search"],input[type="email"],input[type="number"],input[type="url"],input[type="date"],input[type="datetime-local"],input[type="password"],select,textarea) { min-height: 38px; max-width: 100%; border-radius: 6px; border-color: #c7d2e0; font-size: 13px; }
+.eda-admin-screen .eda input[type="checkbox"],
+.eda-admin-screen .eda input[type="radio"] { flex: 0 0 auto; }
+.eda-admin-screen .eda :is(input[type="url"],input[type="email"],input[name$="[title_en]"],input[name="title_en"]) { direction: ltr; text-align: left; }
+.eda-admin-screen .eda :is(input[name$="[title_ar]"],input[name="title_ar"]) { direction: rtl; text-align: right; }
+.eda-admin-screen .eda-form { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 18px; }
+.eda-admin-screen .eda-form label { font-size: 12px; font-weight: 600; }
+.eda-admin-screen .eda-form label:has(> input[type="checkbox"]) { display: flex; align-items: center; }
+.eda-admin-screen .eda-form input[type="checkbox"] { width: 16px; }
+.eda-admin-screen .eda-filter-bar { display: flex !important; flex-wrap: wrap; align-items: end; gap: 12px !important; }
+.eda-admin-screen .eda-filter-bar > label { flex: 1 1 155px; min-width: 0; }
+.eda-admin-screen .eda-filter-bar > label:first-of-type { flex-basis: 220px; }
+.eda-admin-screen .eda-filter-bar > :is(input,select) { flex: 1 1 150px; min-width: 0; }
+.eda-admin-screen .eda-search { flex-wrap: wrap; max-width: none; }
+.eda-admin-screen .eda-search > input:not([type="hidden"]) { min-width: 180px; max-width: 500px; }
+.eda-admin-screen .eda-inline-commission-form { min-width: 330px; }
+.eda-admin-screen .eda-log-filters { grid-template-columns: repeat(auto-fit,minmax(min(100%,160px),1fr)); }
+.eda-admin-screen .eda-pagination,
+.eda-admin-screen .eda .tablenav-pages { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+.eda-admin-screen .eda .page-numbers { display: inline-block; padding: 5px 10px; background: #fff; border: 1px solid var(--eda-border); border-radius: 6px; text-decoration: none; }
+.eda-admin-screen .eda .page-numbers.current { color: #fff; background: #2255c8; border-color: #2255c8; }
+.eda-admin-screen .eda .notice { border-inline-start-width: 4px; border-radius: 8px; }
+.eda-admin-screen .eda-table-tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding-block: 0 12px; font-size: 12px; color: var(--eda-muted); }
+.eda-admin-screen .eda-table-tools label { display: inline-flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.eda-admin-screen .eda-table-tools input[type="search"] { max-width: 240px; }
+.eda-admin-screen .eda-compact .eda-table td { padding-block: 6px; }
+.eda-admin-screen .eda-table-empty { text-align: center; color: var(--eda-muted); padding: 28px !important; }
+.eda-admin-screen .eda-permissions-page,
+.eda-admin-screen .eda-permissions-shell { max-width: 1600px; }
+.eda-admin-screen .eda-permission-grid { grid-template-columns: repeat(auto-fit,minmax(min(100%,260px),1fr)); }
+.eda-admin-screen .eda-permission-item { min-height: 76px; font-size: 12px; border-radius: 8px; }
+.eda-admin-screen .eda-permission-item:has(input:checked) { border-color: #adbee4; background: #f2f6ff; }
+.eda-admin-screen .eda-sensitive { margin-inline: 6px 0; letter-spacing: 0; color: #9c231a; }
+.eda-admin-screen .eda-seller-control-nav { position: static; backdrop-filter: none; box-shadow: var(--eda-shadow-sm); }
+.eda-admin-screen .eda-seller-control-links { gap: 6px; }
+.eda-admin-screen .eda-email-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+.eda-admin-screen .eda-pre { direction: ltr; text-align: left; overflow-wrap: anywhere; }
+.eda-admin-screen .eda-checkout > h2,
+.eda-admin-screen .eda-checkout > form > h2 { margin-block: 28px 14px; padding-block-end: 10px; border-block-end: 1px solid var(--eda-border); font-size: 17px; }
+.eda-admin-screen .eda-checkout > form { padding: 22px; border: 1px solid var(--eda-border); border-radius: 12px; background: #fff; }
+.eda-admin-screen .eda-checkout > form > h2:first-of-type { margin-block-start: 0; }
+.eda-admin-screen .eda-checkout p { max-width: 1000px; }
+.eda-admin-screen .eda-checkout label { line-height: 1.8; }
+.eda-admin-screen .eda-checkout :is(input[type="url"],select) { margin-block-start: 6px; width: min(100%,680px); }
+.eda-admin-screen .eda-checkout :is(input[readonly],textarea[readonly]) { background: #f5f7fa; }
+.eda-admin-screen .eda-checkout .submit { margin-block-end: 0; padding-block-end: 0; }
+.eda-admin-screen.post-type-eldokan_story .wp-list-table,
+.eda-admin-screen.post-type-eldokan_story .postbox { border: 1px solid var(--eda-border); border-radius: 10px; box-shadow: var(--eda-shadow-sm); }
+.eda-admin-screen.post-type-eldokan_story .wp-list-table :is(th,td) { padding: 12px; }
+.eda-admin-screen.post-type-eldokan_story #eldokan-story-product .inside { padding: 18px; }
+.eda-admin-screen #eldokan-story-picker { max-width: none; }
+.eda-admin-screen #eldokan-story-picker input[type="search"] { width: 100%; min-height: 40px; border-radius: 6px; }
+.eda-admin-screen #eldokan-story-seller-results,
+.eda-admin-screen #eldokan-story-product-results { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,260px),1fr)); gap: 8px; }
+.eda-admin-screen #eldokan-story-picker-status { color: #41546e; margin-block: 10px; }
+.eda-admin-screen .eldokan-story-result { margin: 0; border-radius: 8px; border-color: var(--eda-border); text-align: start; }
+.eda-admin-screen .eldokan-story-product-card { background: #f7f9fc; border-radius: 8px; }
+.eda-admin-screen .eda-invalid { border-color: #b42318 !important; }
+.eda-admin-screen .eda-validation { padding: 9px 12px; color: #9c231a; background: #fff1f0; border-radius: 6px; }
+.eda-admin-screen .eda-confirm { max-width: min(480px,calc(100vw - 32px)); box-sizing: border-box; padding: 24px; border: 1px solid var(--eda-border); border-radius: 12px; color: var(--eda-text); box-shadow: 0 24px 80px rgb(0 0 0 / 24%); }
+.eda-admin-screen .eda-confirm::backdrop { background: rgb(15 28 47 / 45%); }
+.eda-admin-screen .eda-confirm h2 { margin-block-start: 0; font-size: 18px; }
+.eda-admin-screen .eda-confirm-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 8px; margin-block-start: 20px; }
+.eda-admin-screen :is(.eda-workspace,.eda,.eda-confirm) :is(a,button,input,select,textarea,summary,[tabindex]):focus-visible { outline: 3px solid #2255c8; outline-offset: 3px; box-shadow: none; }
+.eda-admin-screen.rtl .eda :is(h1,h2,h3,h4,.eda-eyebrow,.eda-card-kicker) { letter-spacing: 0; }
+.eda-admin-screen.rtl .eda .dashicons-arrow-right-alt2 { transform: scaleX(-1); }
+.eda-admin-screen.rtl .eda .notice { border-left-width: 1px; border-right-width: 4px; }
+@media (max-width: 1100px) {
+    .eda-admin-screen .eda-form { grid-template-columns: repeat(2,minmax(0,1fr)); }
+    .eda-admin-screen .eda-hero { flex-direction: column; align-items: flex-start; }
+    .eda-admin-screen .eda-hero-meta { justify-content: flex-start; }
+    .eda-admin-screen .eda-two { grid-template-columns: 1fr; }
+}
+@media (max-width: 700px) {
+    .eda-admin-screen .eda,
+    .eda-admin-screen .eda-workspace,
+    .eda-admin-screen.post-type-eldokan_story #wpbody-content > .wrap { margin-inline: 0 10px; }
+    .eda-admin-screen .eda-workspace-heading { flex-wrap: wrap; gap: 8px; }
+    .eda-admin-screen .eda-rc { margin-inline-start: 0; font-size: 10px; }
+    .eda-admin-screen .eda-workspace-nav { gap: 2px; }
+    .eda-admin-screen .eda-workspace-nav :is(a,summary) { min-height: 40px; padding: 8px; }
+    .eda-admin-screen .eda-nav-group { position: static; }
+    .eda-admin-screen .eda-nav-menu { inset-inline: 0; inset-block-start: 100%; min-width: 0; }
+    .eda-admin-screen .eda-hero { padding: 18px; }
+    .eda-admin-screen .eda-card { padding: 16px; }
+    .eda-admin-screen .eda-form,
+    .eda-admin-screen .eda-email-grid,
+    .eda-admin-screen .eda-email-row { grid-template-columns: minmax(0,1fr); }
+    .eda-admin-screen .eda-filter-bar > label { flex-basis: 100%; }
+    .eda-admin-screen .eda-section-head { align-items: flex-start; }
+    .eda-admin-screen .eda-wcfm-bulk :is(label,select) { min-width: 0; width: 100%; }
+    .eda-admin-screen .eda-checkout > form { padding: 16px; }
+    .eda-admin-screen .eda :is(.button,input[type="submit"]) { min-height: 40px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .eda-admin-screen .eda * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+}
+@media print {
+    .eda-admin-screen .eda-workspace { display: none; }
+    .eda-admin-screen .eda-table-scroll { overflow: visible; }
+}
+
+/* RC3 navigation: six WordPress sidebar links; contextual links for subpages. */
+.eda-admin-screen .eda-context-nav {
+    display: flex; align-items: center; flex-wrap: wrap; gap: 7px;
+    margin: 10px 20px 18px 0; padding: 10px 12px;
+    background: #fff; border: 1px solid var(--eda-border);
+    border-radius: 10px; box-shadow: var(--eda-shadow-sm);
+}
+.eda-admin-screen .eda-context-label {
+    font-weight: 700; color: var(--eda-text); margin-inline-end: 8px;
+}
+.eda-admin-screen .eda-context-nav a {
+    display: inline-block; padding: 8px 11px; border-radius: 7px;
+    border: 1px solid transparent; color: #344861; text-decoration: none;
+}
+.eda-admin-screen .eda-context-nav a:hover,
+.eda-admin-screen .eda-context-nav a:focus-visible { background: #eef3ff; color: #1645ac; }
+.eda-admin-screen .eda-context-nav a[aria-current="page"] {
+    background: #eaf0fc; color: #1947ad; border-color: #d6e4ff; font-weight: 700;
+}
+.eda-admin-screen.rtl .eda-context-nav { margin-inline: 0 20px; }
+@media (max-width: 782px) {
+    .eda-admin-screen .eda-context-nav { margin-inline: 0 10px; gap: 4px; }
+    .eda-admin-screen .eda-context-nav a { min-height: 40px; }
+}
+
+/* rc.4: contextual navigation and normal WP notice placement. */
+.eda-admin-screen .eda-page-context { margin-block: 12px 16px; margin-inline: 0 20px; }
+.eda-admin-screen .eda-breadcrumb { display:flex; flex-wrap:wrap; gap:8px; color:var(--eda-muted); font-size:12px; }
+.eda-admin-screen .eda-context-nav { margin:10px 0 0; padding:7px 9px; }
+.eda-admin-screen.rtl .eda-context-nav { margin-inline:0; }
+.eda-admin-screen .eda-context-nav a { font-size:12px; padding:6px 9px; }
+.eda-admin-screen .eda-context-group { font-size:11px; font-weight:700; padding-inline:12px 5px; border-inline-start:1px solid var(--eda-border); }
+.eda-admin-screen .eda-notice-region .wp-header-end { border:0; margin:0; padding:0; }
+.eda-admin-screen .eda-notice-region .notice { margin-block:10px; margin-inline:0 20px; }
+.eda-admin-screen .eda-hero { padding-block:16px; }
+.eda-admin-screen .eda-hero h1 { font-size:24px; }
+.eda-admin-screen .eda-metric-note { padding:14px 16px; margin-block-end:16px; background:#fff9ec; border:1px solid #e8d4a4; border-radius:8px; color:#634910; font-size:12px; }
+.eda-admin-screen .eda-metric-note p { margin-block:4px; }
+.eda-admin-screen .eda-pending-links { display:flex; flex-wrap:wrap; gap:10px; }
+.eda-admin-screen .eda-commission-table tr:target { outline:2px solid #2255c8; outline-offset:-2px; background:#eff5ff; }
+.eda-admin-screen .eda-inline-commission-form[aria-busy="true"] { opacity:.65; }
+.eda-admin-screen .eda-inline-commission-form button { min-block-size:32px; }
+.eda-admin-screen .eda-inline-commission-form input[type="number"] { direction:ltr; text-align:start; min-inline-size:75px; }
+.eda-admin-screen .eda-pagination { display:flex; flex-wrap:wrap; gap:8px; margin-block:16px; }
+.eda-admin-screen .eda :is(td,th) { text-align:start; }
+.eda-admin-screen .eda-recent-activity { margin:0; }
+.eda-admin-screen .eda-recent-activity li { display:grid; grid-template-columns:150px minmax(120px,1fr) minmax(160px,2fr); gap:12px; border-block-end:1px solid var(--eda-border); padding-block:9px; overflow-wrap:anywhere; }
+.eda-admin-screen .eda-seller-panel { min-width:0; margin-block:12px; border:1px solid var(--eda-border); background:#fff; border-radius:9px; }
+.eda-admin-screen .eda-seller-panel > summary { padding:12px 16px; color:var(--eda-text); cursor:pointer; font-weight:600; }
+.eda-admin-screen .eda-seller-panel:not([open]) > .eda-card { display:none; }
+.eda-admin-screen .eda-seller-panel > .eda-card { border:0; margin:0; box-shadow:none; }
+.eda-admin-screen :is(.eda-page-context,.eda-seller-panel) :is(a,button,summary):focus-visible { outline:3px solid #2255c8; outline-offset:3px; }
+@media (max-width:700px) {
+    .eda-admin-screen .eda-page-context { margin-inline:0 10px; }
+    .eda-admin-screen .eda-context-nav { gap:3px; }
+    .eda-admin-screen .eda-context-group { flex-basis:100%; border:0; padding:6px; }
+    .eda-admin-screen .eda-recent-activity li { grid-template-columns:1fr; gap:3px; }
+}

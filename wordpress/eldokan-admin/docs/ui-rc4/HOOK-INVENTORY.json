@@ -1,0 +1,846 @@
+{
+  "scope": "static source expressions; dynamic registrations require runtime acceptance",
+  "count": 105,
+  "entries": [
+    {
+      "file": "eldokan-admin.php",
+      "line": 14,
+      "registration": "add_action",
+      "literal_first_argument": "admin_notices",
+      "source_expression_excerpt": "'admin_notices', function () {",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "eldokan-admin.php",
+      "line": 38,
+      "registration": "add_action",
+      "literal_first_argument": "plugins_loaded",
+      "source_expression_excerpt": "'plugins_loaded', function () {",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-home-management.php",
+      "line": 17,
+      "registration": "add_action",
+      "literal_first_argument": "init",
+      "source_expression_excerpt": "'init', [$this, 'register_content_types']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-home-management.php",
+      "line": 18,
+      "registration": "add_action",
+      "literal_first_argument": "admin_menu",
+      "source_expression_excerpt": "'admin_menu', [$this, 'register_menu'], 36);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-home-management.php",
+      "line": 19,
+      "registration": "add_action",
+      "literal_first_argument": "admin_enqueue_scripts",
+      "source_expression_excerpt": "'admin_enqueue_scripts', [$this, 'assets']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-home-management.php",
+      "line": 20,
+      "registration": "add_action",
+      "literal_first_argument": "admin_post_eldokan_home_save_item",
+      "source_expression_excerpt": "'admin_post_eldokan_home_save_item', [$this, 'save_item']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-home-management.php",
+      "line": 21,
+      "registration": "add_action",
+      "literal_first_argument": "admin_post_eldokan_home_delete_item",
+      "source_expression_excerpt": "'admin_post_eldokan_home_delete_item', [$this, 'delete_item']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-home-management.php",
+      "line": 22,
+      "registration": "add_action",
+      "literal_first_argument": "admin_post_eldokan_home_save_sections",
+      "source_expression_excerpt": "'admin_post_eldokan_home_save_sections', [$this, 'save_sections']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-category-attributes.php",
+      "line": 7,
+      "registration": "add_action",
+      "literal_first_argument": "admin_post_eldokan_admin_save_category_attributes",
+      "source_expression_excerpt": "'admin_post_eldokan_admin_save_category_attributes', [$this, 'save']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-category-attributes.php",
+      "line": 10,
+      "registration": "add_filter",
+      "literal_first_argument": "rest_dispatch_request",
+      "source_expression_excerpt": "'rest_dispatch_request', [$this, 'dispatch'], 20, 4);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 25,
+      "registration": "add_action",
+      "literal_first_argument": "admin_menu",
+      "source_expression_excerpt": "'admin_menu', [$this, 'menu'], 35);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 26,
+      "registration": "add_action",
+      "literal_first_argument": "admin_init",
+      "source_expression_excerpt": "'admin_init', [$this, 'ensure_index_schema'], 5);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 27,
+      "registration": "add_action",
+      "literal_first_argument": "admin_init",
+      "source_expression_excerpt": "'admin_init', [$this, 'ensure_builtin_access_roles'], 8);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 28,
+      "registration": "add_action",
+      "literal_first_argument": "admin_enqueue_scripts",
+      "source_expression_excerpt": "'admin_enqueue_scripts', [$this, 'assets']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 29,
+      "registration": "add_action",
+      "literal_first_argument": "wp",
+      "source_expression_excerpt": "'wp', [$this, 'track_visit'], 99);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 31,
+      "registration": "add_action",
+      "literal_first_argument": "woocommerce_checkout_create_order_line_item",
+      "source_expression_excerpt": "'woocommerce_checkout_create_order_line_item', [$this, 'snapshot_order_item_fee_rule'], 30, 4);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 33,
+      "registration": "add_action",
+      "literal_first_argument": "admin_post_eldokan_admin_save_commission",
+      "source_expression_excerpt": "'admin_post_eldokan_admin_save_commission', [$this, 'save_commission']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 34,
+      "registration": "add_action",
+      "literal_first_argument": "admin_post_eldokan_admin_save_category_commission",
+      "source_expression_excerpt": "'admin_post_eldokan_admin_save_category_commission', [$this, 'save_category_commission']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 35,
+      "registration": "add_action",
+      "literal_first_argument": "admin_post_eldokan_admin_clear_category_fee",
+      "source_expression_excerpt": "'admin_post_eldokan_admin_clear_category_fee', [$this, 'clear_category_fee']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 36,
+      "registration": "add_action",
+      "literal_first_argument": "admin_post_eldokan_admin_save_product_commission",
+      "source_expression_excerpt": "'admin_post_eldokan_admin_save_product_commission', [$this, 'save_product_commission']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 37,
+      "registration": "add_action",
+      "literal_first_argument": "admin_post_eldokan_admin_delete_commission",
+      "source_expression_excerpt": "'admin_post_eldokan_admin_delete_commission', [$this, 'delete_commission']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 38,
+      "registration": "add_action",
+      "literal_first_argument": "admin_post_eldokan_admin_rate_seller",
+      "source_expression_excerpt": "'admin_post_eldokan_admin_rate_seller', [$this, 'rate_seller']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 39,
+      "registration": "add_action",
+      "literal_first_argument": "admin_post_eldokan_admin_seller_status",
+      "source_expression_excerpt": "'admin_post_eldokan_admin_seller_status', [$this, 'seller_status']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 40,
+      "registration": "add_action",
+      "literal_first_argument": "admin_post_eldokan_admin_save_dashboard_control",
+      "source_expression_excerpt": "'admin_post_eldokan_admin_save_dashboard_control', [$this, 'save_dashboard_control']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 41,
+      "registration": "add_action",
+      "literal_first_argument": "admin_post_eldokan_admin_save_access_role",
+      "source_expression_excerpt": "'admin_post_eldokan_admin_save_access_role', [$this, 'save_access_role']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 42,
+      "registration": "add_action",
+      "literal_first_argument": "admin_post_eldokan_admin_delete_access_role",
+      "source_expression_excerpt": "'admin_post_eldokan_admin_delete_access_role', [$this, 'delete_access_role']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 43,
+      "registration": "add_action",
+      "literal_first_argument": "admin_post_eldokan_admin_assign_access_role",
+      "source_expression_excerpt": "'admin_post_eldokan_admin_assign_access_role', [$this, 'assign_access_role']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 44,
+      "registration": "add_action",
+      "literal_first_argument": "admin_post_eldokan_admin_update_seller_account_role",
+      "source_expression_excerpt": "'admin_post_eldokan_admin_update_seller_account_role', [$this, 'update_seller_account_role']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 45,
+      "registration": "add_action",
+      "literal_first_argument": "admin_post_eldokan_admin_delete_seller_account",
+      "source_expression_excerpt": "'admin_post_eldokan_admin_delete_seller_account', [$this, 'delete_seller_account']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 46,
+      "registration": "add_action",
+      "literal_first_argument": "admin_post_eldokan_admin_update_wcfm_role",
+      "source_expression_excerpt": "'admin_post_eldokan_admin_update_wcfm_role', [$this, 'update_wcfm_role']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 47,
+      "registration": "add_action",
+      "literal_first_argument": "admin_post_eldokan_admin_bulk_wcfm_role",
+      "source_expression_excerpt": "'admin_post_eldokan_admin_bulk_wcfm_role', [$this, 'bulk_wcfm_role']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 48,
+      "registration": "add_action",
+      "literal_first_argument": "admin_post_eldokan_admin_save_email_settings",
+      "source_expression_excerpt": "'admin_post_eldokan_admin_save_email_settings', [$this, 'save_email_settings']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 49,
+      "registration": "add_action",
+      "literal_first_argument": "admin_post_eldokan_admin_send_test_email",
+      "source_expression_excerpt": "'admin_post_eldokan_admin_send_test_email', [$this, 'send_test_email']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 51,
+      "registration": "add_action",
+      "literal_first_argument": "admin_post_eldokan_admin_registration_status",
+      "source_expression_excerpt": "'admin_post_eldokan_admin_registration_status', [$this, 'registration_status']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 52,
+      "registration": "add_action",
+      "literal_first_argument": "admin_post_eldokan_admin_delete_registration",
+      "source_expression_excerpt": "'admin_post_eldokan_admin_delete_registration', [$this, 'delete_registration']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 53,
+      "registration": "add_action",
+      "literal_first_argument": "admin_post_eldokan_admin_view_registration_pdf",
+      "source_expression_excerpt": "'admin_post_eldokan_admin_view_registration_pdf', [$this, 'view_registration_pdf']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 54,
+      "registration": "add_action",
+      "literal_first_argument": "admin_post_eldokan_admin_update_order_status",
+      "source_expression_excerpt": "'admin_post_eldokan_admin_update_order_status', [$this, 'update_order_status']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 55,
+      "registration": "add_action",
+      "literal_first_argument": "eldokan_admin_home_audit",
+      "source_expression_excerpt": "'eldokan_admin_home_audit', [$this, 'audit_home_change'], 10, 3);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 57,
+      "registration": "add_action",
+      "literal_first_argument": "rest_api_init",
+      "source_expression_excerpt": "'rest_api_init', [$this, 'rest_routes']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 58,
+      "registration": "add_action",
+      "literal_first_argument": "wp_ajax_eldokan_wcfm_index_scan",
+      "source_expression_excerpt": "'wp_ajax_eldokan_wcfm_index_scan', [$this, 'wcfm_index_scan']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 59,
+      "registration": "add_action",
+      "literal_first_argument": "wp_ajax_eldokan_wcfm_index_batch",
+      "source_expression_excerpt": "'wp_ajax_eldokan_wcfm_index_batch', [$this, 'wcfm_index_batch']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 60,
+      "registration": "add_action",
+      "literal_first_argument": "wp_ajax_eldokan_wcfm_index_reset",
+      "source_expression_excerpt": "'wp_ajax_eldokan_wcfm_index_reset', [$this, 'wcfm_index_reset']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 61,
+      "registration": "add_action",
+      "literal_first_argument": "wp_ajax_eldokan_wcfm_index_rebuild",
+      "source_expression_excerpt": "'wp_ajax_eldokan_wcfm_index_rebuild', [$this, 'wcfm_index_rebuild']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 62,
+      "registration": "add_action",
+      "literal_first_argument": "wp_ajax_eldokan_wcfm_migration_scan",
+      "source_expression_excerpt": "'wp_ajax_eldokan_wcfm_migration_scan', [$this, 'wcfm_migration_scan']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 63,
+      "registration": "add_action",
+      "literal_first_argument": "wp_ajax_eldokan_wcfm_migration_batch",
+      "source_expression_excerpt": "'wp_ajax_eldokan_wcfm_migration_batch', [$this, 'wcfm_migration_batch']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 64,
+      "registration": "add_action",
+      "literal_first_argument": "wp_ajax_eldokan_wcfm_migration_reset",
+      "source_expression_excerpt": "'wp_ajax_eldokan_wcfm_migration_reset', [$this, 'wcfm_migration_reset']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 65,
+      "registration": "add_action",
+      "literal_first_argument": "wp_ajax_eldokan_wcfm_migration_verify",
+      "source_expression_excerpt": "'wp_ajax_eldokan_wcfm_migration_verify', [$this, 'wcfm_migration_verify']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 66,
+      "registration": "add_action",
+      "literal_first_argument": "wp_ajax_eldokan_wcfm_migration_verify_detailed",
+      "source_expression_excerpt": "'wp_ajax_eldokan_wcfm_migration_verify_detailed', [$this, 'wcfm_migration_verify_detailed']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 67,
+      "registration": "add_action",
+      "literal_first_argument": "wp_ajax_eldokan_wcfm_migration_repair",
+      "source_expression_excerpt": "'wp_ajax_eldokan_wcfm_migration_repair', [$this, 'wcfm_migration_repair']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 70,
+      "registration": "add_action",
+      "literal_first_argument": "shutdown",
+      "source_expression_excerpt": "'shutdown', [$this, 'capture_eldokan_request_audit'], 999);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 71,
+      "registration": "add_filter",
+      "literal_first_argument": "rest_request_after_callbacks",
+      "source_expression_excerpt": "'rest_request_after_callbacks', [$this, 'capture_eldokan_rest_audit'], 99, 3);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 72,
+      "registration": "add_action",
+      "literal_first_argument": "user_register",
+      "source_expression_excerpt": "'user_register', [$this, 'audit_user_registered'], 20, 2);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 73,
+      "registration": "add_action",
+      "literal_first_argument": "profile_update",
+      "source_expression_excerpt": "'profile_update', [$this, 'audit_user_updated'], 20, 3);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 74,
+      "registration": "add_action",
+      "literal_first_argument": "delete_user",
+      "source_expression_excerpt": "'delete_user', [$this, 'audit_user_deleted'], 20, 3);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 75,
+      "registration": "add_action",
+      "literal_first_argument": "save_post_product",
+      "source_expression_excerpt": "'save_post_product', [$this, 'audit_product_saved'], 20, 3);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 76,
+      "registration": "add_action",
+      "literal_first_argument": "before_delete_post",
+      "source_expression_excerpt": "'before_delete_post', [$this, 'audit_post_deleted'], 20, 2);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 77,
+      "registration": "add_action",
+      "literal_first_argument": "transition_post_status",
+      "source_expression_excerpt": "'transition_post_status', [$this, 'audit_product_status_changed'], 20, 3);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 78,
+      "registration": "add_action",
+      "literal_first_argument": "created_product_cat",
+      "source_expression_excerpt": "'created_product_cat', [$this, 'audit_product_category_created'], 20, 3);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 79,
+      "registration": "add_action",
+      "literal_first_argument": "edited_product_cat",
+      "source_expression_excerpt": "'edited_product_cat', [$this, 'audit_product_category_updated'], 20, 3);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 80,
+      "registration": "add_action",
+      "literal_first_argument": "delete_product_cat",
+      "source_expression_excerpt": "'delete_product_cat', [$this, 'audit_product_category_deleted'], 20, 4);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 81,
+      "registration": "add_action",
+      "literal_first_argument": "woocommerce_new_order",
+      "source_expression_excerpt": "'woocommerce_new_order', [$this, 'audit_order_created'], 20, 2);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 82,
+      "registration": "add_action",
+      "literal_first_argument": "woocommerce_order_status_changed",
+      "source_expression_excerpt": "'woocommerce_order_status_changed', [$this, 'audit_order_status_changed'], 20, 4);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 83,
+      "registration": "add_action",
+      "literal_first_argument": "wp_login",
+      "source_expression_excerpt": "'wp_login', [$this, 'audit_wp_login'], 20, 2);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 84,
+      "registration": "add_action",
+      "literal_first_argument": "wp_logout",
+      "source_expression_excerpt": "'wp_logout', [$this, 'audit_wp_logout'], 20, 1);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 85,
+      "registration": "add_action",
+      "literal_first_argument": "admin_post_eldokan_admin_export_activity",
+      "source_expression_excerpt": "'admin_post_eldokan_admin_export_activity', [$this, 'export_activity_csv']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 86,
+      "registration": "add_action",
+      "literal_first_argument": "admin_post_eldokan_admin_export_seller_report",
+      "source_expression_excerpt": "'admin_post_eldokan_admin_export_seller_report', [$this, 'export_seller_report_excel']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 87,
+      "registration": "add_action",
+      "literal_first_argument": "admin_post_eldokan_admin_export_seller_report_pdf",
+      "source_expression_excerpt": "'admin_post_eldokan_admin_export_seller_report_pdf', [$this, 'export_seller_report_pdf']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 6670,
+      "registration": "register_rest_route",
+      "literal_first_argument": "eldokan-admin/v1",
+      "source_expression_excerpt": "'eldokan-admin/v1','/overview',['methods'=>'GET','permission_callback'=>fn()=>current_user_can('eldokan_backoffice_view_dashboard'),'callback'=>fn()=>rest_ensure_response($this->overall_metrics(sanitize_key($_GET['period']??'30d')))]);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 6671,
+      "registration": "register_rest_route",
+      "literal_first_argument": "eldokan/v1",
+      "source_expression_excerpt": "'eldokan/v1','/dashboard-control',['methods'=>'GET','permission_callback'=>function(){return is_user_logged_in();},'callback'=>function(){ $uid=get_current_user_id();$owner=$this->owner_id($uid);$g=get_option('eldokan_dashboard_control_global',$this->dashboard",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 6672,
+      "registration": "register_rest_route",
+      "literal_first_argument": "eldokan/v1",
+      "source_expression_excerpt": "'eldokan/v1','/seller-access',['methods'=>'GET','permission_callback'=>function(){return is_user_logged_in();},'callback'=>function(){",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin.php",
+      "line": 6687,
+      "registration": "register_rest_route",
+      "literal_first_argument": "eldokan-admin/v1",
+      "source_expression_excerpt": "'eldokan-admin/v1','/sellers',['methods'=>'GET','permission_callback'=>fn()=>current_user_can('eldokan_backoffice_view_sellers'),'callback'=>function(){ $out=[];foreach($this->owner_users() as $s){$m=$this->seller_order_metrics($s->ID,...$this->period('30d'));",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-operational-modules.php",
+      "line": 12,
+      "registration": "add_action",
+      "literal_first_argument": "init",
+      "source_expression_excerpt": "'init', [__CLASS__, 'install_admin_caps'], 6);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-operational-modules.php",
+      "line": 13,
+      "registration": "add_filter",
+      "literal_first_argument": "map_meta_cap",
+      "source_expression_excerpt": "'map_meta_cap', [__CLASS__, 'staff_capabilities'], 20, 4);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-operational-modules.php",
+      "line": 16,
+      "registration": "add_action",
+      "literal_first_argument": "plugins_loaded",
+      "source_expression_excerpt": "'plugins_loaded', [__CLASS__, 'load'], 90);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-operational-modules.php",
+      "line": 44,
+      "registration": "add_action",
+      "literal_first_argument": "admin_notices",
+      "source_expression_excerpt": "'admin_notices', static function () use ($module) {",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin-ui.php",
+      "line": 9,
+      "registration": "add_action",
+      "literal_first_argument": "init",
+      "source_expression_excerpt": "'init', [__CLASS__, 'translations']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin-ui.php",
+      "line": 10,
+      "registration": "add_filter",
+      "literal_first_argument": "admin_body_class",
+      "source_expression_excerpt": "'admin_body_class', [__CLASS__, 'body_class']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin-ui.php",
+      "line": 11,
+      "registration": "add_filter",
+      "literal_first_argument": "post_type_labels_eldokan_story",
+      "source_expression_excerpt": "'post_type_labels_eldokan_story', [__CLASS__, 'story_labels']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin-ui.php",
+      "line": 12,
+      "registration": "add_action",
+      "literal_first_argument": "admin_enqueue_scripts",
+      "source_expression_excerpt": "'admin_enqueue_scripts', [__CLASS__, 'assets'], 30);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin-ui.php",
+      "line": 13,
+      "registration": "add_action",
+      "literal_first_argument": "admin_menu",
+      "source_expression_excerpt": "'admin_menu', [__CLASS__, 'simplify_menu'], 999);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin-ui.php",
+      "line": 14,
+      "registration": "add_filter",
+      "literal_first_argument": "parent_file",
+      "source_expression_excerpt": "'parent_file', [__CLASS__, 'parent_file']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin-ui.php",
+      "line": 15,
+      "registration": "add_filter",
+      "literal_first_argument": "submenu_file",
+      "source_expression_excerpt": "'submenu_file', [__CLASS__, 'submenu_file']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin-ui.php",
+      "line": 17,
+      "registration": "add_action",
+      "literal_first_argument": "admin_notices",
+      "source_expression_excerpt": "'admin_notices', [__CLASS__, 'navigation'], 999);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-admin-ui.php",
+      "line": 138,
+      "registration": "add_action",
+      "literal_first_argument": null,
+      "source_expression_excerpt": "$alias, static function () use ($route) {",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-backoffice-roles.php",
+      "line": 11,
+      "registration": "add_action",
+      "literal_first_argument": "init",
+      "source_expression_excerpt": "'init', [__CLASS__, 'maybe_install'], 5);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-backoffice-roles.php",
+      "line": 13,
+      "registration": "add_action",
+      "literal_first_argument": "admin_menu",
+      "source_expression_excerpt": "",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-backoffice-roles.php",
+      "line": 19,
+      "registration": "add_action",
+      "literal_first_argument": "admin_post_eldokan_backoffice_save_role",
+      "source_expression_excerpt": "",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-backoffice-roles.php",
+      "line": 24,
+      "registration": "add_action",
+      "literal_first_argument": "admin_post_eldokan_backoffice_reset_role",
+      "source_expression_excerpt": "",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "includes/class-eldokan-backoffice-roles.php",
+      "line": 28,
+      "registration": "add_filter",
+      "literal_first_argument": "woocommerce_prevent_admin_access",
+      "source_expression_excerpt": "",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "modules/stories/eldokan-stories.php",
+      "line": 8,
+      "registration": "add_action",
+      "literal_first_argument": "init",
+      "source_expression_excerpt": "'init', [self::class, 'register']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "modules/stories/eldokan-stories.php",
+      "line": 9,
+      "registration": "add_action",
+      "literal_first_argument": "add_meta_boxes_eldokan_story",
+      "source_expression_excerpt": "'add_meta_boxes_eldokan_story', [self::class, 'boxes']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "modules/stories/eldokan-stories.php",
+      "line": 10,
+      "registration": "add_action",
+      "literal_first_argument": "save_post_eldokan_story",
+      "source_expression_excerpt": "'save_post_eldokan_story', [self::class, 'save']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "modules/stories/eldokan-stories.php",
+      "line": 11,
+      "registration": "add_action",
+      "literal_first_argument": "rest_api_init",
+      "source_expression_excerpt": "'rest_api_init', function () {",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "modules/stories/eldokan-stories.php",
+      "line": 12,
+      "registration": "register_rest_route",
+      "literal_first_argument": "eldokan-customer/v1",
+      "source_expression_excerpt": "'eldokan-customer/v1', '/stories', [",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "modules/stories/eldokan-stories.php",
+      "line": 18,
+      "registration": "add_action",
+      "literal_first_argument": "admin_notices",
+      "source_expression_excerpt": "'admin_notices', function () {",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "modules/checkout/eldokan-checkout-setup.php",
+      "line": 11,
+      "registration": "add_action",
+      "literal_first_argument": "admin_menu",
+      "source_expression_excerpt": "'admin_menu', [__CLASS__, 'menu'], 40);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "modules/checkout/eldokan-checkout-setup.php",
+      "line": 12,
+      "registration": "add_action",
+      "literal_first_argument": "admin_post_eldokan_checkout_setup_save",
+      "source_expression_excerpt": "'admin_post_eldokan_checkout_setup_save', [__CLASS__, 'save']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "modules/checkout/eldokan-checkout-setup.php",
+      "line": 13,
+      "registration": "add_filter",
+      "literal_first_argument": "eldokan_customer_api_checkout_shipping_type",
+      "source_expression_excerpt": "'eldokan_customer_api_checkout_shipping_type', [__CLASS__, 'shipping_type'], 20, 2);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "modules/checkout/eldokan-checkout-setup.php",
+      "line": 14,
+      "registration": "add_filter",
+      "literal_first_argument": "rest_request_before_callbacks",
+      "source_expression_excerpt": "'rest_request_before_callbacks', [__CLASS__, 'begin_quote'], 10, 3);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "modules/checkout/eldokan-checkout-setup.php",
+      "line": 15,
+      "registration": "add_filter",
+      "literal_first_argument": "woocommerce_shipping_packages",
+      "source_expression_excerpt": "'woocommerce_shipping_packages', [__CLASS__, 'capture_packages'], PHP_INT_MAX);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "modules/checkout/eldokan-checkout-setup.php",
+      "line": 16,
+      "registration": "add_filter",
+      "literal_first_argument": "rest_request_after_callbacks",
+      "source_expression_excerpt": "'rest_request_after_callbacks', [__CLASS__, 'finish_quote'], 10, 3);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "modules/checkout/eldokan-checkout-setup.php",
+      "line": 17,
+      "registration": "add_filter",
+      "literal_first_argument": "woocommerce_available_payment_gateways",
+      "source_expression_excerpt": "'woocommerce_available_payment_gateways', [__CLASS__, 'capture_gateways'], PHP_INT_MAX);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "modules/stories/includes/class-eldokan-stories-picker.php",
+      "line": 6,
+      "registration": "add_action",
+      "literal_first_argument": "wp_ajax_eldokan_stories_sellers",
+      "source_expression_excerpt": "'wp_ajax_eldokan_stories_sellers', [self::class, 'sellers']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "modules/stories/includes/class-eldokan-stories-picker.php",
+      "line": 7,
+      "registration": "add_action",
+      "literal_first_argument": "wp_ajax_eldokan_stories_products",
+      "source_expression_excerpt": "'wp_ajax_eldokan_stories_products', [self::class, 'products']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    },
+    {
+      "file": "modules/stories/includes/class-eldokan-stories-picker.php",
+      "line": 8,
+      "registration": "add_action",
+      "literal_first_argument": "admin_enqueue_scripts",
+      "source_expression_excerpt": "'admin_enqueue_scripts', [self::class, 'assets']);",
+      "note": "source registration; callbacks/loops may expand dynamically"
+    }
+  ]
+}

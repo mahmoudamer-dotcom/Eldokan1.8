@@ -26,6 +26,8 @@ export async function Search(productName: string, locale: Locale = 'en') {
         regular_price: suggestion.price,
       },
     }))
+    // Bound the cache so distinct queries cannot grow server memory without limit.
+    if (searchCache.size >= 500) searchCache.delete(searchCache.keys().next().value!)
     searchCache.set(cacheKey, { data, savedAt: Date.now() })
     return { ...result, data }
   } catch {

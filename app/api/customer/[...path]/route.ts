@@ -2,6 +2,8 @@ import { createEldokanCustomerApiClient, EldokanClientError } from '@eldokan/cus
 import type { AddressId, AddressCreate, AddressUpdate, CartItemId, ProductId, ProductListParams, VariationId, PurchaseInput, QuoteInput, OrderId, PaymentInput, SellerId, Language, ReviewId, ReviewInput, ReviewListParams } from '@eldokan/customer-api-client'
 import type { NextRequest } from 'next/server'
 import { appendCustomerApiCookies, createCustomerApiTransport } from '@/lib/customer-api-transport'
+import { isSameOriginRequest } from '@/lib/request-origin'
+import { CATALOG_LANGUAGE } from '@/lib/catalog-language'
 
 const DEFAULT_API_BASE_URL = 'https://www.eldokan.com/wp-json/eldokan-customer/v1'
 export const runtime = 'nodejs'
@@ -54,13 +56,14 @@ async function handleRequest(request: NextRequest, context: RouteContext, cookie
     return Response.json({ success: false, error: { code: 'protected_guest_order_required', message: 'Guest Order access is available only through protected recovery.' }, meta: { request_id: null } }, { status: 403, headers: { 'Cache-Control': 'no-store' } })
   }
 
-  if (isMutation && request.headers.get('origin') !== new URL(request.url).origin) {
+  if (isMutation && !isSameOriginRequest(request)) {
     return Response.json({ success: false, error: { code: 'invalid_origin', message: 'Request origin is not allowed.' }, meta: { request_id: null } }, { status: 403 })
   }
 
   const transport = createCustomerApiTransport(request, (cookie) => cookies.push(cookie))
   const api = createEldokanCustomerApiClient({
     baseUrl: process.env.ELDOKAN_API_BASE_URL?.trim() || DEFAULT_API_BASE_URL,
+    defaultLanguage: CATALOG_LANGUAGE,
     fetch: transport,
   })
 
@@ -244,6 +247,10 @@ async function handleRequest(request: NextRequest, context: RouteContext, cookie
       result = await api.addresses.list()
     } else if (endpoint === 'me/addresses' && method === 'POST') {
       if (!(await verifyCsrf())) return Response.json({ success: false, error: { code: 'invalid_csrf', message: 'The session token is invalid. Refresh the session and try again.' }, meta: { request_id: null } }, { status: 403 })
+      // One delivery address per account: a second one is edited, not added.
+      if ((await api.addresses.list()).data.items.length > 0) {
+        return Response.json({ success: false, error: { code: 'address_limit', message: 'Your account already has an address. Edit it instead of adding another.' }, meta: { request_id: null } }, { status: 409 })
+      }
       result = await api.addresses.create(await request.json() as AddressCreate)
     } else if (endpoint.startsWith('me/addresses/') && method === 'PATCH') {
       if (!(await verifyCsrf())) return Response.json({ success: false, error: { code: 'invalid_csrf', message: 'The session token is invalid. Refresh the session and try again.' }, meta: { request_id: null } }, { status: 403 })
@@ -275,6 +282,17 @@ async function handleRequest(request: NextRequest, context: RouteContext, cookie
         // Like the SDK's other server requests, do not forward the browser Origin
         // to WordPress. Browser origin and CSRF were verified above; native order
         // ownership and CSRF are verified again by the Customer API.
+        method: 'POST', headers: { 'Content-Type': 'application/json', 'X-ElDokan-CSRF': request.headers.get('x-eldokan-csrf')! },
+        body: JSON.stringify(input), signal: AbortSignal.timeout(15000),
+      })
+      return Response.json(await upstream.json(), { status: upstream.status, headers: { 'Cache-Control': 'private, no-store' } })
+    } else if (/^orders\/ord_[a-f0-9]{64}\/update$/.test(endpoint) && method === 'POST') {
+      if (!(await verifyCsrf())) return Response.json({ success: false, error: { code: 'invalid_csrf', message: 'Refresh your session and try again.' }, meta: { request_id: null } }, { status: 403 })
+      const input = await request.json() as Record<string, unknown>
+      if (!input || typeof input !== 'object' || Array.isArray(input) || !Object.keys(input).length || Object.keys(input).some((key) => !['address', 'order_notes'].includes(key)) || JSON.stringify(input).length > 8000) return Response.json({ success: false, error: { code: 'invalid_order_update', message: 'Send the address and/or order notes to update.' }, meta: { request_id: null } }, { status: 422 })
+      const base = process.env.ELDOKAN_API_BASE_URL?.trim() || DEFAULT_API_BASE_URL
+      // Same forwarding as cancellation; ownership, timing and fields are verified again by the Customer API.
+      const upstream = await transport(`${base.replace(/\/$/, '')}/${endpoint}${lang ? `?lang=${lang}` : ''}`, {
         method: 'POST', headers: { 'Content-Type': 'application/json', 'X-ElDokan-CSRF': request.headers.get('x-eldokan-csrf')! },
         body: JSON.stringify(input), signal: AbortSignal.timeout(15000),
       })

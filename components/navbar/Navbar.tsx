@@ -74,11 +74,15 @@ export default function Navbar() {
         })
     }
 
+    // Sign-out shows immediately; the server confirms it with session-changed afterwards.
+    const signedOut = () => setCustomer(null)
     loadSession()
     window.addEventListener('eldokan:session-changed', loadSession)
+    window.addEventListener('eldokan:signed-out', signedOut)
     return () => {
       active = false
       window.removeEventListener('eldokan:session-changed', loadSession)
+      window.removeEventListener('eldokan:signed-out', signedOut)
     }
   }, [locale])
 

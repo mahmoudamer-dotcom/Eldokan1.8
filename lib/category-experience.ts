@@ -7,14 +7,29 @@ type CategoryNode = { id: string; slug: string; children: Array<{ id: string; sl
 export function categoryWorld(slug: string, category: CategoryDetail | null | undefined, roots: CategoryNode[]): CategoryWorld {
   const parent = roots.find((root) => root.slug === slug || root.id === category?.parent_id
     || root.children.some((child) => child.slug === slug || child.id === category?.parent_id))
-  const identity = `${parent?.slug ?? ''} ${slug}`.toLowerCase().replace(/[_-]+/g, ' ')
+  return categoryWorldOf(parent?.slug, slug)
+}
+
+/** For places that only know a category's own slugs or names, such as menus and product pages. */
+export function categoryWorldOf(...identities: Array<string | null | undefined>): CategoryWorld {
+  const identity = identities.filter(Boolean).join(' ').toLowerCase().replace(/[_-]+/g, ' ')
   if (/beauty|personal care|cosmetic|skincare|perfume/.test(identity)) return 'beauty'
   if (/fashion|clothing|women|men wear|shoes/.test(identity)) return 'fashion'
   if (/handmade|hand made|craft/.test(identity)) return 'handmade'
   if (/tools|home improvement|hardware/.test(identity)) return 'tools'
   if (/home|appliance|furniture|kitchen/.test(identity)) return 'home'
-  if (/electronic|computer|audio|batter|cable|charger|mobile|tablet|gaming|network|security system|data storage|power strip|point of sale|car accessories/.test(identity)) return 'technology'
+  if (/electronic|computer|audio|batter|cable|charger|mobile|tablet|gaming|network|security system|data storage|power strip|point of sale|car accessories|phone|laptop|memory card|usb|flash|camera|television/.test(identity)) return 'technology'
   return 'explore'
+}
+
+/** Illustrated banner drawn for each department; a category image from the store replaces it where one exists. */
+export function categoryArt(world: CategoryWorld) {
+  return `/image/categories/${world}.svg`
+}
+
+/** Square, centered artwork for round category badges. */
+export function categoryIcon(world: CategoryWorld) {
+  return `/image/categories/circle/${world}.svg`
 }
 
 export const categoryWorldCopy: Record<CategoryWorld, { eyebrow: [string, string]; heading: [string, string]; description: [string, string]; guide: [string, string] }> = {

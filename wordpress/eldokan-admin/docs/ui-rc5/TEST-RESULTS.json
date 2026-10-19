@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-19",
+  "release": "1.10.0-rc.5",
+  "approval": "NOT_PRODUCTION_APPROVED",
+  "php_version": "PHP 8.3.35 (cli) (built: Sep 22 2026 11:14:27) (NTS Visual C++ 2019 x64)",
+  "node_version": "v24.19.0",
+  "php_lint_files": 15,
+  "javascript_syntax_files": 4,
+  "php_functional_assertions": 256,
+  "ownership_fixtures": 32,
+  "ownership_assertions": 96,
+  "browser_assertions": 57,
+  "bootstrap_modes": [
+    "normal",
+    "checkout-legacy",
+    "stories-legacy",
+    "modules-disabled"
+  ],
+  "registered_menu_renderers_denied": 17,
+  "main_mutation_handlers_denied": 34,
+  "other_modules": "Home, Team Permissions, Category Attributes, Checkout and Stories guards tested; native WP workflows deferred",
+  "protected_methods_unchanged": 43,
+  "unchanged_module_files": 12,
+  "existing_translations_preserved": 680,
+  "commission_precedence_unchanged": true,
+  "wordpress_integration": "NOT_EXECUTED",
+  "real_database_transactions": "NOT_EXECUTED",
+  "live_order_22862": "DEFERRED: seven SELECT-only queries; stable IDs not yet supplied",
+  "performance_wall_time": "NOT_PROFILED_ON_WORDPRESS",
+  "scope": "Actual PHP methods and browser DOM with synthetic data; no database, WP runtime or network backend"
+}

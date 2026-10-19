@@ -43,3 +43,23 @@ next-env.d.ts
 certificates
 /artifacts/.npm-cache/
 /artifacts/php-syntax/
+
+# Third-party plugin bundles (paid licenses); never commit.
+Test.zip
+
+# Only the running storefront and the live WordPress plugin sources are kept in the repo.
+# Build outputs, old plugin variants and third-party references stay local.
+/artifacts/
+/wordpress-reference/
+/wordpress-plugin-source/
+/wordpress/eldokan-checkout-options/
+/wordpress/eldokan-checkout-payment-diagnostics/
+/wordpress/eldokan-checkout-setup/
+/wordpress/eldokan-customer-api-cancellation/
+/wordpress/eldokan-customer-api-fixed/
+/wordpress/eldokan-customer-api-installments/
+/wordpress/eldokan-customer-api-installments-recovery/
+/wordpress/eldokan-customer-api-installments-safe/
+/wordpress/eldokan-customer-api-options/
+/wordpress/eldokan-stories/
+/wordpress/eldokan-product-seller/

@@ -10,8 +10,8 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@eldokan/customer-api-client": "file:./eldokan-customer-api-client",
     "@base-ui/react": "^1.8.0",
+    "@eldokan/customer-api-client": "file:./eldokan-customer-api-client",
     "@lottiefiles/dotlottie-react": "^0.19.16",
     "class-variance-authority": "^0.7.1",
     "cn": "^0.3.0",
@@ -20,6 +20,7 @@
     "lottie-react": "^3.1.2",
     "lucide-react": "^1.48.0",
     "next": "16.3.5",
+    "qrcode": "^1.5.4",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "react-hook-form": "^7.89.0",
@@ -31,6 +32,7 @@
     "@tailwindcss/postcss": "^4",
     "@tailwindcss/typography": "^0.5.20",
     "@types/node": "^20",
+    "@types/qrcode": "^1.5.5",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",

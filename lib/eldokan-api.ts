@@ -1,5 +1,6 @@
 import { createEldokanCustomerApiClient, type Language } from '@eldokan/customer-api-client'
 import { createCustomerApiTransport } from './customer-api-transport'
+import { withCatalogLanguage } from './catalog-language'
 
 const DEFAULT_API_BASE_URL = 'https://www.eldokan.com/wp-json/eldokan-customer/v1'
 
@@ -11,6 +12,23 @@ export function getBrowserEldokanApiBaseUrl() {
   return new URL('/api/customer', window.location.origin).toString()
 }
 
+const CATALOG_REVALIDATE_SECONDS = 60
+
+/**
+ * Anonymous server-side catalog reads are shared for a short time so every page
+ * does not wait on the store for the same public data. Cart, checkout, account
+ * and order requests never use this client; they go through the request-scoped
+ * transport and stay uncached. Free-text searches are not stored.
+ */
+const cachedCatalogFetch: typeof fetch = (input, init) => {
+  const url = withCatalogLanguage(input)
+  const method = init?.method ?? 'GET'
+  if (method !== 'GET' || url.pathname.includes('/search') || url.searchParams.has('search')) return fetch(url, init)
+  const { cache: _cache, ...rest } = init ?? {}
+  void _cache
+  return fetch(url, { ...rest, next: { revalidate: CATALOG_REVALIDATE_SECONDS } })
+}
+
 function createClient(
   baseUrl = process.env.ELDOKAN_API_BASE_URL?.trim() || DEFAULT_API_BASE_URL,
   defaultLanguage: Language = 'en',
@@ -18,6 +36,7 @@ function createClient(
   return createEldokanCustomerApiClient({
     baseUrl,
     defaultLanguage,
+    ...(typeof window === 'undefined' ? { fetch: cachedCatalogFetch } : {}),
   })
 }
 

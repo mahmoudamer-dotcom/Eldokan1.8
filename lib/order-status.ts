@@ -46,3 +46,8 @@ export function shouldWatchPayment(order: OrderDetail | null) {
     && ['unpaid', 'pending'].includes(order.payment_status)
     && ['pending_payment', 'processing'].includes(order.status)
 }
+
+/** Customer-facing order number, e.g. "#22931". Older API versions only send the opaque reference. */
+export function orderNumber(order: { id: string; number?: unknown }) {
+  return typeof order.number === 'string' && /^[0-9A-Za-z-]{1,32}$/.test(order.number) ? `#${order.number}` : `ord_…${order.id.slice(-8)}`
+}

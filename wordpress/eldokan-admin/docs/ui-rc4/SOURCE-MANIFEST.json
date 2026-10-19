@@ -1,0 +1,721 @@
+{
+  "candidate": "1.10.0-rc.4",
+  "baseline": "1.10.0-rc.3",
+  "status": "UNAPPROVED STAGING CANDIDATE",
+  "self_excluded": [
+    "docs/ui-rc4/CHANGED-FILES.md",
+    "docs/ui-rc4/SOURCE-MANIFEST.json"
+  ],
+  "counts": {
+    "unchanged": 45,
+    "modified": 10,
+    "added": 33,
+    "removed": 0
+  },
+  "files": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "modified",
+      "rc3_sha256": "1d049700b44c88788506ba3ae7e5004e75a8ef1f4c702a95d2202f22ba0fa5bf",
+      "rc4_sha256": "d1f106b32b70c39dbe7664d01adbd440fc41d8c9f178c7ef05fee61a6996561b",
+      "size_bytes": 2780,
+      "install_zip": true
+    },
+    {
+      "path": "README.txt",
+      "status": "modified",
+      "rc3_sha256": "14f85d96fc38f51b218c47f1bf96f2540a07615e97048a36f887a9dd56d4964c",
+      "rc4_sha256": "cdcac966f0be85fe68472977a177bffb6ea6f11a0d52587d28db8088f57641a6",
+      "size_bytes": 6575,
+      "install_zip": true
+    },
+    {
+      "path": "assets/admin.css",
+      "status": "unchanged",
+      "rc3_sha256": "69ac9b28fb923cc6b3fed3b32d5ea6cf585ef2b15c1551066f8cf8338571366b",
+      "rc4_sha256": "69ac9b28fb923cc6b3fed3b32d5ea6cf585ef2b15c1551066f8cf8338571366b",
+      "size_bytes": 24061,
+      "install_zip": true
+    },
+    {
+      "path": "assets/home-management.js",
+      "status": "unchanged",
+      "rc3_sha256": "a11d71778e5ef82640660e0b7aac8e1915f0e3b1c7dddab5ddf7dc7a4c13a3df",
+      "rc4_sha256": "a11d71778e5ef82640660e0b7aac8e1915f0e3b1c7dddab5ddf7dc7a4c13a3df",
+      "size_bytes": 647,
+      "install_zip": true
+    },
+    {
+      "path": "assets/workspace.css",
+      "status": "modified",
+      "rc3_sha256": "9f3dec9105256c68308011c7cc5db12d6cbb6c885b041b919f164656432c0b83",
+      "rc4_sha256": "42280a3b5e6a0c731d643e630d776c1f25d912dcc589d10ca4be289ec4d77ad2",
+      "size_bytes": 19861,
+      "install_zip": true
+    },
+    {
+      "path": "assets/workspace.js",
+      "status": "modified",
+      "rc3_sha256": "b27cfc712ad005492d1ee3cf72c58540dbeef754e6ad6f4871396b8bbf80676a",
+      "rc4_sha256": "bb5c0d8956a212091bc38ec18bb4f243948551816573ffeb7000fed996abd9ec",
+      "size_bytes": 10285,
+      "install_zip": true
+    },
+    {
+      "path": "docs/releases/V1.6.16-CATEGORY-FEES-DASHBOARD-SYNC.md",
+      "status": "unchanged",
+      "rc3_sha256": "325034ad586c9f123e9552905002b1b424640534170dfc93f0d3e7a06e6d4ca4",
+      "rc4_sha256": "325034ad586c9f123e9552905002b1b424640534170dfc93f0d3e7a06e6d4ca4",
+      "size_bytes": 126,
+      "install_zip": true
+    },
+    {
+      "path": "docs/releases/V1.6.17-SELLER-FINANCIAL-REPORTS.md",
+      "status": "unchanged",
+      "rc3_sha256": "d655819b1e012a44cc2622409d7a10a38ae4f0a22ee53822bdfe0b6d465a12f6",
+      "rc4_sha256": "d655819b1e012a44cc2622409d7a10a38ae4f0a22ee53822bdfe0b6d465a12f6",
+      "size_bytes": 455,
+      "install_zip": true
+    },
+    {
+      "path": "docs/releases/V1.6.18-SELLER-INTELLIGENCE-REPORTS.md",
+      "status": "unchanged",
+      "rc3_sha256": "38f25aebdda19bba420e331bf85879f0f3ce210fb074abdf150db332fd112903",
+      "rc4_sha256": "38f25aebdda19bba420e331bf85879f0f3ce210fb074abdf150db332fd112903",
+      "size_bytes": 602,
+      "install_zip": true
+    },
+    {
+      "path": "docs/releases/V1.6.19-SELLER-PDF-EXPORT.md",
+      "status": "unchanged",
+      "rc3_sha256": "a8dbfbf73a719a8b654ed89b1fcd934af8b328ebac79a49da91b4182925295c4",
+      "rc4_sha256": "a8dbfbf73a719a8b654ed89b1fcd934af8b328ebac79a49da91b4182925295c4",
+      "size_bytes": 377,
+      "install_zip": true
+    },
+    {
+      "path": "docs/releases/V1.6.20-ACTIVATION-SAFE.md",
+      "status": "unchanged",
+      "rc3_sha256": "08ede2371660829d241e2bf03c4d3e232246c4a0ba7f900af69e775525caeb9f",
+      "rc4_sha256": "08ede2371660829d241e2bf03c4d3e232246c4a0ba7f900af69e775525caeb9f",
+      "size_bytes": 318,
+      "install_zip": true
+    },
+    {
+      "path": "docs/releases/V1.6.21-FINANCIAL-RECONCILIATION.md",
+      "status": "unchanged",
+      "rc3_sha256": "63b2fa7508678e75c62481d8e4f3335c5813fc51b5682456d0abecdffb8547c7",
+      "rc4_sha256": "63b2fa7508678e75c62481d8e4f3335c5813fc51b5682456d0abecdffb8547c7",
+      "size_bytes": 747,
+      "install_zip": true
+    },
+    {
+      "path": "docs/releases/V1.6.22-EFFECTIVE-FEE-DISPLAY.md",
+      "status": "unchanged",
+      "rc3_sha256": "825d40fe25f0fe7b199209830b4d66a0627b10bcc8f0c95e2c16da989f033632",
+      "rc4_sha256": "825d40fe25f0fe7b199209830b4d66a0627b10bcc8f0c95e2c16da989f033632",
+      "size_bytes": 338,
+      "install_zip": true
+    },
+    {
+      "path": "docs/releases/V1.6.25-FINANCIAL-TERMINOLOGY.md",
+      "status": "unchanged",
+      "rc3_sha256": "9aa6d08113187c970e2fffaa6f209cceaa3805f915bc30efdc71ce03c2847d00",
+      "rc4_sha256": "9aa6d08113187c970e2fffaa6f209cceaa3805f915bc30efdc71ce03c2847d00",
+      "size_bytes": 153,
+      "install_zip": true
+    },
+    {
+      "path": "docs/releases/V1.6.26-ACCOUNT-SYNC.md",
+      "status": "unchanged",
+      "rc3_sha256": "82e05143304eccc9232deb470cb4739da97d6181c0a332f3617f27abdd7354c5",
+      "rc4_sha256": "82e05143304eccc9232deb470cb4739da97d6181c0a332f3617f27abdd7354c5",
+      "size_bytes": 489,
+      "install_zip": true
+    },
+    {
+      "path": "docs/releases/V1.6.27-CENTRAL-CONTROL-LIVE.md",
+      "status": "unchanged",
+      "rc3_sha256": "30bd4203dd198160bf7f51cdacec6b7a37a6b66234e8321e5769b53e23130e8c",
+      "rc4_sha256": "30bd4203dd198160bf7f51cdacec6b7a37a6b66234e8321e5769b53e23130e8c",
+      "size_bytes": 1656,
+      "install_zip": true
+    },
+    {
+      "path": "docs/releases/V1.6.28-OFFICIAL-ORDER-WORKFLOW.md",
+      "status": "unchanged",
+      "rc3_sha256": "c101e356bb4aacefe44b67b685692528bd84f669a4e01a9e71441a70ed6321e0",
+      "rc4_sha256": "c101e356bb4aacefe44b67b685692528bd84f669a4e01a9e71441a70ed6321e0",
+      "size_bytes": 526,
+      "install_zip": true
+    },
+    {
+      "path": "docs/releases/V1.6.29-SAFE-ORDER-WORKFLOW.md",
+      "status": "unchanged",
+      "rc3_sha256": "5289b1ff64850243fb036d29a57d4cc9c6d6d361d845d0c87a1327935cb17327",
+      "rc4_sha256": "5289b1ff64850243fb036d29a57d4cc9c6d6d361d845d0c87a1327935cb17327",
+      "size_bytes": 440,
+      "install_zip": true
+    },
+    {
+      "path": "docs/releases/V1.6.30-LIVE-READINESS.md",
+      "status": "unchanged",
+      "rc3_sha256": "2021d982a834db002f135f8c14a1cd93abda09876866f25dc638e70e2881dc56",
+      "rc4_sha256": "2021d982a834db002f135f8c14a1cd93abda09876866f25dc638e70e2881dc56",
+      "size_bytes": 154,
+      "install_zip": true
+    },
+    {
+      "path": "docs/releases/V1.6.31-CATEGORY-ATTRIBUTES.md",
+      "status": "unchanged",
+      "rc3_sha256": "3b058a2518e090753bea80619c9ff1d4bc4676de6e3abf0b5ea47b53e1d2b705",
+      "rc4_sha256": "3b058a2518e090753bea80619c9ff1d4bc4676de6e3abf0b5ea47b53e1d2b705",
+      "size_bytes": 4745,
+      "install_zip": true
+    },
+    {
+      "path": "docs/releases/V1.7.0-BACKOFFICE-ROLES.md",
+      "status": "unchanged",
+      "rc3_sha256": "af57bdec9cda5d68773c1174ab16c11ca8c1fe9298f712437d98f3e6c6d26a99",
+      "rc4_sha256": "af57bdec9cda5d68773c1174ab16c11ca8c1fe9298f712437d98f3e6c6d26a99",
+      "size_bytes": 1938,
+      "install_zip": true
+    },
+    {
+      "path": "docs/releases/V1.8.0-MODERN-ADMIN-UI.md",
+      "status": "unchanged",
+      "rc3_sha256": "bd8ac234ae2464db09c130b5528637dcc1a46742c2dab0378b19544ea1d77c4b",
+      "rc4_sha256": "bd8ac234ae2464db09c130b5528637dcc1a46742c2dab0378b19544ea1d77c4b",
+      "size_bytes": 1833,
+      "install_zip": true
+    },
+    {
+      "path": "docs/releases/V1.9.0-HOME-MANAGEMENT.md",
+      "status": "unchanged",
+      "rc3_sha256": "d5ee1c90a5267b08ae1a5d00f02b99b0993d77d379166f219a8a1664cd5c7a20",
+      "rc4_sha256": "d5ee1c90a5267b08ae1a5d00f02b99b0993d77d379166f219a8a1664cd5c7a20",
+      "size_bytes": 541,
+      "install_zip": true
+    },
+    {
+      "path": "docs/releases/V1.9.1-HOME-HARDENING.md",
+      "status": "unchanged",
+      "rc3_sha256": "4bcea144392da97f54d4a5aad31a0576b8e43847238d4e7d3f24f36239a0eb92",
+      "rc4_sha256": "4bcea144392da97f54d4a5aad31a0576b8e43847238d4e7d3f24f36239a0eb92",
+      "size_bytes": 451,
+      "install_zip": true
+    },
+    {
+      "path": "docs/reviews/V1.8.0-FILE-AUDIT.md",
+      "status": "unchanged",
+      "rc3_sha256": "92c41e44c648c8ba7bcf18384940dd22c8b2219c530d47aa52b44ab6c3c407ce",
+      "rc4_sha256": "92c41e44c648c8ba7bcf18384940dd22c8b2219c530d47aa52b44ab6c3c407ce",
+      "size_bytes": 4376,
+      "install_zip": true
+    },
+    {
+      "path": "docs/ui-rc2/CHANGED-FILES.json",
+      "status": "unchanged",
+      "rc3_sha256": "fda8af16ef9ba4d38021881f8ac8032a7d48dd187040a7ebb6548ffa22699916",
+      "rc4_sha256": "fda8af16ef9ba4d38021881f8ac8032a7d48dd187040a7ebb6548ffa22699916",
+      "size_bytes": 7464,
+      "install_zip": true
+    },
+    {
+      "path": "docs/ui-rc2/CHANGED-FILES.md",
+      "status": "unchanged",
+      "rc3_sha256": "6272d33e6d6d2456efd2b07e5277163e5487cec7da1691fd3e1c0e85ce400c0d",
+      "rc4_sha256": "6272d33e6d6d2456efd2b07e5277163e5487cec7da1691fd3e1c0e85ce400c0d",
+      "size_bytes": 1626,
+      "install_zip": true
+    },
+    {
+      "path": "docs/ui-rc2/DESIGN-SYSTEM.md",
+      "status": "unchanged",
+      "rc3_sha256": "18e177d4531f08f02157a599161e5d5bd15c32d7c0fb24bc17aa8e87e747db5e",
+      "rc4_sha256": "18e177d4531f08f02157a599161e5d5bd15c32d7c0fb24bc17aa8e87e747db5e",
+      "size_bytes": 2948,
+      "install_zip": true
+    },
+    {
+      "path": "docs/ui-rc2/INSTALL-ROLLBACK.md",
+      "status": "unchanged",
+      "rc3_sha256": "facc81beb05cf02d3e10608a71dbb03e8deefcab522e2583ba6b01ec0d0e8d48",
+      "rc4_sha256": "facc81beb05cf02d3e10608a71dbb03e8deefcab522e2583ba6b01ec0d0e8d48",
+      "size_bytes": 3933,
+      "install_zip": true
+    },
+    {
+      "path": "docs/ui-rc2/RELEASE-NOTES-AR.md",
+      "status": "unchanged",
+      "rc3_sha256": "8e0a6877b629115c8d4767db74cebb031165c72919eda91609ff4caa6b3a0406",
+      "rc4_sha256": "8e0a6877b629115c8d4767db74cebb031165c72919eda91609ff4caa6b3a0406",
+      "size_bytes": 5523,
+      "install_zip": true
+    },
+    {
+      "path": "docs/ui-rc2/SCREEN-INVENTORY.md",
+      "status": "unchanged",
+      "rc3_sha256": "53c21e700f550a6251dccfbbf8fede723ce7b42431e727235708bf0a36f7fd9c",
+      "rc4_sha256": "53c21e700f550a6251dccfbbf8fede723ce7b42431e727235708bf0a36f7fd9c",
+      "size_bytes": 4303,
+      "install_zip": true
+    },
+    {
+      "path": "docs/ui-rc2/VERIFICATION.md",
+      "status": "unchanged",
+      "rc3_sha256": "dd1c93333541af11de4e5860a90044019946f016fcc958a5b7cee29c0b206172",
+      "rc4_sha256": "dd1c93333541af11de4e5860a90044019946f016fcc958a5b7cee29c0b206172",
+      "size_bytes": 4534,
+      "install_zip": true
+    },
+    {
+      "path": "docs/ui-rc2/WCFM-DEPENDENCY-ASSESSMENT.md",
+      "status": "unchanged",
+      "rc3_sha256": "a96c147891b9bf64a5785b8176179ddc9516b7e1d6b2c13bc81fad544886fe89",
+      "rc4_sha256": "a96c147891b9bf64a5785b8176179ddc9516b7e1d6b2c13bc81fad544886fe89",
+      "size_bytes": 7670,
+      "install_zip": true
+    },
+    {
+      "path": "docs/ui-rc3/CHANGES-MANIFEST.json",
+      "status": "unchanged",
+      "rc3_sha256": "e921243e716e3d3dd26437f9b868a60bfc839776027b6389a6edbbfa60617852",
+      "rc4_sha256": "e921243e716e3d3dd26437f9b868a60bfc839776027b6389a6edbbfa60617852",
+      "size_bytes": 2429,
+      "install_zip": true
+    },
+    {
+      "path": "docs/ui-rc3/NAVIGATION-MAP.md",
+      "status": "unchanged",
+      "rc3_sha256": "e94bdfad1c787e633d7d8181b4d013de2e97e6b0446ea40ad3fe5e997e370ddf",
+      "rc4_sha256": "e94bdfad1c787e633d7d8181b4d013de2e97e6b0446ea40ad3fe5e997e370ddf",
+      "size_bytes": 2435,
+      "install_zip": true
+    },
+    {
+      "path": "docs/ui-rc3/VERIFICATION.md",
+      "status": "unchanged",
+      "rc3_sha256": "4c4db5eaacc5f4895eb55264e775ffa2384b7f92feaa6ae636001fc55daeaebe",
+      "rc4_sha256": "4c4db5eaacc5f4895eb55264e775ffa2384b7f92feaa6ae636001fc55daeaebe",
+      "size_bytes": 2041,
+      "install_zip": true
+    },
+    {
+      "path": "docs/ui-rc3/WCFM-RETIREMENT-GATE.md",
+      "status": "unchanged",
+      "rc3_sha256": "06d73a5c4eb19e42ba9718abaa9cd3111484dfc5f685f54a95cb7f608b906986",
+      "rc4_sha256": "06d73a5c4eb19e42ba9718abaa9cd3111484dfc5f685f54a95cb7f608b906986",
+      "size_bytes": 4352,
+      "install_zip": true
+    },
+    {
+      "path": "docs/ui-rc4/ALL-FUNCTIONS.json",
+      "status": "added",
+      "rc3_sha256": null,
+      "rc4_sha256": "c99d9053beb57ddab7b5f76f3d2fe0392ec7a91d1e1e27ff575819d9f705fbd1",
+      "size_bytes": 115866,
+      "install_zip": true
+    },
+    {
+      "path": "docs/ui-rc4/CUSTOMER-API-COMPATIBILITY.md",
+      "status": "added",
+      "rc3_sha256": null,
+      "rc4_sha256": "8561a5ff945b928d1ffbe155a6d0bc7e0c95cd4c74faa0fc15bdd72038ababeb",
+      "size_bytes": 4380,
+      "install_zip": true
+    },
+    {
+      "path": "docs/ui-rc4/DATA-SOURCES-AND-FINANCIAL-ACCEPTANCE.md",
+      "status": "added",
+      "rc3_sha256": null,
+      "rc4_sha256": "80ac5b93203e4e7fb0523312b1aeafca1654b2dbc3dd1373a3b8403e10387385",
+      "size_bytes": 6551,
+      "install_zip": true
+    },
+    {
+      "path": "docs/ui-rc4/DESIGN-SYSTEM.md",
+      "status": "added",
+      "rc3_sha256": null,
+      "rc4_sha256": "a1c60a8ba7507930a6c0c4a298e28af5185c65603825c6ebdd22b38abf2bde4b",
+      "size_bytes": 3921,
+      "install_zip": true
+    },
+    {
+      "path": "docs/ui-rc4/FUNCTIONAL-VERIFICATION-MATRIX.md",
+      "status": "added",
+      "rc3_sha256": null,
+      "rc4_sha256": "cb71b75287acc5487a9241726bdc9489a6d834d72c69fcf9323dad5400cbd75c",
+      "size_bytes": 7093,
+      "install_zip": true
+    },
+    {
+      "path": "docs/ui-rc4/HOOK-INVENTORY.json",
+      "status": "added",
+      "rc3_sha256": null,
+      "rc4_sha256": "81ca62cb3765fdf5e6a863f5de6add1f61ced592140029e586f8c392e7b5b20d",
+      "size_bytes": 38402,
+      "install_zip": true
+    },
+    {
+      "path": "docs/ui-rc4/INPUT-PROVENANCE.json",
+      "status": "added",
+      "rc3_sha256": null,
+      "rc4_sha256": "48a38f15784ce465a6c1cc5ba2ba3c22e03a4c8d51ee029266591b356861f1e0",
+      "size_bytes": 1807,
+      "install_zip": true
+    },
+    {
+      "path": "docs/ui-rc4/KNOWN-DEFECTS.md",
+      "status": "added",
+      "rc3_sha256": null,
+      "rc4_sha256": "2dc8a8be50cb18172724db98a64a8182b79236e3ed2a5e209f39977499fab6d0",
+      "size_bytes": 6646,
+      "install_zip": true
+    },
+    {
+      "path": "docs/ui-rc4/RELEASE-REPORT-AR.md",
+      "status": "added",
+      "rc3_sha256": null,
+      "rc4_sha256": "df49697852bf3bbb9d11e580e059bffddb54920df7e5aff818a81da90988ce4a",
+      "size_bytes": 8967,
+      "install_zip": true
+    },
+    {
+      "path": "docs/ui-rc4/SECURITY-COMPATIBILITY.md",
+      "status": "added",
+      "rc3_sha256": null,
+      "rc4_sha256": "37c973234c06834f48916dddfbd52766cfeffa4805f3145a0688370704988600",
+      "size_bytes": 3726,
+      "install_zip": true
+    },
+    {
+      "path": "docs/ui-rc4/STAGING-ACCEPTANCE-AND-ROLLBACK.md",
+      "status": "added",
+      "rc3_sha256": null,
+      "rc4_sha256": "77b6e5016d0357d09aa3014e3033b6af55a0fe674523e8c124ae90b0b0d4f68b",
+      "size_bytes": 5390,
+      "install_zip": true
+    },
+    {
+      "path": "docs/ui-rc4/TEST-RESULTS.md",
+      "status": "added",
+      "rc3_sha256": null,
+      "rc4_sha256": "502fc568400cbdcb65cb9889048f0a4eb3e6956254b227357e28af7adc727dc0",
+      "size_bytes": 4575,
+      "install_zip": true
+    },
+    {
+      "path": "docs/ui-rc4/UX-RECOMMENDATIONS.md",
+      "status": "added",
+      "rc3_sha256": null,
+      "rc4_sha256": "0242abf02bbad8477fa10b2796221505365db53fd78ad4f6a57de662db068817",
+      "size_bytes": 2953,
+      "install_zip": true
+    },
+    {
+      "path": "docs/ui-rc4/WCFM-DEPENDENCY-ASSESSMENT.md",
+      "status": "added",
+      "rc3_sha256": null,
+      "rc4_sha256": "806767b5263535a353c383de152b9bbe497b99b2b863896f4cba47409f0019cd",
+      "size_bytes": 13451,
+      "install_zip": true
+    },
+    {
+      "path": "eldokan-admin.php",
+      "status": "modified",
+      "rc3_sha256": "b9074f4e515218f9f233dd8b78772ffe85764194e91bac1e6f2eebfa81d7f924",
+      "rc4_sha256": "28cc076764546de4c50b5dde295c7210f8ed2c6870c545a730e98613f8d84c79",
+      "size_bytes": 2015,
+      "install_zip": true
+    },
+    {
+      "path": "includes/class-eldokan-admin-ui.php",
+      "status": "modified",
+      "rc3_sha256": "2074bd252fccbc1b467ce03f60e3531f9c4cb2f9c3cda73f073a968468484e5d",
+      "rc4_sha256": "afef1b3df6a0824bfa46ca47702f71c1345b420425e0ea6465de2fad157a33ef",
+      "size_bytes": 16105,
+      "install_zip": true
+    },
+    {
+      "path": "includes/class-eldokan-admin.php",
+      "status": "modified",
+      "rc3_sha256": "317a99112283286026b080971705475a149e4fefb8a211e6645fa54376fed572",
+      "rc4_sha256": "6625550ad60af8c9ee624be2494ef9ada61e5d5a4d5ab2692d864afef4d943d7",
+      "size_bytes": 368299,
+      "install_zip": true
+    },
+    {
+      "path": "includes/class-eldokan-backoffice-roles.php",
+      "status": "unchanged",
+      "rc3_sha256": "4583baad0835909515783571263a48fcdb06cac19aeb042f0299bfc15fbb4243",
+      "rc4_sha256": "4583baad0835909515783571263a48fcdb06cac19aeb042f0299bfc15fbb4243",
+      "size_bytes": 25587,
+      "install_zip": true
+    },
+    {
+      "path": "includes/class-eldokan-category-attributes.php",
+      "status": "unchanged",
+      "rc3_sha256": "dabd803fe99e26a222a56b6809de1e4add70da4d16ba1a9909b25b3d6811206f",
+      "rc4_sha256": "dabd803fe99e26a222a56b6809de1e4add70da4d16ba1a9909b25b3d6811206f",
+      "size_bytes": 9601,
+      "install_zip": true
+    },
+    {
+      "path": "includes/class-eldokan-home-management.php",
+      "status": "unchanged",
+      "rc3_sha256": "4abc3c0b855beb4218deb453504485dd0febd4eb2e8361e5e124e3ccde41a598",
+      "rc4_sha256": "4abc3c0b855beb4218deb453504485dd0febd4eb2e8361e5e124e3ccde41a598",
+      "size_bytes": 20015,
+      "install_zip": true
+    },
+    {
+      "path": "includes/class-eldokan-operational-modules.php",
+      "status": "unchanged",
+      "rc3_sha256": "b33aabc63000571c6833b4aa01e01de077be353cb63f488a0256572b50a801da",
+      "rc4_sha256": "b33aabc63000571c6833b4aa01e01de077be353cb63f488a0256572b50a801da",
+      "size_bytes": 3535,
+      "install_zip": true
+    },
+    {
+      "path": "includes/class-eldokan-report-pdf.php",
+      "status": "unchanged",
+      "rc3_sha256": "5fb2e86c183dff3a42c5a585b1207f30bff39d4181f0ffc7a5bbbf36c354431f",
+      "rc4_sha256": "5fb2e86c183dff3a42c5a585b1207f30bff39d4181f0ffc7a5bbbf36c354431f",
+      "size_bytes": 6414,
+      "install_zip": true
+    },
+    {
+      "path": "languages/eldokan-admin-ar.mo",
+      "status": "modified",
+      "rc3_sha256": "1060a9ec427dafc61ff67467b5aeb287d97b3dda6fafa0aa5f2237cd85a5472d",
+      "rc4_sha256": "60e70f2b1cebc5f53d21dad2b6cee0918d95e82f775f893f5c872df3df36f22d",
+      "size_bytes": 58306,
+      "install_zip": true
+    },
+    {
+      "path": "languages/eldokan-admin-ar.po",
+      "status": "modified",
+      "rc3_sha256": "2b177df1655f9bef5e5df9070e5ffddafcbca7bc199256db3f500fa66c00a8ae",
+      "rc4_sha256": "712a80e45ca7fcbe0c17a5f892903335a6f4f97040fac428b50bcfa37ab757f5",
+      "size_bytes": 59644,
+      "install_zip": true
+    },
+    {
+      "path": "languages/eldokan-admin.pot",
+      "status": "modified",
+      "rc3_sha256": "8516921e0108663c1bc78176219d4c9c0ca084dc87c6d53ba84ddb19c3d9144e",
+      "rc4_sha256": "228005ce45a818506b498e2bc8e45c93e5429353c80efc768ca88add60fa0651",
+      "size_bytes": 31537,
+      "install_zip": true
+    },
+    {
+      "path": "modules/checkout/README.md",
+      "status": "unchanged",
+      "rc3_sha256": "37c028bb7a84d4d607f4b13fc09e949855ad36882da8406a83b71deb12c8cea5",
+      "rc4_sha256": "37c028bb7a84d4d607f4b13fc09e949855ad36882da8406a83b71deb12c8cea5",
+      "size_bytes": 7151,
+      "install_zip": true
+    },
+    {
+      "path": "modules/checkout/eldokan-checkout-setup.php",
+      "status": "unchanged",
+      "rc3_sha256": "f56c61069771ce82e8eedd7b9058acb19a6f9b0b408c9bd5ac85b3bb522e6760",
+      "rc4_sha256": "f56c61069771ce82e8eedd7b9058acb19a6f9b0b408c9bd5ac85b3bb522e6760",
+      "size_bytes": 27192,
+      "install_zip": true
+    },
+    {
+      "path": "modules/stories/README.md",
+      "status": "unchanged",
+      "rc3_sha256": "969aeeb175af70e8157844a5c93f49e45ef3a7c373a8e26cd53e262a8d858c24",
+      "rc4_sha256": "969aeeb175af70e8157844a5c93f49e45ef3a7c373a8e26cd53e262a8d858c24",
+      "size_bytes": 3174,
+      "install_zip": true
+    },
+    {
+      "path": "modules/stories/assets/picker.css",
+      "status": "unchanged",
+      "rc3_sha256": "7bc50d91d295692ef0d18d85a6fb3221de7619d8798c7a19c59c1e4d9ae8af8f",
+      "rc4_sha256": "7bc50d91d295692ef0d18d85a6fb3221de7619d8798c7a19c59c1e4d9ae8af8f",
+      "size_bytes": 1151,
+      "install_zip": true
+    },
+    {
+      "path": "modules/stories/assets/picker.js",
+      "status": "unchanged",
+      "rc3_sha256": "51fe0b1fa5c987e59edbd1400c883a85f46290c84beeb01f212d1b61a9d33c2c",
+      "rc4_sha256": "51fe0b1fa5c987e59edbd1400c883a85f46290c84beeb01f212d1b61a9d33c2c",
+      "size_bytes": 5915,
+      "install_zip": true
+    },
+    {
+      "path": "modules/stories/eldokan-stories.php",
+      "status": "unchanged",
+      "rc3_sha256": "ee33d1baf02304c9bde3653a82c9030f075d3d5567a2e4c55e79e5a2ba57a3da",
+      "rc4_sha256": "ee33d1baf02304c9bde3653a82c9030f075d3d5567a2e4c55e79e5a2ba57a3da",
+      "size_bytes": 8159,
+      "install_zip": true
+    },
+    {
+      "path": "modules/stories/includes/class-eldokan-stories-picker.php",
+      "status": "unchanged",
+      "rc3_sha256": "2c34b82d451c7528d3576770ba5171efc10a18ff8a27276783df519029300fbc",
+      "rc4_sha256": "2c34b82d451c7528d3576770ba5171efc10a18ff8a27276783df519029300fbc",
+      "size_bytes": 8248,
+      "install_zip": true
+    },
+    {
+      "path": "tests/README.md",
+      "status": "added",
+      "rc3_sha256": null,
+      "rc4_sha256": "6c3c3af99aa23fdb93b87ef9a02bfb3014b5063585490dfc06d2ec31a3bd6815",
+      "size_bytes": 3629,
+      "install_zip": false
+    },
+    {
+      "path": "tests/admin-regression.php",
+      "status": "added",
+      "rc3_sha256": null,
+      "rc4_sha256": "9e64e525fedd373ab13785761fd308c73dbfe73fb42471dc1b2592b4049c3414",
+      "size_bytes": 19696,
+      "install_zip": false
+    },
+    {
+      "path": "tests/api-ownership-probe.php",
+      "status": "added",
+      "rc3_sha256": null,
+      "rc4_sha256": "0e22e1fe2748b134e0081aad83f7ec0f8a38ae2ef96acb798b71d9bb972cea8e",
+      "size_bytes": 2112,
+      "install_zip": false
+    },
+    {
+      "path": "tests/build-languages.py",
+      "status": "added",
+      "rc3_sha256": null,
+      "rc4_sha256": "e942f3bc45ca79319dd511c4753caa9b57d5e9256dff1781d1d43c33e17ed202",
+      "size_bytes": 4377,
+      "install_zip": false
+    },
+    {
+      "path": "tests/build-review-inventory.py",
+      "status": "added",
+      "rc3_sha256": null,
+      "rc4_sha256": "26a1fb35a8e3c000d1ceffe430c7ca6cc470c275cf913970e4f776cdb8fa973d",
+      "size_bytes": 3985,
+      "install_zip": false
+    },
+    {
+      "path": "tests/build-visual-evidence.py",
+      "status": "added",
+      "rc3_sha256": null,
+      "rc4_sha256": "4df25f9a44e502cbbf7d27e01bdf0fe3877a295cfd608cb001ddbfc599eb81c9",
+      "size_bytes": 8271,
+      "install_zip": false
+    },
+    {
+      "path": "tests/compare-candidates.py",
+      "status": "added",
+      "rc3_sha256": null,
+      "rc4_sha256": "92371fdb8fb93249cb138a2c14c530aff25d788caf782d32eb67857d7bba653c",
+      "size_bytes": 2958,
+      "install_zip": false
+    },
+    {
+      "path": "tests/compare-functions.php",
+      "status": "added",
+      "rc3_sha256": null,
+      "rc4_sha256": "8f1f68d32c9d3653d013c66f1960b2c2ae0bb62dc3b812bae8e8504474f1f1b5",
+      "size_bytes": 1230,
+      "install_zip": false
+    },
+    {
+      "path": "tests/core-navigation.php",
+      "status": "added",
+      "rc3_sha256": null,
+      "rc4_sha256": "0d50d159c7314b0d0db5dde2609ac27062161c010e0a9d7b7595fc0c7407446f",
+      "size_bytes": 4732,
+      "install_zip": false
+    },
+    {
+      "path": "tests/customer-route-inventory.php",
+      "status": "added",
+      "rc3_sha256": null,
+      "rc4_sha256": "b7db03e7aaf3ca007411efa9a20cf7137a885d923d2fa2666d7c0f3e5554c159",
+      "size_bytes": 1484,
+      "install_zip": false
+    },
+    {
+      "path": "tests/modules-runtime.php",
+      "status": "added",
+      "rc3_sha256": null,
+      "rc4_sha256": "c563c6dd8fb148e4ac42e8f4d472341d580086b70c7d76089b299594dc95a158",
+      "size_bytes": 8334,
+      "install_zip": false
+    },
+    {
+      "path": "tests/render-candidates.py",
+      "status": "added",
+      "rc3_sha256": null,
+      "rc4_sha256": "a2fc766eda0cc9d960f48b28773fda4bcf14dd93a200fa6def448f47496f8db0",
+      "size_bytes": 1548,
+      "install_zip": false
+    },
+    {
+      "path": "tests/ui-dom.cjs",
+      "status": "added",
+      "rc3_sha256": null,
+      "rc4_sha256": "71f16d71154f16f52a165f2519a6e2f7cb30effd898ae0279b6ae79fa76e8549",
+      "size_bytes": 8661,
+      "install_zip": false
+    },
+    {
+      "path": "tests/ui-render.php",
+      "status": "added",
+      "rc3_sha256": null,
+      "rc4_sha256": "e0740073305258332a9ebe9737440843aec81f589de975826d480387f02ea7da",
+      "size_bytes": 14370,
+      "install_zip": false
+    },
+    {
+      "path": "tests/ui-runtime.php",
+      "status": "added",
+      "rc3_sha256": null,
+      "rc4_sha256": "90084eb8002198109b2855b7afbf4b4dc1e21ee1e182a8b2eb959a201b25196d",
+      "size_bytes": 3283,
+      "install_zip": false
+    },
+    {
+      "path": "tests/verify-customer-compatibility.py",
+      "status": "added",
+      "rc3_sha256": null,
+      "rc4_sha256": "cc1d9b26eb558d319b2207015f724da238e57ff5e344e42bce16045710176d85",
+      "size_bytes": 2527,
+      "install_zip": false
+    },
+    {
+      "path": "tests/verify-navigation.py",
+      "status": "added",
+      "rc3_sha256": null,
+      "rc4_sha256": "01c5487a17538934a49b6165bd912b8771a51be65c4caa05741b5bca2cd5fa70",
+      "size_bytes": 2958,
+      "install_zip": false
+    },
+    {
+      "path": "tests/verify-release.py",
+      "status": "added",
+      "rc3_sha256": null,
+      "rc4_sha256": "d046941caa499a2644e3a0644a9be09915fef10dc790ddc5f003872b052f25d8",
+      "size_bytes": 3496,
+      "install_zip": false
+    },
+    {
+      "path": "tests/verify-ui.py",
+      "status": "added",
+      "rc3_sha256": null,
+      "rc4_sha256": "0ba79338bd3750cc8cbfb0144f4e248168d28d8a46a7865f56120d23a3f7abe3",
+      "size_bytes": 3425,
+      "install_zip": false
+    }
+  ]
+}

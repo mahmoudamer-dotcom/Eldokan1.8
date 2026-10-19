@@ -1,3 +1,11 @@
+# 0.11.0
+
+Customers can change the delivery address, phone and order notes of their own order before fulfillment (POST /orders/{order_id}/update, same window as online cancellation). The governorate cannot change, so shipping and totals stay valid; lines, quantities, payment and totals are never modified. The checkout address snapshot is kept unchanged for verification; the latest edit is stored separately, copied to the WooCommerce billing/shipping fields and noted on the order. Order detail now includes edit.available.
+
+# 0.10.1
+
+Order detail and order history now include number, the WooCommerce order number shown to staff (for example 22931), so invoices and support can use the same reference. The opaque id is unchanged and remains the only identifier accepted by the API.
+
 # 0.10.0
 
 Password recovery, private order return requests and staff replies, recorded refund display, stock/price email alerts, saved selection profiles, review images/helpfulness/reporting, search aliases and diagnostics, catalog sitemap and bundled home category shelves. Bosta integration deferred. Requires existing customer authentication and checkout setup.

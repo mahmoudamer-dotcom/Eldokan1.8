@@ -18,6 +18,9 @@ import { translateCatalogName } from '@/lib/i18n'
 import type { Metadata } from 'next'
 import ProductReviews from '@/components/productDetails/ProductReviews'
 import ReturnToJourney from '@/components/discovery/ReturnToJourney'
+import Image from 'next/image'
+import { ArrowUpRight } from 'lucide-react'
+import { categoryArt, categoryWorldOf } from '@/lib/category-experience'
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params
@@ -47,6 +50,7 @@ export default async function ProductPage({
   if (!product?.id) notFound()
 
   const category = product.categories?.[0]
+  const world = categoryWorldOf(...(product.categories ?? []).map((item) => item.slug || item.name))
   return (
     <>
       <main className="container mx-auto  px-4 pb-12">
@@ -64,6 +68,11 @@ export default async function ProductPage({
           <span className="line-clamp-1 font-medium text-foreground">{product.name}</span>
         </nav>
 
+        {category && <Link href={`/category/${encodeURIComponent(category.slug || category.name)}`} className={`category-world category-world--${world} category-ribbon mb-5`}>
+          <Image src={categoryArt(world)} alt="" width={1600} height={480} unoptimized />
+          <span className="min-w-0"><span>{locale === 'ar' ? 'من قسم' : 'From the department'}</span><strong className="line-clamp-1">{translateCatalogName(category.name, locale)}</strong></span>
+          <ArrowUpRight aria-hidden="true" className="size-5 rtl:-rotate-90" />
+        </Link>}
         <ReturnToJourney />
         <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(20rem,0.95fr)] lg:gap-8">
           <div className="min-w-0 rounded-2xl border border-border bg-card p-3 sm:p-5">

@@ -81,7 +81,7 @@ final class ElDokan_Customer_API_Order_Read {
             if(!is_string($public) || !in_array($public,array_merge(['pending'],self::STATUSES),true) || !is_array($s) || !isset($s['id'],$s['name'])){throw new RuntimeException('Fulfillment state requires a verified mapping.');}
             $fulfillments[]=['seller'=>['id'=>$s['id'],'name'=>$s['name']],'status'=>$public];
         }
-        $address=$order->get_meta('_eldokan_customer_address_snapshot',true);
+        $address=ElDokan_Customer_API_Order_Edit::address($order);
         if(!is_array($address)){throw new RuntimeException('Historical address unavailable.');}
         $address=array_intersect_key($address,array_flip(ElDokan_Customer_API_Checkout::ADDRESS_FIELDS));
         $modified=$order->get_date_modified();
@@ -91,10 +91,11 @@ final class ElDokan_Customer_API_Order_Read {
         if ($installment_public && $order->get_currency() === 'EGP' && is_array($display) && isset($display['tenure'], $display['monthly_amount']) && is_int($display['tenure']) && $display['tenure'] >= 1 && $display['tenure'] <= 120 && is_int($display['monthly_amount']) && $display['monthly_amount'] >= 1 && $display['monthly_amount'] <= 1000000000000) {
             $installment_public['selected_quote'] = ['tenure' => $display['tenure'], 'monthly_amount' => $display['monthly_amount'], 'currency' => 'EGP', 'decimals' => 2, 'source' => 'checkout_widget', 'provider_confirmed' => false];
         }
-        return ['id'=>$row['order_id'],'created_at'=>$order->get_date_created()->date('c'),'updated_at'=>$modified?$modified->date('c'):null,
+        return ['id'=>$row['order_id'],'number'=>(string)$order->get_order_number(),'created_at'=>$order->get_date_created()->date('c'),'updated_at'=>$modified?$modified->date('c'):null,
             'status'=>self::status($order),'payment_status'=>self::payment($order),'payment_method'=>$order->get_meta('_eldokan_customer_payment_concept',true)==='paymob'?'paymob':($order->get_payment_method()==='cod'?'cod':'unavailable'),
             'installment_plan' => $installment_public,
             'cancellation' => ElDokan_Customer_API_Order_Cancellation::policy($order),
+            'edit' => ElDokan_Customer_API_Order_Edit::policy($order),
             'currency'=>$order->get_currency(),'subtotal'=>$money($order->get_subtotal()),'discount'=>$money($order->get_discount_total()),'fees'=>$fees,
             'shipping_total'=>$money($order->get_shipping_total()),'tax'=>$money($order->get_total_tax()),'total'=>$money($order->get_total()),
             'address'=>$address,'lines'=>$lines,'item_count'=>$count,'shipping'=>$receipt['shipping'],'order_notes'=>sanitize_textarea_field($order->get_customer_note('edit')),'fulfillments'=>$fulfillments];
@@ -122,7 +123,7 @@ final class ElDokan_Customer_API_Order_Read {
             $total=(int)$total_rows[0]['total'];
             $rows=ElDokan_Customer_API_Payment_Store::rows("SELECT DISTINCT a.* FROM {$a} a{$join}{$where} ORDER BY a.created_at DESC,a.order_id DESC LIMIT ".(int)$limit.' OFFSET '.(int)(($page-1)*$limit));
             $items=[];foreach($rows as $row){$order=wc_get_order($row['woo_order_id']);if(!$order || (int)$order->get_customer_id()!==(int)$user->ID || $order->get_meta('_eldokan_customer_public_order_id',true)!==$row['order_id']){throw new RuntimeException('Order ownership changed.');}
-                $detail=self::detail($row,$order);$items[]=array_intersect_key($detail,array_flip(['id','created_at','updated_at','status','payment_status','payment_method','currency','total','item_count','shipping','fulfillments']));}
+                $detail=self::detail($row,$order);$items[]=array_intersect_key($detail,array_flip(['id','number','created_at','updated_at','status','payment_status','payment_method','currency','total','item_count','shipping','fulfillments']));}
             return ['items'=>$items,'pagination'=>['page'=>$page,'per_page'=>$limit,'total'=>$total,'total_pages'=>(int)ceil($total/$limit)]];
         }catch(Throwable $error){return new WP_Error('order_read_unavailable','Order history is temporarily unavailable.',['status'=>503]);}
     }

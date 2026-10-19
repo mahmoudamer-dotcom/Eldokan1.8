@@ -1,4 +1,6 @@
+import Image from 'next/image'
 import Link from 'next/link'
+import { categoryArt, categoryWorldOf } from '@/lib/category-experience'
 import ProductCard from '@/components/productCard/ProductCard'
 import {
   Carousel,
@@ -24,14 +26,17 @@ export default async function HomeCategoryShelves({ groups }: { groups: HomeCate
 
   return (
     <div className="space-y-8">
-      {visibleGroups.map(({ category, products }) => (
+      {visibleGroups.map(({ category, products }) => {
+        const world = categoryWorldOf(category.slug, category.name)
+        return (
         <section key={`products-${category.id}`} className="space-y-4" aria-labelledby={`category-products-${category.id}`}>
-          <div className="flex items-end justify-between gap-4">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-shop-accent"><T text="Browse this category" /></p>
-              <h2 id={`category-products-${category.id}`} className="mt-1 text-lg font-bold text-foreground sm:text-xl">{translateCatalogName(category.name, locale)}</h2>
+          <div className={`category-world category-world--${world} category-shelf-head`}>
+            <Image src={categoryArt(world)} alt="" width={1600} height={480} unoptimized />
+            <div className="min-w-0">
+              <p><T text="Browse this category" /></p>
+              <h2 id={`category-products-${category.id}`}>{translateCatalogName(category.name, locale)}</h2>
             </div>
-            <Link href={`/category/${category.slug || encodeURIComponent(category.name)}`} className="shrink-0 text-sm font-semibold text-foreground underline decoration-gray-300 underline-offset-4 transition hover:text-shop-accent">
+            <Link href={`/category/${category.slug || encodeURIComponent(category.name)}`}>
               <T text="View all" />
             </Link>
           </div>
@@ -46,7 +51,8 @@ export default async function HomeCategoryShelves({ groups }: { groups: HomeCate
             {products.length > 5 && <><CarouselPrevious /><CarouselNext /></>}
           </Carousel>
         </section>
-      ))}
+        )
+      })}
     </div>
   )
 }

@@ -8,9 +8,10 @@ import { useCallback, useState } from 'react'
 import { EldokanClientError, type OrderId } from '@eldokan/customer-api-client'
 import { createEldokanApi } from '@/lib/eldokan-api'
 import { paymentIssueCode } from '@/lib/payment-issue'
-import { canRecoverPayment, orderStatusLabel, paymentStatusLabel } from '@/lib/order-status'
+import { canRecoverPayment, orderNumber, orderStatusLabel, paymentStatusLabel } from '@/lib/order-status'
 import { useLocale } from '@/components/i18n/LocaleProvider'
 import OrderInvoice from './OrderInvoice'
+import OrderEdit from './OrderEdit'
 import { useOrderStatus } from './useOrderStatus'
 
 export default function AccountOrderDetail({ orderId }: { orderId: string }) {
@@ -73,7 +74,7 @@ export default function AccountOrderDetail({ orderId }: { orderId: string }) {
   const recoverable = canRecoverPayment(order) && (order as typeof order & { cancellation?: { state: string | null } }).cancellation?.state !== 'requested'
   return <section dir={ar ? 'rtl' : 'ltr'} className="rounded-2xl border border-border bg-card p-6 shadow-sm sm:p-8">
     <Link href="/account/orders" className="text-sm font-semibold underline">{text('Back to orders', 'العودة للطلبات')}</Link>
-    <h1 className="mt-4 break-all text-2xl font-bold">{text('Order', 'الطلب')} · {order.id}</h1>
+    <h1 className="mt-4 break-all text-2xl font-bold">{text('Order', 'الطلب')} <bdi>{orderNumber(order)}</bdi></h1>
     <dl className="mt-5 grid gap-3 border-b pb-5 text-sm sm:grid-cols-2">
       <div><dt className="text-muted-foreground">{text('Created', 'تاريخ الطلب')}</dt><dd>{new Date(order.created_at).toLocaleString(ar ? 'ar-EG' : 'en-EG')}</dd></div>
       <div><dt className="text-muted-foreground">{text('Order status', 'حالة الطلب')}</dt><dd className="font-semibold">{orderStatusLabel(order.status, locale)}</dd></div>
@@ -82,6 +83,7 @@ export default function AccountOrderDetail({ orderId }: { orderId: string }) {
     </dl>
     {watching && <p role="status" className="mt-4 rounded-lg bg-shop-soft p-3 text-sm text-shop-accent">{text('Checking for payment confirmation automatically…', 'جارٍ متابعة تأكيد الدفع تلقائيًا…')}</p>}
     <OrderProgress status={order.status} fulfillments={order.fulfillments} />
+    <OrderEdit order={order} busy={busy || refreshing} onBusy={setBusy} onRefresh={refresh} />
     <OrderInvoice order={order} />
     <OrderReturns orderId={orderId as OrderId} orderStatus={order.status} />
     <div className="mt-5 flex flex-wrap gap-3 print:hidden">

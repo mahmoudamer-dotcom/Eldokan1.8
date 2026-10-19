@@ -2,7 +2,7 @@
 /**
  * Plugin Name: ElDokan Customer API
  * Description: Stable customer-facing API contract for ElDokan. WooCommerce is the current data source behind the API.
- * Version: 0.10.0
+ * Version: 0.11.0
  * Author: ElDokan
  * Requires PHP: 8.0
  */
@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('ELDOKAN_CUSTOMER_API_VERSION', '0.10.0');
+define('ELDOKAN_CUSTOMER_API_VERSION', '0.11.0');
 define('ELDOKAN_CUSTOMER_API_FILE', __FILE__);
 define('ELDOKAN_CUSTOMER_API_DIR', plugin_dir_path(__FILE__));
 
@@ -64,6 +64,7 @@ require_once ELDOKAN_CUSTOMER_API_DIR . 'includes/class-eldokan-customer-api-pay
 require_once ELDOKAN_CUSTOMER_API_DIR . 'includes/class-eldokan-customer-api-paymob.php';
 require_once ELDOKAN_CUSTOMER_API_DIR . 'includes/class-eldokan-customer-api-order-read.php';
 require_once ELDOKAN_CUSTOMER_API_DIR . 'includes/class-eldokan-customer-api-order-cancellation.php';
+require_once ELDOKAN_CUSTOMER_API_DIR . 'includes/class-eldokan-customer-api-order-edit.php';
 add_filter('woocommerce_order_actions', ['ElDokan_Customer_API_Order_Cancellation', 'admin_actions'], 10, 2);
 add_action('woocommerce_order_action_eldokan_decline_customer_cancellation', ['ElDokan_Customer_API_Order_Cancellation', 'decline']);
 register_activation_hook(__FILE__, ['ElDokan_Customer_API_Payment_Store', 'install']);

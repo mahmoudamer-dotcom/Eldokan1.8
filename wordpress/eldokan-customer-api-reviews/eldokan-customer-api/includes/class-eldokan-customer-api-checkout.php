@@ -133,7 +133,7 @@ final class ElDokan_Customer_API_Checkout {
         return $error->get_error_code() === 'invalid_state' ? 'invalid_state' : 'invalid_address';
     }
 
-    private static function validate_address($body, $id = null) {
+    public static function validate_address($body, $id = null) {
         if (!is_array($body) || !$body || array_diff(array_keys($body), self::ADDRESS_FIELDS)) {
             return new WP_Error('invalid_address', 'Provide supported checkout address fields.', ['status' => 422]);
         }

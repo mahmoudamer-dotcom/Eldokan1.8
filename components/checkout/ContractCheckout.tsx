@@ -8,6 +8,7 @@ import Link from 'next/link'
 import { EldokanClientError, type CheckoutAddressInput, type CheckoutResponse, type OrderDetail, type PurchaseInput, type QuoteInput } from '@eldokan/customer-api-client'
 import { createEldokanApi } from '@/lib/eldokan-api'
 import { getEgyptGovernorateLabel, getEgyptGovernorateOptions } from '@/lib/egypt-governorates'
+import { loadCheckoutAddress, saveCheckoutAddress } from '@/lib/saved-checkout-address'
 import { useLocale } from '@/components/i18n/LocaleProvider'
 import { canStartNewCheckout, orderStatusLabel, paymentStatusLabel } from '@/lib/order-status'
 import CheckoutPaymentMethods from './CheckoutPaymentMethods'
@@ -121,6 +122,9 @@ export default function ContractCheckout() {
             const saved = result.data.saved_addresses.items.find((item) => item.id === result.data.address?.id)
             setSavedAddressId(saved?.id ?? null)
             if (result.data.shipping_calculable) applyQuote(result)
+          } else if (!addressEdited.current) {
+            const remembered = loadCheckoutAddress()
+            if (remembered) setAddress(addressInput(remembered))
           }
         }
       } catch (cause) {
@@ -140,7 +144,16 @@ export default function ContractCheckout() {
           setAttemptSaved(true)
           setError(ar ? 'هناك محاولة شراء سابقة لم يتأكد مصيرها. استعد نفس المحاولة قبل إنشاء طلب جديد.' : 'A previous checkout attempt is unresolved. Recover that same attempt before starting a new order.')
         } else if (recovery.success && recovery.data) {
-          setExistingOrder(recovery.data)
+          // A confirmed earlier order does not block a new purchase. Retire its
+          // recovery state (the order stays in the account or guest order history)
+          // and continue with a normal checkout. Only fall back to the saved-order
+          // screen if that cannot be confirmed.
+          const previous = recovery.data
+          const cleared = canStartNewCheckout(previous) && await fetch('/api/orders/recovery', {
+            method: 'POST', headers: { 'Content-Type': 'application/json', 'x-eldokan-locale': locale },
+            body: JSON.stringify({ action: 'clear', expected_order_id: previous.id }),
+          }).then((response) => response.ok, () => false)
+          if (active && !cleared) setExistingOrder(previous)
         }
       } catch {
         if (active) setError(ar ? 'تعذر التحقق من الطلب السابق. أعد تحميل الصفحة قبل بدء عملية شراء.' : 'Could not check previous checkout state. Reload the page before starting a purchase.')
@@ -247,6 +260,7 @@ export default function ContractCheckout() {
       })
       if (!recoveryResponse.ok) throw new Error('Could not safely save checkout recovery state. No order was placed.')
       setAttemptSaved(true)
+      saveCheckoutAddress(addressInput(address))
 
       const placed = await fetch('/api/orders/recovery', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-eldokan-locale': locale }, body: JSON.stringify({ action: 'place' }) })
       const envelope = await placed.json() as { data?: { order_id: string; payment?: { requires_redirect?: boolean; redirect_url?: string | null } | { issue?: { code: string } } }; error?: string; code?: string; request_id?: string | null }

@@ -1,6 +1,4 @@
 import { Products } from '@/services/product'
-import { Suspense } from 'react'
-import CategoryBestSellers from '@/components/category/CategoryBestSellers'
 import { fetchCategoryBySlug, fetchCategoryFilters, fetchCategoriesWithChildren } from '@/services/category'
 import T from '@/components/i18n/T'
 import type { StoreProduct } from '@/components/productCard/ProductCard'
@@ -47,7 +45,6 @@ export default async function CategoryPage({
         <section className="py-5 sm:py-8">
           <CategoryExperience world={categoryWorld(categorySlug, categoryResponse?.data, treeResponse.data)} category={categoryResponse?.data} name={categoryName} slug={categorySlug} products={availableProducts} locale={locale} />
           <div id="category-products" className="scroll-mt-48">
-          <Suspense fallback={null}><CategoryBestSellers category={categorySlug} /></Suspense>
           {availableProducts.length > 0 ? (
             <CategoryProducts
               key={categorySlug}

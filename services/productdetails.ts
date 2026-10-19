@@ -10,20 +10,8 @@ export const ProductsDetails = cache(async (id: string, locale: Locale = 'en') =
   try {
     const api = createEldokanApi(locale)
     const response = await retryApiRead(() => api.products.get(productId as `prd_${number}`))
-    if (response?.data?.id || locale === 'en') return { ...response, data: toProductDetail(response.data) }
-    const fallbackApi = createEldokanApi('en')
-    const fallback = await retryApiRead(() => fallbackApi.products.get(productId as `prd_${number}`))
-    return { ...fallback, data: toProductDetail(fallback.data) }
+    return { ...response, data: toProductDetail(response.data) }
   } catch (cause) {
-    if (locale === 'ar') {
-      try {
-        const api = createEldokanApi('en')
-        const fallback = await retryApiRead(() => api.products.get(productId as `prd_${number}`))
-        return { ...fallback, data: toProductDetail(fallback.data) }
-      } catch (fallbackCause) {
-        return { data: null, unavailable: !(fallbackCause instanceof EldokanClientError && fallbackCause.status === 404) }
-      }
-    }
     return { data: null, unavailable: !(cause instanceof EldokanClientError && cause.status === 404) }
   }
 })

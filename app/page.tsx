@@ -1,6 +1,7 @@
 import { Suspense, cache } from 'react'
 import HomeBrandSection from '@/components/home/HomeBrandSection'
 import HomeCategoryShelves from '@/components/home/HomeCategoryShelves'
+import HomeCategoryShortcuts from '@/components/home/HomeCategoryShortcuts'
 import HomeDailyOffers from '@/components/home/HomeDailyOffers'
 import type { HomeCategoryProductGroup } from '@/components/home/HomeCategoryShelves'
 import HomeFallbackCategorySection from '@/components/home/HomeFallbackCategorySection'
@@ -14,7 +15,7 @@ import Slider from '@/components/slider/Slider'
 import { Brands } from '@/services/brand'
 import { HomeApi } from '@/services/home'
 import { fetchStoreStories } from '@/services/stories'
-import { fetchUsers } from '@/services/category'
+import { fetchCategoriesWithChildren, fetchUsers } from '@/services/category'
 import { Products } from '@/services/product'
 import type { HomeBrand, HomeCategory, HomeHeroSlide, HomeProduct, HomePromoBanner, HomeSection } from '@/types/home'
 import { mapLimited } from '@/lib/map-limited'
@@ -62,6 +63,8 @@ export default async function Home() {
           ? heroSections.map((section) => <Slider key={section.id} slides={section.items as HomeHeroSlide[]} />)
           : <Slider />}
 
+        <Suspense fallback={null}><CategoryTiles /></Suspense>
+
         <Suspense fallback={<ShelfPlaceholder />}><CatalogOffers sections={dealSections} products={catalogProducts} /></Suspense>
 
        
@@ -105,6 +108,10 @@ function ShelfPlaceholder() {
 async function BrandShelf({ fallbackBrands, title }: { fallbackBrands: HomeBrand[]; title: string }) {
   const response = await Brands()
   return <HomeBrandSection brands={Array.isArray(response) && response.length ? response as HomeBrand[] : fallbackBrands} title={title} />
+}
+async function CategoryTiles() {
+  const tree = await fetchCategoriesWithChildren()
+  return <HomeCategoryShortcuts categories={tree.data} />
 }
 async function FallbackShelves() {
   const response = await fetchUsers()

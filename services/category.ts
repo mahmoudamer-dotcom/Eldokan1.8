@@ -2,7 +2,6 @@ import { cache } from 'react'
 import { unstable_cache } from 'next/cache'
 import { createEldokanApi } from '@/lib/eldokan-api'
 import { getLocale } from '@/lib/server-locale'
-import type { Locale } from '@/lib/i18n'
 import { retryApiRead } from '@/lib/retry-api-read'
 
 export async function fetchUsers() {
@@ -15,16 +14,9 @@ export async function fetchUsers() {
   }
 }
 
-const loadCategoriesForLocale = unstable_cache(async (locale: Locale) => {
-  const api = createEldokanApi('en')
-
-  const [response, localizedResponse] = await Promise.all([
-    retryApiRead(() => api.categories.list()),
-    locale === 'ar'
-      ? retryApiRead(() => createEldokanApi('ar').categories.list()).catch(() => null)
-      : Promise.resolve(null),
-  ])
-  const localizedNames = new Map((localizedResponse?.data ?? []).map((category) => [category.slug, category.name]))
+const loadCategoryTree = unstable_cache(async () => {
+  const api = createEldokanApi()
+  const response = await retryApiRead(() => api.categories.list())
   const roots = response.data ?? []
   if (roots.length === 0) throw new Error('The customer API returned an empty category list.')
   const categories = []
@@ -39,26 +31,19 @@ const loadCategoriesForLocale = unstable_cache(async (locale: Locale) => {
         const childList = await retryApiRead(() => api.categories.list({ parent: category.slug }))
         children = childList.data
       }
-      return {
-        ...category,
-        name: locale === 'ar' ? localizedNames.get(category.slug) ?? category.name : category.name,
-        children: children.map((child) => ({
-          ...child,
-          name: locale === 'ar' ? localizedNames.get(child.slug) ?? child.name : child.name,
-        })),
-      }
+      return { ...category, children }
     }))
     categories.push(...details)
   }
 
   return { data: categories }
-}, ['category-tree-v3'], { revalidate: 300, tags: ['category-tree'] })
+}, ['category-tree-v4'], { revalidate: 300, tags: ['category-tree'] })
 
-const fetchCategoriesForLocale = cache((locale: Locale) => loadCategoriesForLocale(locale))
+const fetchCategoryTree = cache(() => loadCategoryTree())
 
 export async function fetchCategoriesWithChildren() {
   try {
-    return await fetchCategoriesForLocale(await getLocale())
+    return await fetchCategoryTree()
   } catch {
     return { data: [] }
   }

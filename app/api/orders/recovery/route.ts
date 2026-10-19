@@ -1,6 +1,7 @@
 import { createEldokanApiForRequest } from '@/lib/eldokan-api'
 import { EldokanClientError, type Language } from '@eldokan/customer-api-client'
 import { appendCustomerApiCookies } from '@/lib/customer-api-transport'
+import { isSameOriginRequest, isSecureRequest } from '@/lib/request-origin'
 import { canStartNewCheckout } from '@/lib/order-status'
 import { GUEST_ORDER_HISTORY_COOKIE, guestOrderHistoryCookie, readGuestOrderHistory } from '@/lib/guest-order-history'
 
@@ -39,7 +40,7 @@ function readState(request: Request): RecoveryState | null {
 function stateCookie(value: RecoveryState, request: Request) {
   const encoded = Buffer.from(JSON.stringify(value)).toString('base64url')
   if (encoded.length > 3500) throw new Error('Recovery state exceeds cookie size limit.')
-  return `${COOKIE}=${encodeURIComponent(encoded)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=86400${new URL(request.url).protocol === 'https:' ? '; Secure' : ''}`
+  return `${COOKIE}=${encodeURIComponent(encoded)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=86400${isSecureRequest(request) ? '; Secure' : ''}`
 }
 
 function locale(request: Request): Language {
@@ -71,7 +72,7 @@ async function readOrder(request: Request, cookies: string[]) {
 }
 
 async function recoveryAction(request: Request, cookies: string[]) {
-  if (request.headers.get('origin') !== new URL(request.url).origin) return Response.json({ error: 'Request origin is not allowed.' }, { status: 403, headers: { 'Cache-Control': 'no-store' } })
+  if (!isSameOriginRequest(request)) return Response.json({ error: 'Request origin is not allowed.' }, { status: 403, headers: { 'Cache-Control': 'no-store' } })
   let body: Record<string, unknown>
   try { body = await request.json() as Record<string, unknown> } catch { return Response.json({ error: 'Invalid request.' }, { status: 400, headers: { 'Cache-Control': 'no-store' } }) }
   if (!body || typeof body !== 'object' || Array.isArray(body)) return Response.json({ error: 'Request body must be an object.' }, { status: 400, headers: { 'Cache-Control': 'no-store' } })
@@ -135,7 +136,7 @@ async function recoveryAction(request: Request, cookies: string[]) {
       const result = await api.orders.get(selected.order_id as `ord_${string}`, access)
       if (result.data.id !== selected.order_id || !canStartNewCheckout(result.data)) return Response.json({ error: 'Could not verify the saved order reference.', code: 'checkout_recovery_required' }, { status: 409, headers: { 'Cache-Control': 'no-store' } })
       const headers = new Headers({ 'Cache-Control': 'private, no-store' })
-      const secure = new URL(request.url).protocol === 'https:'
+      const secure = isSecureRequest(request)
       if (selected.guest_access) {
         headers.append('Set-Cookie', guestOrderHistoryCookie(readGuestOrderHistory(cookieValue(request, GUEST_ORDER_HISTORY_COOKIE)), { order_id: selected.order_id as `ord_${string}`, guest_access: selected.guest_access }, secure))
       }
