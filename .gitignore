@@ -63,3 +63,6 @@ Test.zip
 /wordpress/eldokan-customer-api-options/
 /wordpress/eldokan-stories/
 /wordpress/eldokan-product-seller/
+
+# Documentation stays local; the repo holds code only.
+*.md
