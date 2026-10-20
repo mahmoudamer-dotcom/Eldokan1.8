@@ -15,6 +15,6 @@ export default async function PoliciesPage() {
       <span className="text-xs font-semibold text-shop-accent">{policy.audience === 'seller' ? (ar ? 'للبائعين والتجار' : 'For sellers') : policy.audience === 'buyer' ? (ar ? 'للعملاء' : 'For customers') : (ar ? 'للجميع' : 'For everyone')}</span>
       <h2 className="mt-2 text-lg font-bold">{policy.title[locale]}</h2><p className="mt-2 text-sm leading-6 text-muted-foreground">{policy.summary[locale]}</p>
     </Link>)}</div>
-    <section className="mt-8 rounded-2xl border p-6"><h2 className="font-bold">{BUSINESS.name[locale]}</h2><p className="mt-2 text-sm">{BUSINESS.address[locale]}</p><a className="mt-3 inline-block text-sm underline" href={`mailto:${BUSINESS.email}`}>{BUSINESS.email}</a><Link href="/help" className="ms-5 text-sm underline">{ar ? 'التواصل والشكاوى' : 'Support & complaints'}</Link></section>
+    <section className="mt-8 rounded-2xl border p-6"><h2 className="font-bold">{BUSINESS.name[locale]}</h2><a className="mt-2 inline-block text-sm underline" href={`mailto:${BUSINESS.email}`}>{BUSINESS.email}</a><Link href="/help" className="ms-5 text-sm underline">{ar ? 'التواصل والشكاوى' : 'Support & complaints'}</Link></section>
   </main>
 }

@@ -69,3 +69,4 @@ Test.zip
 
 # WordPress plugin sources are deployed to WordPress separately; not needed to run the storefront.
 /wordpress/
+Test (*).zip

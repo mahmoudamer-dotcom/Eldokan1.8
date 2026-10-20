@@ -2,10 +2,9 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import type { HomeBrand } from '@/types/home'
 import { useLocale } from '@/components/i18n/LocaleProvider'
-import { fetchCatalogBrands } from '@/lib/catalog-brands'
 
 function normalizeImageUrl(value: unknown) {
   if (typeof value !== 'string' || !value.trim()) return null
@@ -87,40 +86,11 @@ function BrandLogo({ name, images, onUnavailable }: { name: string; images: stri
 }
 
 export default function HomeBrandSection({ brands: brandItems, title }: { brands: HomeBrand[]; title?: string }) {
-  const { t, locale } = useLocale()
-  const [catalog, setCatalog] = useState<{ locale: string; brands: HomeBrand[] } | null>(null)
+  const { t } = useLocale()
+  // Brands come from the server render (cached there); the browser does not re-fetch them.
   const [failedImages, setFailedImages] = useState<Set<string>>(() => new Set())
-  useEffect(() => {
-    let active = true
-    let loading = false
-    async function refresh() {
-      if (!active || loading || document.visibilityState !== 'visible') return
-      loading = true
-      try {
-        const brands = await fetchCatalogBrands(locale)
-        if (active) {
-          setCatalog({ locale, brands })
-          // Retry previously unavailable logos when catalog data is refreshed.
-          setFailedImages(new Set())
-        }
-      } catch {
-        // Preserve the displayed catalog during temporary API failures.
-      } finally { loading = false }
-    }
-    void refresh()
-    const interval = window.setInterval(() => { void refresh() }, 60_000)
-    const onVisible = () => { void refresh() }
-    document.addEventListener('visibilitychange', onVisible)
-    window.addEventListener('focus', onVisible)
-    return () => {
-      active = false
-      window.clearInterval(interval)
-      document.removeEventListener('visibilitychange', onVisible)
-      window.removeEventListener('focus', onVisible)
-    }
-  }, [locale])
   const brands: Array<{ brand: HomeBrand; images: string[] }> = []
-  for (const item of catalog?.locale === locale ? catalog.brands : brandItems) {
+  for (const item of brandItems) {
     const brand = { ...item, name: item.name?.trim(), slug: item.slug?.trim() }
     if (!brand.name || !(brand.slug || brand.id)) continue
     const images = getBrandImages(brand)

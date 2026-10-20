@@ -24,8 +24,9 @@ export function categoryWorldOf(...identities: Array<string | null | undefined>)
 
 /** Illustrated banner drawn for each department; a category image from the store replaces it where one exists. */
 /** Wide banner photo for a department (Unsplash, see public/image/categories/photo/CREDITS.txt). */
-export function categoryArt(world: CategoryWorld) {
-  return `/image/categories/photo/${world}.jpg`
+export function categoryArt(world: CategoryWorld, size: 'large' | 'small' = 'large') {
+  // 'small' (480px, ~10 KB) for menus, ribbons and shelf headers; 'large' (1600px) for the department hero.
+  return `/image/categories/photo/${world}${size === 'small' ? '-sm' : ''}.jpg`
 }
 
 /** Square, centered artwork for round category badges. */

@@ -47,7 +47,7 @@ const TOPICS: Topic[] = [
     answer: { ar: `عايز تبيع على الدكان؟ كلمنا على ${BUSINESS.phone} أو ابعت على ${BUSINESS.email} وهنبعتلك خطوات التسجيل.`, en: `Want to sell on ElDokan? Contact ${BUSINESS.phone} or ${BUSINESS.email} and we’ll send you the onboarding steps.` },
     links: [policy('seller-terms', 'شروط البائعين', 'Seller terms')] },
   { id: 'contact', words: /تواصل|اكلم|أكلم|كلمكم|رقمكم|تليفون|موبايل|واتس|ايميل|إيميل|دعم|خدمة العملاء|عنوانكم|مكانكم|فرع|contact|phone|whatsapp|email|support|address|location/i,
-    answer: { ar: `تقدر تكلمنا على ${BUSINESS.phone} أو تبعت إيميل على ${BUSINESS.email}. عنواننا: ${BUSINESS.address.ar}.`, en: `Call ${BUSINESS.phone} or email ${BUSINESS.email}. Address: ${BUSINESS.address.en}.` } },
+    answer: { ar: `تقدر تكلمنا على ${BUSINESS.phone} أو تبعت إيميل على ${BUSINESS.email}.`, en: `Call ${BUSINESS.phone} or email ${BUSINESS.email}.` } },
   { id: 'privacy', words: /خصوصية|بياناتي|privacy|my data/i,
     answer: { ar: 'بياناتك بتستخدم بس لتنفيذ طلبك وتوصيله ودعمك. ولو عايز تعدل أو تمسح بياناتك كلم الدعم.', en: 'Your data is used only to fulfill, deliver and support your order. Contact support to correct or delete it.' },
     links: [policy('privacy', 'إشعار الخصوصية', 'Privacy notice')] },

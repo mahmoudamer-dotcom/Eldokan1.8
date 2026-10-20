@@ -26,7 +26,7 @@ export default async function Category() {
           {data.map((item, index) => (
             <div key={item.slug || item.name || index} className="border-b border-border p-2 last:border-0">
               <Link href={`/category/${encodeURIComponent(item.slug || item.name)}`} className="flex min-h-11 items-center gap-3 rounded-lg px-2 text-sm font-bold hover:bg-shop-soft">
-                <Image src={categoryArt(categoryWorldOf(item.slug, item.name))} alt="" width={1600} height={480} unoptimized className="h-9 w-16 shrink-0 rounded-lg object-cover" />
+                <Image src={categoryArt(categoryWorldOf(item.slug, item.name), 'small')} alt="" width={480} height={144} unoptimized className="h-9 w-16 shrink-0 rounded-lg object-cover" />
                 {translateCatalogName(item.name, locale)}
               </Link>
               {item.children.length > 0 && <ul className="grid gap-1 ps-3 sm:grid-cols-2">
@@ -54,7 +54,7 @@ export default async function Category() {
             {item.children.length > 0 && (
               <div className="invisible absolute start-0 top-full z-50 w-64 translate-y-2 pt-2 opacity-0 transition duration-150 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-has-[:focus-visible]:visible group-has-[:focus-visible]:translate-y-0 group-has-[:focus-visible]:opacity-100">
                 <div className="overflow-hidden rounded-2xl border border-[#eadfca] bg-card p-2 shadow-[0_16px_40px_-16px_rgba(45,35,15,0.35)]">
-                  <Image src={categoryArt(categoryWorldOf(item.slug, item.name))} alt="" width={1600} height={480} unoptimized className="h-20 w-full rounded-xl object-cover" />
+                  <Image src={categoryArt(categoryWorldOf(item.slug, item.name), 'small')} alt="" width={480} height={144} unoptimized className="h-20 w-full rounded-xl object-cover" />
                   <p className="px-3 pb-2 pt-2 text-[11px] font-bold uppercase tracking-[0.14em] text-shop-accent">{locale === 'ar' ? 'تصفح' : 'Browse'} {translateCatalogName(item.name, locale)}</p>
                   <ul className="space-y-1 border-t border-border pt-2">
                     {item.children.map((child) => (

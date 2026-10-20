@@ -64,7 +64,7 @@ export default function OrderInvoice({ order, shared = false }: { order: OrderDe
         <header className="flex flex-wrap items-start justify-between gap-5">
           <div className="space-y-2">
             <Image src="/image/Eldokan-logo.webp" alt={text('ElDokan', 'الدكان')} width={132} height={72} className="h-14 w-auto object-contain" />
-            <p className="text-xs leading-5 text-neutral-500">{BUSINESS.address[locale]}<br /><bdi>{BUSINESS.email}</bdi> · <bdi dir="ltr">{BUSINESS.phone}</bdi></p>
+            <p className="text-xs leading-5 text-neutral-500"><bdi>{BUSINESS.email}</bdi> · <bdi dir="ltr">{BUSINESS.phone}</bdi></p>
           </div>
           <div className="text-end">
             <p className={label}>{paid ? text('Invoice', 'فاتورة') : text('Order summary', 'ملخص الطلب')}</p>

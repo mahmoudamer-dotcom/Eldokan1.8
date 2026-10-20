@@ -34,7 +34,8 @@ export default function CustomerReviews({ target }: { target: ProductId | Seller
     const api = createEldokanApi(locale)
     setLoading(true); setError('')
     const publishedPromise = api.reviews.list(target, { page, perPage: 10, rating: filter, sort })
-    const ownPromise = api.reviews.mine(target).then(response => ({ signedIn: true, data: response.data })).catch((cause: unknown) => {
+    // Guests are known from the shared session check, so they skip the "my review" request.
+    const ownPromise = api.auth.session().then(() => api.reviews.mine(target)).then(response => ({ signedIn: true, data: response.data })).catch((cause: unknown) => {
       if (cause instanceof EldokanClientError && cause.status === 401) return { signedIn: false, data: null }
       throw cause
     })

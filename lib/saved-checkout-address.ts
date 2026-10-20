@@ -1,8 +1,8 @@
 import type { CheckoutAddressInput } from '@eldokan/customer-api-client'
 
-// The last delivery address used on this device, so returning guests do not
-// type it again. It stays in this browser only and is never sent anywhere
-// until the customer reviews an order.
+// The delivery details typed on this device, saved as the customer types (with
+// or without an account), so a reload or a later visit does not lose them. They
+// stay in this browser only and are sent nowhere until the customer reviews an order.
 const KEY = 'eldokan:checkout-address'
 const FIELDS = ['first_name', 'last_name', 'phone', 'email', 'state', 'city', 'street_address', 'address_extra'] as const
 
@@ -16,7 +16,8 @@ export function loadCheckoutAddress(): CheckoutAddressInput | null {
       if (typeof value !== 'string' || value.length > 500) return null
       address[field] = value
     }
-    return address.first_name && address.phone ? address as unknown as CheckoutAddressInput : null
+    // Keep partly filled forms too: anything typed is worth restoring.
+    return FIELDS.some((field) => address[field].trim()) ? address as unknown as CheckoutAddressInput : null
   } catch { return null }
 }
 

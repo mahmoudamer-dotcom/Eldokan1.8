@@ -12,21 +12,25 @@ export function getBrowserEldokanApiBaseUrl() {
   return new URL('/api/customer', window.location.origin).toString()
 }
 
-const CATALOG_REVALIDATE_SECONDS = 60
+// Public catalog reads are shared for 5 minutes. Checkout always re-prices and
+// re-checks stock on the server, so a briefly older listing cannot be bought wrong.
+const CATALOG_REVALIDATE_SECONDS = 300
+const SEARCH_REVALIDATE_SECONDS = 120
 
 /**
  * Anonymous server-side catalog reads are shared for a short time so every page
  * does not wait on the store for the same public data. Cart, checkout, account
  * and order requests never use this client; they go through the request-scoped
- * transport and stay uncached. Free-text searches are not stored.
+ * transport and stay uncached. Searches are public too and kept for 2 minutes.
  */
 const cachedCatalogFetch: typeof fetch = (input, init) => {
   const url = withCatalogLanguage(input)
   const method = init?.method ?? 'GET'
-  if (method !== 'GET' || url.pathname.includes('/search') || url.searchParams.has('search')) return fetch(url, init)
+  if (method !== 'GET') return fetch(url, init)
+  const search = url.pathname.includes('/search') || url.searchParams.has('search')
   const { cache: _cache, ...rest } = init ?? {}
   void _cache
-  return fetch(url, { ...rest, next: { revalidate: CATALOG_REVALIDATE_SECONDS } })
+  return fetch(url, { ...rest, next: { revalidate: search ? SEARCH_REVALIDATE_SECONDS : CATALOG_REVALIDATE_SECONDS } })
 }
 
 function createClient(
@@ -41,6 +45,41 @@ function createClient(
 }
 
 const browserClients: Record<string, ReturnType<typeof createClient>> = {}
+const SESSION_REUSE_MS = 15_000
+const sessionResets = new Set<() => void>()
+
+/**
+ * The navbar, cart, wishlist, reviews and pages all ask "who is signed in?" on
+ * load. Share one answer for a few seconds instead of one request each. Signing
+ * in, out or registering, or any session change event, asks again.
+ */
+function shareSessionReads(client: ReturnType<typeof createClient>) {
+  let pending: ReturnType<typeof client.auth.session> | null = null
+  let fetchedAt = 0
+  const reset = () => { pending = null }
+  sessionResets.add(reset)
+  const read = client.auth.session.bind(client.auth)
+  client.auth.session = () => {
+    if (!pending || Date.now() - fetchedAt > SESSION_REUSE_MS) {
+      fetchedAt = Date.now()
+      pending = read()
+      pending.catch(() => {})
+    }
+    return pending
+  }
+  for (const name of ['login', 'logout', 'register'] as const) {
+    const action = client.auth[name].bind(client.auth) as (...args: unknown[]) => Promise<unknown>
+    ;(client.auth[name] as unknown) = (...args: unknown[]) => { reset(); return action(...args).finally(reset) }
+  }
+  return client
+}
+
+if (typeof window !== 'undefined') {
+  // Capture phase: cleared before any component listener reads the session again.
+  for (const event of ['eldokan:session-changed', 'eldokan:signed-out']) {
+    window.addEventListener(event, () => { for (const reset of sessionResets) reset() }, { capture: true })
+  }
+}
 
 /** Keep browser session state in one client while isolating every server request. */
 export function createEldokanApi(language: Language = 'en') {
@@ -49,7 +88,7 @@ export function createEldokanApi(language: Language = 'en') {
     // the same customer API client without browser CORS or third-party cookie limits.
     const browserBaseUrl = getBrowserEldokanApiBaseUrl()
     const cacheKey = `${language}:${browserBaseUrl}`
-    return browserClients[cacheKey] ??= createClient(browserBaseUrl, language)
+    return browserClients[cacheKey] ??= shareSessionReads(createClient(browserBaseUrl, language))
   }
   return createClient(undefined, language)
 }

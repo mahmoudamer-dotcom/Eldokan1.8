@@ -10,7 +10,9 @@ import { createEldokanApi } from '@/lib/eldokan-api'
 import { getEgyptGovernorateLabel, getEgyptGovernorateOptions } from '@/lib/egypt-governorates'
 import { loadCheckoutAddress, saveCheckoutAddress } from '@/lib/saved-checkout-address'
 import { useLocale } from '@/components/i18n/LocaleProvider'
-import { canStartNewCheckout, orderStatusLabel, paymentStatusLabel } from '@/lib/order-status'
+import { canStartNewCheckout, orderNumber, orderStatusLabel, paymentStatusLabel } from '@/lib/order-status'
+import { isAbandonedOnlinePayment, restoreOrderToCart } from '@/lib/restore-order-cart'
+import { useCart } from '@/components/cart/CartProvider'
 import CheckoutPaymentMethods from './CheckoutPaymentMethods'
 import CheckoutInstallmentPlans from './CheckoutInstallmentPlans'
 import { installmentQuoteKey, type SelectedInstallmentPlan } from '@/lib/checkout-payment-options'
@@ -71,6 +73,16 @@ function checkoutError(cause: unknown, fallback: string, ar: boolean) {
 export default function ContractCheckout() {
   const { locale } = useLocale()
   const router = useRouter()
+  const { refresh: refreshCart } = useCart()
+  // Read through a ref so a new cart callback does not re-run the checkout loader.
+  const refreshCartRef = useRef(refreshCart)
+  useEffect(() => { refreshCartRef.current = refreshCart }, [refreshCart])
+  // The browser's Back button from the payment page can show a frozen copy of this page; load it fresh instead.
+  useEffect(() => {
+    const fresh = (event: PageTransitionEvent) => { if (event.persisted) window.location.reload() }
+    window.addEventListener('pageshow', fresh)
+    return () => window.removeEventListener('pageshow', fresh)
+  }, [])
   const ar = locale === 'ar'
   const [checkout, setCheckout] = useState<CheckoutResponse['data'] | null>(null)
   const [address, setAddress] = useState<AddressFields>(emptyAddress)
@@ -87,6 +99,7 @@ export default function ContractCheckout() {
   const [error, setError] = useState('')
   const [quoteRequestId, setQuoteRequestId] = useState<string | null>(null)
   const [recoveryReady, setRecoveryReady] = useState(false)
+  const [restoredOrder, setRestoredOrder] = useState<OrderDetail | null>(null)
   const addressEdited = useRef(false)
 
   const applyQuote = useCallback((result: CheckoutResponse, preferredShippingId: string | null = null) => {
@@ -154,6 +167,11 @@ export default function ContractCheckout() {
             body: JSON.stringify({ action: 'clear', expected_order_id: previous.id }),
           }).then((response) => response.ok, () => false)
           if (active && !cleared) setExistingOrder(previous)
+          // Back from the payment page without paying: the order took the cart's items, so put them back.
+          else if (active && cleared && isAbandonedOnlinePayment(previous) && await restoreOrderToCart(previous, locale) > 0) {
+            const again = await createEldokanApi(locale).checkout.get({ lang: locale })
+            if (active) { setCheckout(again.data); setQuote(null); setRestoredOrder(previous); void refreshCartRef.current() }
+          }
         }
       } catch {
         if (active) setError(ar ? 'تعذر التحقق من الطلب السابق. أعد تحميل الصفحة قبل بدء عملية شراء.' : 'Could not check previous checkout state. Reload the page before starting a purchase.')
@@ -169,7 +187,12 @@ export default function ContractCheckout() {
     if (key === 'phone' && typeof value === 'string') {
       value = value.replace(/[٠-٩۰-۹]/g, (digit) => String(digit.charCodeAt(0) - (digit >= '۰' ? 0x06f0 : 0x0660))) as AddressFields[K]
     }
-    setAddress((current) => ({ ...current, [key]: value }))
+    setAddress((current) => {
+      const next = { ...current, [key]: value }
+      // Saved as typed, so the details survive a reload even before ordering or signing in.
+      saveCheckoutAddress(addressInput(next))
+      return next
+    })
     setSavedAddressId(null)
     setQuote(null)
   }
@@ -339,6 +362,10 @@ export default function ContractCheckout() {
   </section>
 
   return <form onSubmit={reviewQuote} className="mx-auto grid max-w-6xl items-start gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]" dir={ar ? 'rtl' : 'ltr'}>
+    {restoredOrder && <div role="status" className="rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm leading-6 text-amber-900 lg:col-span-2">
+      <strong>{ar ? 'الدفع ما كملش، ورجّعنا منتجاتك للسلة.' : 'Payment was not completed, so your items are back in the cart.'}</strong>{' '}
+      {ar ? `تقدر تكمل الطلب تاني بالكارت أو تختار الدفع عند الاستلام. الطلب ${orderNumber(restoredOrder)} اللي ما اتدفعش هيتلغي لوحده.` : `Place the order again by card or choose cash on delivery. The unpaid order ${orderNumber(restoredOrder)} will be cancelled automatically.`}
+    </div>}
     <div className="min-w-0 space-y-6 rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-8">
     <h2 className="text-xl font-bold">{ar ? 'عنوان التوصيل' : 'Delivery address'}</h2>
     {checkout?.saved_addresses.items.length ? <label className={label}>{ar ? 'عنوان محفوظ' : 'Saved address'}

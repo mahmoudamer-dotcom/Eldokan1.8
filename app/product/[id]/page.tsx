@@ -69,7 +69,7 @@ export default async function ProductPage({
         </nav>
 
         {category && <Link href={`/category/${encodeURIComponent(category.slug || category.name)}`} className={`category-world category-world--${world} category-ribbon mb-5`}>
-          <Image src={categoryArt(world)} alt="" width={1600} height={480} unoptimized />
+          <Image src={categoryArt(world, 'small')} alt="" width={480} height={144} unoptimized />
           <span className="min-w-0"><span>{locale === 'ar' ? 'من قسم' : 'From the department'}</span><strong className="line-clamp-1">{translateCatalogName(category.name, locale)}</strong></span>
           <ArrowUpRight aria-hidden="true" className="size-5 rtl:-rotate-90" />
         </Link>}

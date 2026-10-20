@@ -5,10 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { CiHeart } from 'react-icons/ci'
-import { GitCompareArrows, Moon, Sun } from 'lucide-react'
-import { IoLanguageOutline } from 'react-icons/io5'
-import { PiShoppingCartLight } from 'react-icons/pi'
+import { GitCompareArrows, Heart, Languages, Moon, ShoppingCart, Sun } from 'lucide-react'
 import { EldokanClientError, type CustomerAccount } from '@eldokan/customer-api-client'
 import { useLocale } from '@/components/i18n/LocaleProvider'
 import { useWishlist } from '@/components/wishlist/WishlistProvider'
@@ -229,20 +226,20 @@ export default function Navbar() {
 
           <div className="category-scrollbar-hidden col-start-2 row-start-1 flex min-w-0 max-w-full flex-wrap items-center justify-end gap-0 min-[360px]:gap-0.5 sm:gap-2 lg:col-start-auto lg:row-start-auto lg:flex-nowrap">
             <button type="button" onClick={handleLanguageChange} aria-label={t('Change language')} title={t(locale === 'en' ? 'Switch to Arabic' : 'Switch to English')} className="flex h-9 shrink-0 items-center justify-center gap-1 rounded-full px-1.5 text-xs font-semibold text-foreground transition hover:bg-muted sm:h-10 sm:px-2 sm:text-sm">
-              <IoLanguageOutline /><span>{locale === 'en' ? 'عربي' : 'EN'}</span>
+              <Languages aria-hidden="true" className="size-[1em]" strokeWidth={1.5} /><span>{locale === 'en' ? 'عربي' : 'EN'}</span>
             </button>
             <button type="button" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} aria-label={t(theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode')} title={t(theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode')} className="flex size-8 shrink-0 min-[360px]:size-9 items-center justify-center rounded-full text-foreground transition hover:bg-muted sm:size-10">
               {theme === 'dark' ? <Sun className="size-5" /> : <Moon className="size-5" />}
             </button>
             <Link href="/wishlist" aria-label={`${t('Favorites')}${wishlistCount ? ` (${wishlistCount})` : ''}`} title={t('Favorites')} className="flex size-8 shrink-0 min-[360px]:size-9 items-center justify-center rounded-full text-2xl text-foreground transition hover:bg-muted hover:text-[#C58A36] sm:size-10">
-              <span className="relative"><CiHeart /><CountBadge count={wishlistCount} /></span>
+              <span className="relative"><Heart aria-hidden="true" className="size-[1em]" strokeWidth={1.5} /><CountBadge count={wishlistCount} /></span>
             </Link>
             <button type="button" onClick={() => showComparison()} aria-haspopup="dialog" aria-label={`${locale === 'ar' ? 'مقارنة المنتجات' : 'Compare products'}${comparisonIds.length ? ` (${comparisonIds.length})` : ''}`} className="flex h-8 min-w-8 shrink-0 items-center justify-center gap-2 rounded-full px-1 text-foreground transition hover:bg-muted hover:text-[#C58A36] min-[360px]:h-9 min-[360px]:min-w-9 sm:h-10 sm:min-w-10 sm:px-2">
               <span className="relative"><GitCompareArrows className="size-5" aria-hidden="true" /><CountBadge count={comparisonIds.length} /></span>
      
             </button>
           <Link href="/cart" aria-label={`${t('Shopping cart')}${visibleCartItemCount ? ` (${visibleCartItemCount})` : ''}`} title={t('Shopping cart')} className="flex size-8 shrink-0 min-[360px]:size-9 items-center justify-center rounded-full text-2xl text-foreground transition hover:bg-muted hover:text-[#C58A36] sm:size-10">
-              <span className="relative"><PiShoppingCartLight /><CountBadge count={visibleCartItemCount} /></span>
+              <span className="relative"><ShoppingCart aria-hidden="true" className="size-[1em]" strokeWidth={1.5} /><CountBadge count={visibleCartItemCount} /></span>
             </Link>
             <AccountShortcuts customer={customer} />
           </div>

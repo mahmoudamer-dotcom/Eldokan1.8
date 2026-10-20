@@ -31,7 +31,7 @@ export default async function HomeCategoryShelves({ groups }: { groups: HomeCate
         return (
         <section key={`products-${category.id}`} className="space-y-4" aria-labelledby={`category-products-${category.id}`}>
           <div className={`category-world category-world--${world} category-shelf-head`}>
-            <Image src={categoryArt(world)} alt="" width={1600} height={480} unoptimized />
+            <Image src={categoryArt(world, 'small')} alt="" width={480} height={144} unoptimized />
             <div className="min-w-0">
               <p><T text="Browse this category" /></p>
               <h2 id={`category-products-${category.id}`}>{translateCatalogName(category.name, locale)}</h2>
