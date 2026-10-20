@@ -134,11 +134,14 @@ export default function ContractCheckout() {
     setPaymobOption(paymentData.selected_paymob_option && options.includes(paymentData.selected_paymob_option) ? paymentData.selected_paymob_option : null)
     const selected = result.data.selected_shipping_method?.id ?? preferredShippingId
     setShippingId(result.data.shipping_methods.some((method) => method.available && method.id === selected) ? selected : null)
+    // Cash on delivery is preselected whenever the store offers it (guests and accounts alike);
+    // the customer can still switch to card or installments.
+    const cod = result.data.payment_methods.find((method) => method.available && method.id === 'cod')?.id ?? null
     if ('selected_payment_method' in paymentData) {
-      setPaymentMethod(result.data.payment_methods.find((method) => method.available && method.id === paymentData.selected_payment_method)?.id ?? null)
+      setPaymentMethod(result.data.payment_methods.find((method) => method.available && method.id === paymentData.selected_payment_method)?.id ?? cod)
     } else {
       setPaymentMethod((current) => result.data.payment_methods.find((method) => method.available && method.id === current)?.id
-        ?? result.data.payment_methods.find((method) => method.available && method.id === 'paymob')?.id
+        ?? cod
         ?? result.data.payment_methods.find((method) => method.available)?.id ?? null)
     }
   }, [])
