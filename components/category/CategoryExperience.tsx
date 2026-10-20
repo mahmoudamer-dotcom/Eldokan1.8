@@ -17,18 +17,21 @@ export default function CategoryExperience({ world, category, name, slug, produc
   const copy = categoryWorldCopy[world]
   const pick = (value: [string, string]) => value[ar ? 1 : 0]
   const Icon = icons[world]
+  // A description written for the category in WordPress replaces the default text.
+  const storeDescription = (category?.description ?? '').replace(/<[^>]*>/g, ' ').replace(/s+/g, ' ').trim()
   const showcase = products.filter((product) => product.id && (product.image?.url || product.images?.length)).slice(0, 3)
   return <div className={`category-world category-world--${world}`}>
     <nav aria-label={ar ? 'مسار التصفح' : 'Breadcrumb'} className="mb-5 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
       <Link href="/" className="hover:text-foreground hover:underline">{ar ? 'الرئيسية' : 'Home'}</Link><span aria-hidden="true">/</span><span aria-current="page" className="font-semibold text-foreground">{translateCatalogName(name, locale)}</span>
     </nav>
     <section aria-labelledby="category-world-title" className={`category-world-hero${showcase.length ? '' : ' category-world-hero--solo'}`}>
-      <div className="category-world-art"><Image src={categoryArt(world)} alt="" width={1600} height={480} priority unoptimized /></div>
+      {/* The category image set in WordPress wins; the built-in department photo is the fallback. */}
+      <div className="category-world-art"><Image src={category?.image?.url || categoryArt(world)} alt="" width={1600} height={480} priority unoptimized /></div>
       <div className="category-world-copy">
         <p className="category-world-eyebrow"><Icon aria-hidden="true" className="size-4 shrink-0" />{pick(copy.eyebrow)}</p>
         <h1 id="category-world-title" className="category-world-name">{translateCatalogName(name, locale)}</h1>
         <p className="category-world-heading">{pick(copy.heading)}</p>
-        <p className="category-world-description">{pick(copy.description)}</p>
+        <p className="category-world-description">{storeDescription || pick(copy.description)}</p>
         <div className="mt-6 flex flex-wrap items-center gap-3">
           <a href="#category-products" className="category-world-browse">{ar ? 'تصفح المنتجات' : 'Browse products'}<ArrowDown aria-hidden="true" className="size-4" /></a>
           <DiscoveryPrompt locale={locale} category={slug} />

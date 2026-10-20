@@ -27,6 +27,9 @@ const cachedCatalogFetch: typeof fetch = (input, init) => {
   const url = withCatalogLanguage(input)
   const method = init?.method ?? 'GET'
   if (method !== 'GET') return fetch(url, init)
+  // Home sections (hero slides, banners, shelves) are edited in WordPress and must show at
+  // once; the plugin keeps its own cache and clears it on save, so this read stays fast.
+  if (url.pathname.endsWith('/home')) return fetch(url, { ...init, cache: 'no-store' })
   const search = url.pathname.includes('/search') || url.searchParams.has('search')
   const { cache: _cache, ...rest } = init ?? {}
   void _cache
