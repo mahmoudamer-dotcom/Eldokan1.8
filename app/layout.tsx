@@ -13,6 +13,8 @@ import { getStorefrontUrl } from '@/lib/site-url'
 import { ComparisonProvider } from '@/components/productDetails/ComparisonProvider'
 import Footer from '@/components/footer/Footer'
 import { ShoppingChatProvider } from '@/components/discovery/ShoppingChatProvider'
+import WhatsAppButton from '@/components/support/WhatsAppButton'
+import SiteChrome from '@/components/checkout/CheckoutChrome'
 
 
 const OpenSans = localFont({
@@ -56,13 +58,18 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
             <WishlistProvider>
               <ComparisonProvider>
               <ShoppingChatProvider>
+              <SiteChrome>
               <Suspense fallback={<div className="h-[180px] shrink-0 bg-card" aria-hidden="true" />}>
                 <SiteHeader />
               </Suspense>
+              </SiteChrome>
               <div id="main-content" tabIndex={-1} className="flex flex-1 flex-col outline-none">{children}</div>
+              <SiteChrome>
               <Suspense fallback={<footer className="min-h-40 border-t bg-background" aria-label={locale === 'ar' ? 'جارٍ تحميل تذييل الموقع' : 'Loading site footer'} />}>
                 <Footer />
               </Suspense>
+              </SiteChrome>
+              <WhatsAppButton />
               </ShoppingChatProvider>
               </ComparisonProvider>
             </WishlistProvider>

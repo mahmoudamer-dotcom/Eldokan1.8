@@ -1,6 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import type { OrderDetail } from '@eldokan/customer-api-client'
+import { orderNumber } from '@/lib/order-status'
+import { restoreAbandonedPayment } from '@/lib/restore-order-cart'
 import PurchaseJourney from '@/components/shopping/PurchaseJourney'
 import Money from '@/components/i18n/Money'
 import Link from 'next/link'
@@ -13,6 +16,14 @@ export default function CartPage() {
   const { cart, ready, busy, error, updateQuantity, removeItem, refresh } = useCart()
   const ar = locale === 'ar'
   const t = (en: string, arabic: string) => ar ? arabic : en
+  // Back from the card payment page without paying: the order took the items, so put them back here too.
+  const [restored, setRestored] = useState<OrderDetail | null>(null)
+  const checkedRecovery = useRef(false)
+  useEffect(() => {
+    if (!ready || checkedRecovery.current || (cart?.items.length ?? 0) > 0) return
+    checkedRecovery.current = true
+    void restoreAbandonedPayment(locale).then((order) => { if (order) { setRestored(order); void refresh() } })
+  }, [ready, cart, locale, refresh])
   const subtotalMinor = cart?.items.reduce((sum, item) => sum + (item.line_subtotal?.amount ?? 0), 0) ?? 0
   const currency = cart?.items.find((item) => item.line_subtotal)?.line_subtotal?.currency ?? 'EGP'
   const decimals = cart?.items.find((item) => item.line_subtotal)?.line_subtotal?.decimals ?? 2
@@ -20,6 +31,7 @@ export default function CartPage() {
 
   return <main className="mx-auto w-full max-w-6xl flex-1 px-3 py-7 sm:px-4 sm:py-14" dir={ar ? 'rtl' : 'ltr'}>
     <h1 className="mb-7 text-3xl font-bold">{t('Shopping cart', 'سلة التسوق')}</h1>
+    {restored && <p role="status" className="mb-5 rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm leading-6 text-amber-900">{t(`Payment was not completed, so your items are back in the cart. The unpaid order ${orderNumber(restored)} will be cancelled automatically.`, `الدفع ما كملش، ورجّعنا منتجاتك للسلة. الطلب ${orderNumber(restored)} اللي ما اتدفعش هيتلغي لوحده.`)}</p>}
     <PurchaseJourney stage="cart" />
     {!ready ? <p className="rounded-xl border border-border bg-card p-8 text-center text-muted-foreground">{t('Loading your cart…', 'جارٍ تحميل السلة…')}</p>
       : error && !cart ? <section className="rounded-xl border border-danger-foreground/30 bg-card p-6"><p role="alert" className="text-danger-foreground">{error}</p><button type="button" onClick={() => void refresh()} className="mt-4 rounded-lg border px-4 py-2 font-semibold">{t('Try again', 'حاول مرة أخرى')}</button></section>

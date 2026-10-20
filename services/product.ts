@@ -50,6 +50,3 @@ export function ProductsByBrand(brand: string) {
   return getAllProducts({ brand })
 }
 
-export function ProductsByPriceRange(minPrice?: number, maxPrice?: number) {
-  return getAllProducts({ minPrice, maxPrice })
-}

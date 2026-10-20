@@ -36,3 +36,22 @@ export async function restoreOrderToCart(order: OrderDetail, locale: 'ar' | 'en'
   try { window.localStorage.setItem(KEY, JSON.stringify([...restoredIds(), order.id].slice(-20))) } catch { /* Storage blocked. */ }
   return added
 }
+
+/**
+ * For pages other than checkout (the cart page): if the order saved in this
+ * browser is an abandoned online payment, put its items back and retire the
+ * saved checkout so a new purchase can start. Works for guests and accounts.
+ * Returns the order whose items were restored, or null.
+ */
+export async function restoreAbandonedPayment(locale: 'ar' | 'en') {
+  try {
+    const response = await fetch('/api/orders/recovery', { cache: 'no-store', headers: { 'x-eldokan-locale': locale } })
+    if (!response.ok) return null
+    const recovery = await response.json() as { success?: boolean; data?: OrderDetail }
+    const order = recovery.success ? recovery.data : undefined
+    if (!order || !isAbandonedOnlinePayment(order)) return null
+    const added = await restoreOrderToCart(order, locale)
+    await fetch('/api/orders/recovery', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-eldokan-locale': locale }, body: JSON.stringify({ action: 'clear', expected_order_id: order.id }) })
+    return added > 0 ? order : null
+  } catch { return null }
+}

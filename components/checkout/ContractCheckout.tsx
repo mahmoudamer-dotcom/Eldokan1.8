@@ -101,6 +101,19 @@ export default function ContractCheckout() {
   const [recoveryReady, setRecoveryReady] = useState(false)
   const [restoredOrder, setRestoredOrder] = useState<OrderDetail | null>(null)
   const addressEdited = useRef(false)
+  // Shipping and the total are fetched by themselves once the address is complete,
+  // once per version of the address; there is no "review" step to press.
+  const lastAutoQuote = useRef('')
+  const runQuoteRef = useRef<() => Promise<void>>(async () => {})
+  const addressReady = Boolean(savedAddressId) || (
+    ['first_name', 'last_name', 'city', 'street_address', 'state'].every((key) => String(address[key as keyof AddressFields] ?? '').trim())
+    && (address.phone.replace(/\D/g, '').length >= 10) && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address.email.trim()))
+  const addressKey = savedAddressId ?? JSON.stringify(addressInput(address))
+  useEffect(() => {
+    if (!addressReady || quote || busy || attemptSaved || existingOrder || !recoveryReady || !checkout?.cart.valid || lastAutoQuote.current === addressKey) return
+    const timer = window.setTimeout(() => { lastAutoQuote.current = addressKey; void runQuoteRef.current() }, 600)
+    return () => window.clearTimeout(timer)
+  }, [addressReady, addressKey, quote, busy, attemptSaved, existingOrder, recoveryReady, checkout])
 
   const applyQuote = useCallback((result: CheckoutResponse, preferredShippingId: string | null = null) => {
     setCheckout(result.data)
@@ -222,15 +235,21 @@ export default function ContractCheckout() {
     return { payment_method: paymentMethod, ...(paymentMethod === 'paymob' && paymobOption ? { paymob_option_id: paymobOption } : {}) }
   }
 
-  async function reviewQuote(event: React.FormEvent<HTMLFormElement>) {
+  function reviewQuote(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    void runQuote()
+  }
+
+  async function runQuote() {
     if (busy || !recoveryReady || attemptSaved || existingOrder || !checkout?.cart.valid) return
     setBusy(true); setError('')
     setQuote(null); setQuoteRequestId(null)
     try {
       const input: QuoteInput = { ...(savedAddressId ? { address_id: savedAddressId } : { address: addressInput(address) }), ...paymentQuoteFields() }
       const result = await createEldokanApi(locale).checkout.quote(input, { lang: locale })
-      const nextShippingId = result.data.selected_shipping_method?.id ?? null
+      // No method chosen yet: pick home delivery (or the only/first available one) so payment options appear at once.
+      const available = result.data.shipping_methods.filter((method) => method.available)
+      const nextShippingId = result.data.selected_shipping_method?.id ?? (available.find((method) => method.type === 'door_delivery') ?? available[0])?.id ?? null
       if (result.data.shipping_required && nextShippingId) {
         const selectedInput = { ...input, shipping_method_id: nextShippingId as `shp_${string}` }
         const selected = await createEldokanApi(locale).checkout.quote(selectedInput, { lang: locale })
@@ -239,6 +258,9 @@ export default function ContractCheckout() {
     } catch (cause) { setError(checkoutError(cause, ar ? 'تعذر مراجعة الطلب.' : 'Could not review this order.', ar)) }
     finally { setBusy(false) }
   }
+
+  // Keep the automatic quote pointing at the latest runQuote.
+  useEffect(() => { runQuoteRef.current = runQuote })
 
   async function changeShipping(id: string) {
     if (busy || attemptSaved || existingOrder) return
@@ -349,6 +371,7 @@ export default function ContractCheckout() {
 
   const label = 'block text-sm font-medium text-foreground'
   const input = 'mt-1 w-full rounded-lg border border-input bg-card px-3 py-2.5 text-foreground'
+  const governorateField = <label key="state" className={label}>{ar ? 'المحافظة' : 'Governorate'}<select required value={address.state} onChange={(event) => setField('state', event.target.value)} className={input}><option value="">{ar ? 'اختر المحافظة' : 'Choose governorate'}</option>{getEgyptGovernorateOptions(checkout?.address_requirements.state_codes ?? []).map((state) => <option key={state} value={state}>{getEgyptGovernorateLabel(state, locale)}</option>)}</select></label>
   if (!checkout && !error) return <p className="rounded-xl border bg-card p-8 text-center">{ar ? 'جاري تحميل خيارات الشراء…' : 'Loading checkout…'}</p>
   if (existingOrder) return <section dir={ar ? 'rtl' : 'ltr'} className="mx-auto max-w-3xl space-y-5 rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-8">
     <h2 className="text-xl font-bold">{ar ? 'عندك طلب سابق محفوظ' : 'You have a saved order'}</h2>
@@ -381,29 +404,33 @@ export default function ContractCheckout() {
       }}><option value="">{ar ? 'أدخل عنوانًا جديدًا' : 'Enter a new address'}</option>{checkout.saved_addresses.items.map((saved) => <option key={saved.id} value={saved.id}>{saved.first_name} {saved.last_name} · {saved.city}</option>)}</select>
     </label> : null}
     <fieldset disabled={busy || attemptSaved} aria-label={ar ? 'بيانات عنوان التوصيل' : 'Delivery address fields'} className="grid min-w-0 gap-4 sm:grid-cols-2">
-      {([['first_name', ar ? 'الاسم الأول' : 'First name'], ['last_name', ar ? 'اسم العائلة' : 'Last name'], ['phone', ar ? 'رقم الهاتف' : 'Phone number'], ['email', ar ? 'البريد الإلكتروني' : 'Email'], ['city', ar ? 'المدينة أو المركز' : 'City or district'], ['street_address', ar ? 'العنوان بالتفصيل' : 'Street address'], ['address_extra', ar ? 'علامة مميزة (اختياري)' : 'Nearby landmark (optional)']] as const).map(([key, title]) => <label key={key} className={`${label} ${key === 'street_address' || key === 'address_extra' ? 'sm:col-span-2' : ''}`}>{title}<input required={key !== 'address_extra'} name={key} maxLength={{ first_name: 100, last_name: 100, phone: 32, email: 254, city: 150, street_address: 500, address_extra: 500 }[key]} minLength={key === 'phone' ? 6 : undefined} dir={key === 'phone' || key === 'email' ? 'ltr' : undefined} type={key === 'email' ? 'email' : key === 'phone' ? 'tel' : 'text'} autoComplete={{ first_name: 'given-name', last_name: 'family-name', phone: 'tel', email: 'email', city: 'address-level2', street_address: 'street-address', address_extra: 'address-line2' }[key]} value={address[key] ?? ''} onChange={(event) => setField(key, event.target.value)} className={input} placeholder={key === 'address_extra' && ar ? 'مثال: بجوار المدرسة أو المسجد' : undefined} /></label>)}
-      <label className={label}>{ar ? 'المحافظة' : 'Governorate'}<select required value={address.state} onChange={(event) => setField('state', event.target.value)} className={input}><option value="">{ar ? 'اختر المحافظة' : 'Choose governorate'}</option>{getEgyptGovernorateOptions(checkout?.address_requirements.state_codes ?? []).map((state) => <option key={state} value={state}>{getEgyptGovernorateLabel(state, locale)}</option>)}</select></label>
+      {([['first_name', ar ? 'الاسم الأول' : 'First name'], ['last_name', ar ? 'اسم العائلة' : 'Last name'], ['phone', ar ? 'رقم الموبايل' : 'Mobile number'], ['email', ar ? 'البريد الإلكتروني' : 'Email'], ['state', ''], ['city', ar ? 'المدينة أو المنطقة' : 'City or area'], ['street_address', ar ? 'العنوان بالتفصيل' : 'Street address'], ['address_extra', ar ? 'علامة مميزة (اختياري)' : 'Nearby landmark (optional)']] as const).map(([key, title]) => key === 'state' ? governorateField : <label key={key} className={`${label} ${key === 'street_address' || key === 'address_extra' ? 'sm:col-span-2' : ''}`}>{title}<input required={key !== 'address_extra'} name={key} maxLength={{ first_name: 100, last_name: 100, phone: 32, email: 254, city: 150, street_address: 500, address_extra: 500 }[key]} minLength={key === 'phone' ? 6 : undefined} dir={key === 'phone' || key === 'email' ? 'ltr' : undefined} type={key === 'email' ? 'email' : key === 'phone' ? 'tel' : 'text'} autoComplete={{ first_name: 'given-name', last_name: 'family-name', phone: 'tel', email: 'email', city: 'address-level2', street_address: 'street-address', address_extra: 'address-line2' }[key]} value={address[key] ?? ''} onChange={(event) => setField(key, event.target.value)} className={input} placeholder={key === 'address_extra' && ar ? 'مثال: بجوار المدرسة أو المسجد' : undefined} /></label>)}
     </fieldset>
     <label className={label}>{ar ? 'ملاحظات الطلب (اختياري)' : 'Order notes (optional)'}<textarea disabled={busy || attemptSaved} maxLength={500} value={orderNotes} onChange={(event) => setOrderNotes(event.target.value)} className={`${input} min-h-24`} placeholder={ar ? 'تعليمات إضافية للتوصيل' : 'Any extra delivery instructions'} /></label>
-    {!quote && checkout?.issues.map((issue, index) => <p key={`${issue.code}-${index}`} className="rounded-lg bg-shop-soft p-3 text-sm text-shop-accent">{checkoutMessage(issue.message, ar)}</p>)}
+    {!quote && busy && addressReady && <p role="status" className="rounded-lg bg-muted/60 p-3 text-sm text-muted-foreground">{ar ? 'جارٍ حساب الشحن والإجمالي…' : 'Calculating shipping and total…'}</p>}
     {quote && <section className="space-y-4 border-t pt-5">
       <h3 className="font-bold">{ar ? 'خيارات الشحن والدفع' : 'Shipping and payment'}</h3>
       {quote.shipping_required && !quote.shipping_methods.some((item) => item.available) && <p role="alert" className="rounded-lg bg-danger-soft p-3 text-sm text-danger-foreground">{ar ? 'لا توجد طريقة شحن متاحة لكل المنتجات لهذا العنوان. جرّب تحديث الخيارات أو تواصل مع المتجر.' : 'Shipping is unavailable for this cart and address. Refresh the options or contact the store.'}</p>}
-      {quote.shipping_required && quote.shipping_methods.some((item) => item.available) && <label className={label}>{ar ? 'طريقة الشحن' : 'Shipping method'}<select required disabled={busy || attemptSaved || !!existingOrder} value={shippingId ?? ''} onChange={(event) => void changeShipping(event.target.value)} className={input}><option value="">{ar ? 'اختر طريقة الشحن' : 'Choose shipping'}</option>{quote.shipping_methods.filter((item) => item.available).map((item) => <option key={item.id} value={item.id}>{ar ? (item.type === 'pickup' ? 'استلام من المتجر' : 'توصيل للمنزل') : item.name} · {formatMoney(item.amount, locale)}</option>)}</select></label>}
+      {quote.shipping_required && quote.shipping_methods.some((item) => item.available) && <fieldset className="space-y-2" disabled={busy || attemptSaved || !!existingOrder}>
+        <legend className={`${label} mb-2`}>{ar ? 'طريقة الشحن' : 'Shipping method'}</legend>
+        <div className="grid gap-2 sm:grid-cols-2">{quote.shipping_methods.filter((item) => item.available).map((item) => <label key={item.id} className={`flex cursor-pointer items-center justify-between gap-3 rounded-xl border p-3.5 text-sm transition ${shippingId === item.id ? 'border-primary bg-shop-soft ring-1 ring-primary' : 'border-border hover:bg-muted/50'}`}>
+          <span className="flex items-center gap-2.5"><input type="radio" name="shipping" className="size-4 accent-[#f5b400]" checked={shippingId === item.id} onChange={() => void changeShipping(item.id)} /><span className="font-semibold">{ar ? (item.type === 'pickup' ? 'استلام من الفرع' : 'توصيل للمنزل') : item.name}</span></span>
+          <span className="font-bold">{item.amount.amount === 0 ? (ar ? 'مجانًا' : 'Free') : formatMoney(item.amount, locale)}</span>
+        </label>)}</div>
+      </fieldset>}
       <CheckoutPaymentMethods checkout={quote} selected={paymentMethod === 'cod' ? 'cod' : paymentMethod === 'paymob' ? paymobOption ?? 'paymob' : null} disabled={busy || attemptSaved || !!existingOrder} onSelect={selectPayment} />
       {paymobOption === 'bank_installments' && <CheckoutInstallmentPlans key={`${quoteRequestId}:${locale}`} config={(quote as CheckoutWithPaymentOptions).installment_widget} selected={installmentPlan} disabled={busy || attemptSaved || !!existingOrder} onSelect={setInstallmentPlan} />}
-      {!quote.ready && <p role="alert" className="rounded-lg bg-shop-soft p-3 text-sm">{quote.issues.map((issue) => checkoutMessage(issue.message, ar)).join(' · ') || (ar ? 'راجع البيانات قبل المتابعة.' : 'Review the checkout details before continuing.')}</p>}
-      {quoteRequestId && !quote.ready && <p className="text-xs text-muted-foreground">{ar ? 'رقم مرجع المراجعة' : 'Quote reference'}: <span dir="ltr">{quoteRequestId}</span></p>}
+      {!quote.ready && !busy && <p role="alert" className="rounded-lg bg-shop-soft p-3 text-sm">{quote.issues.map((issue) => checkoutMessage(issue.message, ar)).join(' · ') || (ar ? 'راجع البيانات قبل المتابعة.' : 'Review the checkout details before continuing.')}</p>}
       <div className="flex justify-between gap-3 rounded-xl bg-shop-soft p-4 font-bold lg:hidden"><span>{ar ? 'الإجمالي' : 'Total'}</span><Money value={quote.totals.total} /></div>
       <button type="button" disabled={(paymobOption === 'bank_installments' && (!(quote as CheckoutWithPaymentOptions).installment_widget || !installmentPlan)) || busy || attemptSaved || !!existingOrder || !quote.ready || !quote.cart.valid || !quote.totals.calculable || !quote.totals.total || !paymentMethod || (quote.shipping_required && !shippingId)} onClick={() => void placeOrder()} className="w-full rounded-xl bg-[#f5b400] text-primary-foreground px-5 py-3.5 font-bold disabled:opacity-50">{busy ? (ar ? 'جارٍ تأكيد الطلب…' : 'Processing…') : (paymentMethod === 'paymob' ? (ar ? 'تأكيد الطلب والانتقال للدفع' : 'Confirm order and pay') : (ar ? 'تأكيد الطلب' : 'Confirm order'))}</button>
     </section>}
       {error && <p role="alert" className="rounded-lg bg-danger-soft p-3 text-sm text-danger-foreground">{error}</p>}
       {attemptSaved && error && <button type="button" disabled={busy} onClick={() => void recoverPlacement()} className="w-full rounded-xl border px-5 py-3 font-semibold disabled:opacity-50">{ar ? 'استعادة نفس محاولة الطلب' : 'Recover the same checkout attempt'}</button>}
-    <button type="submit" disabled={busy || !recoveryReady || !checkout?.cart.valid || attemptSaved || !!existingOrder} className="w-full rounded-xl border px-5 py-3.5 font-bold disabled:opacity-50">{busy ? (ar ? 'جارٍ مراجعة الإجمالي…' : 'Reviewing…') : quote ? (ar ? 'تحديث خيارات الشحن والدفع' : 'Refresh shipping and payment') : (ar ? 'مراجعة الإجمالي' : 'Review total')}</button>
+    {error && !attemptSaved && recoveryReady && <button type="submit" disabled={busy || !checkout?.cart.valid || !!existingOrder} className="w-full rounded-xl border px-5 py-3 font-semibold disabled:opacity-50">{busy ? (ar ? 'جارٍ المحاولة…' : 'Trying again…') : (ar ? 'حاول تاني' : 'Try again')}</button>}
     {!recoveryReady && error && <button type="button" onClick={() => window.location.reload()} className="w-full rounded-xl border px-5 py-3 font-semibold">{ar ? 'إعادة تحميل حالة الشراء' : 'Reload checkout state'}</button>}
     <p className="text-xs leading-6 text-muted-foreground">{ar ? 'راجع معلومات الشراء والسياسات: ' : 'Review shopping information and policies: '}<Link href="/policies/buyer-terms" className="underline">{ar ? 'شروط العملاء' : 'Buyer terms'}</Link> · <Link href="/policies/shipping" className="underline">{ar ? 'الشحن' : 'Shipping'}</Link> · <Link href="/policies/returns" className="underline">{ar ? 'الإرجاع' : 'Returns'}</Link> · <Link href="/policies/privacy" className="underline">{ar ? 'الخصوصية' : 'Privacy'}</Link></p>
     </div>
-    <aside className="order-first min-w-0 space-y-4 rounded-2xl border border-border bg-card p-4 shadow-sm lg:sticky lg:top-48 lg:order-last">
+    <aside className="order-first min-w-0 space-y-4 rounded-2xl border border-border bg-card p-4 shadow-sm lg:sticky lg:top-6 lg:order-last">
     {checkout?.cart.items.length ? <section className="space-y-3 rounded-xl bg-background p-4" aria-label={ar ? 'محتويات السلة' : 'Cart summary'}>
       <h2 className="font-bold">{ar ? 'مراجعة المنتجات' : 'Review items'}</h2>
       <ul className="divide-y">{checkout.cart.items.map((item) => <li key={item.id} className="space-y-2 py-3 text-sm">
@@ -413,10 +440,10 @@ export default function ContractCheckout() {
       {!checkout.cart.valid && <div role="alert" className="space-y-2 rounded-lg bg-danger-soft p-3 text-sm text-danger-foreground"><p>{ar ? 'تعذر متابعة الشراء. راجع السبب الموضح تحت كل منتج.' : 'Checkout is blocked. Review the reason shown under each item.'}</p><Link href="/cart" className="inline-flex rounded-lg border border-current px-3 py-2 font-semibold underline underline-offset-4">{ar ? 'مراجعة وتعديل السلة' : 'Review and edit cart'}</Link></div>}
     </section> : null}
       {quote ? <>      <div className="space-y-2 rounded-xl bg-background p-4 text-sm">
-        {([[ar ? 'المجموع الفرعي' : 'Subtotal', quote.totals.subtotal], [ar ? 'الشحن' : 'Shipping', quote.totals.shipping], [ar ? 'الضريبة' : 'Tax', quote.totals.tax], [ar ? 'الخصم' : 'Discount', quote.totals.discount], [ar ? 'الرسوم' : 'Fees', quote.totals.fees]] as const).filter(([, amount]) => amount).map(([title, amount]) => <p key={title} className="flex justify-between gap-4"><span>{title}</span><span><Money value={amount} /></span></p>)}
-        <p className="flex justify-between gap-4 border-t pt-2 text-lg font-bold"><span>{ar ? 'الإجمالي' : 'Total'}</span><span>{quote.totals.total ? <Money value={quote.totals.total} /> : (ar ? 'بانتظار حساب الشحن' : 'Waiting for shipping quote')}</span></p>
+        {([[ar ? 'المجموع الفرعي' : 'Subtotal', quote.totals.subtotal], [ar ? 'الشحن' : 'Shipping', quote.totals.shipping], [ar ? 'الضريبة' : 'Tax', quote.totals.tax], [ar ? 'الخصم' : 'Discount', quote.totals.discount], [ar ? 'الرسوم' : 'Fees', quote.totals.fees]] as const).filter(([, amount], index) => amount && (index < 2 || amount.amount > 0)).map(([title, amount]) => <p key={title} className="flex justify-between gap-4"><span>{title}</span><span><Money value={amount} /></span></p>)}
+        <p className="flex justify-between gap-4 border-t pt-2 text-lg font-bold"><span className="shrink-0">{ar ? 'الإجمالي' : 'Total'}</span><span>{quote.totals.total ? <Money value={quote.totals.total} /> : (ar ? 'بانتظار حساب الشحن' : 'Waiting for shipping quote')}</span></p>
       </div>
-</> : <p className="px-4 text-sm text-muted-foreground">{ar ? 'أكمل العنوان لعرض الشحن والإجمالي النهائي.' : 'Complete your address to see shipping and the final total.'}</p>}
+</> : <p className="px-4 text-sm text-muted-foreground">{busy && addressReady ? (ar ? 'جارٍ حساب الشحن والإجمالي…' : 'Calculating shipping and total…') : (ar ? 'الشحن والإجمالي هيظهروا هنا أول ما تكمّل العنوان.' : 'Shipping and the total appear here as soon as your address is complete.')}</p>}
       <Link href="/cart" className="inline-flex min-h-11 items-center px-4 text-sm font-semibold underline underline-offset-4">{ar ? 'تعديل السلة' : 'Edit your cart'}</Link>
     </aside>
   </form>
