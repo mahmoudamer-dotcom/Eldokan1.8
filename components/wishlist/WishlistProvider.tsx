@@ -27,6 +27,8 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
   const [ready, setReady] = useState(false)
   const [signedIn, setSignedIn] = useState(false)
   const [error, setError] = useState('')
+  // Product id -> wanted state while the store confirms the change.
+  const [overrides, setOverrides] = useState<Map<string, boolean>>(() => new Map())
   const loadSequence = useRef(0)
 
   const load = useCallback(async () => {
@@ -66,10 +68,16 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
 
   const toggle = useCallback(async (productId: ProductId) => {
     const api = createEldokanApi(locale)
+    const saved = products.some((product) => String(product.id) === productId)
+    const wanted = !(overrides.get(productId) ?? saved)
+    const setOverride = (value: boolean | null) => setOverrides((current) => {
+      const next = new Map(current)
+      if (value === null) next.delete(productId); else next.set(productId, value)
+      return next
+    })
+    setOverride(wanted)
     try {
-      const response = products.some((product) => String(product.id) === productId)
-        ? await api.wishlist.remove(productId)
-        : await api.wishlist.add(productId)
+      const response = wanted ? await api.wishlist.add(productId) : await api.wishlist.remove(productId)
       setProducts(response.data.items.map((product: ApiProductCard) => toStoreProduct(product)))
       setSignedIn(true)
       setError('')
@@ -77,8 +85,8 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
       if (cause instanceof EldokanClientError && cause.status === 401) setSignedIn(false)
       setError(translate('Unable to update your favorites.', locale))
       throw cause
-    }
-  }, [products, locale])
+    } finally { setOverride(null) }
+  }, [products, overrides, locale])
 
   const remove = useCallback(async (productId: ProductId) => {
     const response = await createEldokanApi(locale).wishlist.remove(productId)
@@ -87,13 +95,17 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
 
   const value = useMemo(() => ({
     products,
-    productIds: new Set(products.map((product) => String(product.id))),
+    productIds: (() => {
+      const ids = new Set(products.map((product) => String(product.id)))
+      for (const [id, wanted] of overrides) { if (wanted) ids.add(id); else ids.delete(id) }
+      return ids
+    })(),
     ready,
     signedIn,
     error,
     toggle,
     remove,
-  }), [products, ready, signedIn, error, toggle, remove])
+  }), [products, overrides, ready, signedIn, error, toggle, remove])
 
   return <WishlistContext.Provider value={value}>{children}</WishlistContext.Provider>
 }

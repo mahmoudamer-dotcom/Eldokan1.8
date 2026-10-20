@@ -23,30 +23,33 @@ type AddToCartButtonProps = {
 }
 
 export default function AddToCartButton({ product, compact = false }: AddToCartButtonProps) {
-  const { addItem, busy, error, ready } = useCart()
+  const { addItem, error } = useCart()
   const { t } = useLocale()
   const [added, setAdded] = useState(false)
   const [failed, setFailed] = useState(false)
+  const [adding, setAdding] = useState(false)
   const supportedType = product?.type === undefined || product.type === 'simple' || product.type === 'variable'
   const canAdd = Boolean(product?.id) && supportedType && product?.available && (product.type !== 'variable' || Boolean(product.variationId)) && (product?.stockQuantity == null || product.stockQuantity > 0)
 
   async function handleAdd() {
     if (!product?.id || !product.available || (product.stockQuantity != null && product.stockQuantity < 1)) return
     setFailed(false)
+    // Shown as added immediately; it switches back only if the store refuses.
+    setAdded(true); setAdding(true)
     try {
       await addItem({ id: String(product.id), variationId: product.variationId, imageUrl: product.imageUrl, name: product.name, quantity: product.quantity, stockQuantity: product.stockQuantity })
       setAdded(true)
     } catch {
       setAdded(false)
       setFailed(true)
-    }
+    } finally { setAdding(false) }
   }
 
   return <>
     <Button
       type="button"
       variant="outline"
-      disabled={!canAdd || busy || !ready}
+      disabled={!canAdd || adding}
       onClick={handleAdd}
       aria-live="polite"
       aria-label={t(failed ? 'Unable to add to cart' : added ? 'Added to cart' : 'Add to cart')}

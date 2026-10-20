@@ -36,6 +36,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [ready, setReady] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
+  // Quantities added but not yet confirmed by the store, shown in the cart count at once.
+  const [pending, setPending] = useState(0)
   const loadSequence = useRef(0)
   const mutationSequence = useRef(0)
   const imageCache = useRef(new Map<string, NonNullable<Cart['items'][number]['image']>>())
@@ -115,7 +117,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
     setBusy(true)
     setError('')
+    setPending((count) => count + quantity)
     mutationSequence.current += 1
+    const sequence = mutationSequence.current
     try {
       const api = createEldokanApi(locale)
       const response = await api.cart.add({
@@ -123,12 +127,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         variationId: product.variationId as VariationId | undefined,
         quantity,
       }, { lang: locale })
-      setCart(await hydrateCartImages(response.data))
+      setCart(response.data)
       setReady(true)
+      void hydrateCartImages(response.data).then((hydrated) => { if (sequence === mutationSequence.current) setCart(hydrated) })
     } catch (cause) {
       setError(customerError(cause, locale, 'Unable to update your cart.'))
       throw cause
-    } finally { setBusy(false) }
+    } finally { setPending((count) => count - quantity); setBusy(false) }
   }, [locale, hydrateCartImages])
 
   const updateQuantity = useCallback(async (itemId: CartItemId, quantity: number) => {
@@ -143,7 +148,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     mutationSequence.current += 1
     try {
       const response = await createEldokanApi(locale).cart.update(itemId, { quantity }, { lang: locale })
-      setCart(await hydrateCartImages(response.data))
+      setCart(response.data)
+      const sequence = mutationSequence.current
+      void hydrateCartImages(response.data).then((hydrated) => { if (sequence === mutationSequence.current) setCart(hydrated) })
     } catch (cause) {
       setError(customerError(cause, locale, 'Unable to update your cart.'))
       throw cause
@@ -156,7 +163,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     mutationSequence.current += 1
     try {
       const response = await createEldokanApi(locale).cart.remove(itemId, { lang: locale })
-      setCart(await hydrateCartImages(response.data))
+      setCart(response.data)
+      const sequence = mutationSequence.current
+      void hydrateCartImages(response.data).then((hydrated) => { if (sequence === mutationSequence.current) setCart(hydrated) })
     } catch (cause) {
       setError(customerError(cause, locale, 'Unable to update your cart.'))
       throw cause
@@ -165,7 +174,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const value = useMemo(() => ({
     cart,
-    itemCount: cart?.items.reduce((count, item) => count + item.quantity, 0) ?? 0,
+    itemCount: (cart?.items.reduce((count, item) => count + item.quantity, 0) ?? 0) + pending,
     ready,
     busy,
     error,
@@ -173,7 +182,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     addItem,
     updateQuantity,
     removeItem,
-  }), [cart, ready, busy, error, refresh, addItem, updateQuantity, removeItem])
+  }), [cart, pending, ready, busy, error, refresh, addItem, updateQuantity, removeItem])
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>
 }

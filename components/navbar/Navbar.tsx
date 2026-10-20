@@ -44,12 +44,12 @@ export default function Navbar() {
   const [isNavigatingToSearch, setIsNavigatingToSearch] = useState(false)
   const [customer, setCustomer] = useState<CustomerAccount | null>(null)
   const [hydrated, setHydrated] = useState(false)
-  const { products: wishlistProducts } = useWishlist()
+  const { productIds: wishlistIds } = useWishlist()
   const { itemCount: cartItemCount } = useCart()
   const comparisonIds = useProductComparison()
   const showComparison = useComparisonDrawer()
   const showShoppingChat = useShoppingChat()
-  const wishlistCount = hydrated ? wishlistProducts.length : 0
+  const wishlistCount = hydrated ? wishlistIds.size : 0
   const visibleCartItemCount = hydrated ? cartItemCount : 0
 
   useEffect(() => {
