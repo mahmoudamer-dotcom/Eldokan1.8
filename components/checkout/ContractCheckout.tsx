@@ -104,14 +104,23 @@ export default function ContractCheckout() {
   // Shipping and the total are fetched by themselves once the address is complete,
   // once per version of the address; there is no "review" step to press.
   const lastAutoQuote = useRef('')
-  const runQuoteRef = useRef<() => Promise<void>>(async () => {})
-  const addressReady = Boolean(savedAddressId) || (
-    ['first_name', 'last_name', 'city', 'street_address', 'state'].every((key) => String(address[key as keyof AddressFields] ?? '').trim())
-    && (address.phone.replace(/\D/g, '').length >= 10) && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address.email.trim()))
+  const runQuoteRef = useRef<() => Promise<boolean>>(async () => false)
+  // What is still missing before shipping can be calculated, in the customer's words.
+  const missing = savedAddressId ? [] : ([
+    ['first_name', ar ? 'الاسم الأول' : 'first name'], ['last_name', ar ? 'اسم العائلة' : 'last name'],
+    ['phone', ar ? 'رقم موبايل صحيح' : 'a valid mobile number'], ['email', ar ? 'إيميل صحيح' : 'a valid email'],
+    ['state', ar ? 'المحافظة' : 'governorate'], ['city', ar ? 'المدينة' : 'city'], ['street_address', ar ? 'العنوان بالتفصيل' : 'street address'],
+  ] as const).filter(([key]) => key === 'phone' ? address.phone.replace(/\D/g, '').length < 10
+    : key === 'email' ? !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address.email.trim())
+    : !String(address[key] ?? '').trim()).map(([, title]) => title)
+  const addressReady = missing.length === 0
   const addressKey = savedAddressId ?? JSON.stringify(addressInput(address))
   useEffect(() => {
     if (!addressReady || quote || busy || attemptSaved || existingOrder || !recoveryReady || !checkout?.cart.valid || lastAutoQuote.current === addressKey) return
-    const timer = window.setTimeout(() => { lastAutoQuote.current = addressKey; void runQuoteRef.current() }, 600)
+    const timer = window.setTimeout(() => {
+      lastAutoQuote.current = addressKey
+      void runQuoteRef.current().then((started) => { if (!started) lastAutoQuote.current = '' })
+    }, 600)
     return () => window.clearTimeout(timer)
   }, [addressReady, addressKey, quote, busy, attemptSaved, existingOrder, recoveryReady, checkout])
 
@@ -241,7 +250,7 @@ export default function ContractCheckout() {
   }
 
   async function runQuote() {
-    if (busy || !recoveryReady || attemptSaved || existingOrder || !checkout?.cart.valid) return
+    if (busy || !recoveryReady || attemptSaved || existingOrder || !checkout?.cart.valid) return false
     setBusy(true); setError('')
     setQuote(null); setQuoteRequestId(null)
     try {
@@ -257,6 +266,7 @@ export default function ContractCheckout() {
       } else applyQuote(result)
     } catch (cause) { setError(checkoutError(cause, ar ? 'تعذر مراجعة الطلب.' : 'Could not review this order.', ar)) }
     finally { setBusy(false) }
+    return true
   }
 
   // Keep the automatic quote pointing at the latest runQuote.
@@ -408,6 +418,7 @@ export default function ContractCheckout() {
     </fieldset>
     <label className={label}>{ar ? 'ملاحظات الطلب (اختياري)' : 'Order notes (optional)'}<textarea disabled={busy || attemptSaved} maxLength={500} value={orderNotes} onChange={(event) => setOrderNotes(event.target.value)} className={`${input} min-h-24`} placeholder={ar ? 'تعليمات إضافية للتوصيل' : 'Any extra delivery instructions'} /></label>
     {!quote && busy && addressReady && <p role="status" className="rounded-lg bg-muted/60 p-3 text-sm text-muted-foreground">{ar ? 'جارٍ حساب الشحن والإجمالي…' : 'Calculating shipping and total…'}</p>}
+    {!quote && !addressReady && missing.length < 7 && <p className="rounded-lg bg-muted/60 p-3 text-sm text-muted-foreground">{ar ? 'الشحن والإجمالي هيظهروا أول ما تكتب: ' : 'Shipping and the total appear once you add: '}{missing.join(ar ? '، ' : ', ')}</p>}
     {quote && <section className="space-y-4 border-t pt-5">
       <h3 className="font-bold">{ar ? 'خيارات الشحن والدفع' : 'Shipping and payment'}</h3>
       {quote.shipping_required && !quote.shipping_methods.some((item) => item.available) && <p role="alert" className="rounded-lg bg-danger-soft p-3 text-sm text-danger-foreground">{ar ? 'لا توجد طريقة شحن متاحة لكل المنتجات لهذا العنوان. جرّب تحديث الخيارات أو تواصل مع المتجر.' : 'Shipping is unavailable for this cart and address. Refresh the options or contact the store.'}</p>}
