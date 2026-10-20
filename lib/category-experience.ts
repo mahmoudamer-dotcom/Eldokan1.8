@@ -23,8 +23,9 @@ export function categoryWorldOf(...identities: Array<string | null | undefined>)
 }
 
 /** Illustrated banner drawn for each department; a category image from the store replaces it where one exists. */
+/** Wide banner photo for a department (Unsplash, see public/image/categories/photo/CREDITS.txt). */
 export function categoryArt(world: CategoryWorld) {
-  return `/image/categories/${world}.svg`
+  return `/image/categories/photo/${world}.jpg`
 }
 
 /** Square, centered artwork for round category badges. */
