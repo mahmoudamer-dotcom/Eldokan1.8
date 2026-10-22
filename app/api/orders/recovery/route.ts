@@ -67,6 +67,15 @@ async function readOrder(request: Request, cookies: string[]) {
     return Response.json(order, { headers })
   } catch (cause) {
     const details = failureDetails(cause)
+    // The store definitively refuses this order (signed out, expired guest access or a
+    // deleted order): it can never be recovered, so drop the saved reference instead of
+    // blocking every new checkout until the cookie expires.
+    if (!requestedId && cause instanceof EldokanClientError && [401, 403, 404].includes(cause.status ?? 0)) {
+      return Response.json({ success: false, error: { code: 'recovery_unavailable', message: 'No recoverable order is available.' } }, { status: 404, headers: {
+        'Cache-Control': 'no-store',
+        'Set-Cookie': `${COOKIE}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0${isSecureRequest(request) ? '; Secure' : ''}`,
+      } })
+    }
     return Response.json({ success: false, error: { code: 'order_read_unavailable', message: 'Order status is not available yet.', request_id: details.request_id ?? null } }, { status: 502, headers: { 'Cache-Control': 'no-store' } })
   }
 }
