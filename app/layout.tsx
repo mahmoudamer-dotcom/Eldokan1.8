@@ -26,12 +26,13 @@ const OpenSans = localFont({
   variable: '--font-openSans',
 });
 
-// Kufic display face matching the logo's Arabic lettering; used for the الدكان wordmark (Arabic subset, ~12 KB, OFL).
-const reemKufi = localFont({
-  src: '../public/fonts/ReemKufi-Arabic-Variable.woff2',
+// Maghrebi (Andalusian-style) display face for the الدكان wordmark: Harmattan Bold, Arabic subset, SIL OFL.
+// Not preloaded; the browser fetches it only where the wordmark appears.
+const logoArabic = localFont({
+  src: '../public/fonts/Harmattan-Arabic-Bold.woff2',
   display: 'swap',
   variable: '--font-logo-arabic',
-  weight: '400 700',
+  weight: '700',
   preload: false,
 });
 
@@ -59,7 +60,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang={locale}
       dir={locale === 'ar' ? 'rtl' : 'ltr'}
-      className={`${OpenSans.variable} ${cairo.variable} ${reemKufi.variable} h-full antialiased${theme === 'dark' ? ' dark' : ''}`}
+      className={`${OpenSans.variable} ${cairo.variable} ${logoArabic.variable} h-full antialiased${theme === 'dark' ? ' dark' : ''}`}
     >
       <body className="flex min-h-screen flex-col overflow-x-clip bg-background text-foreground">
         <LocaleProvider initialLocale={locale} initialTheme={theme}>
