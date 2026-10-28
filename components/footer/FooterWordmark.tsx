@@ -43,24 +43,24 @@ export default function FooterWordmark({ locale }: { locale: Locale }) {
   const part = active === null ? null : parts[active]
 
   return (
-    <div className="eldokan-wordmark relative mx-auto max-w-7xl px-4 pb-8 pt-4 sm:px-6 lg:px-8" data-open={open || undefined} data-joined={ar || undefined} onMouseLeave={() => { setActive(null); setOpen(false) }}>
+    <div className="eldokan-wordmark relative mx-auto max-w-7xl px-4 pb-4 sm:px-6 lg:px-8" data-open={open || undefined} data-joined={ar || undefined} onMouseLeave={() => { setActive(null); setOpen(false) }}>
       <p className="sr-only">{ar ? 'قصة الدكان: ' : 'The Eldokan story: '}{parts.map((item) => `${item.letter} — ${item.word}: ${item.line}`).join(' ')}</p>
       <div aria-hidden="true" dir={ar ? 'rtl' : 'ltr'} className="relative flex select-none justify-center" onMouseEnter={() => setOpen(true)}>
         {/* Arabic outline: the whole word drawn as one joined run, so no seams show where letters meet.
             The letters above it carry the hover and the fill, without outlines of their own. */}
-        {ar && <span className="eldokan-outline pointer-events-none absolute inset-x-0 top-0 text-center text-[24vw] font-black leading-[1.15] lg:text-[230px]" style={{ fontFamily: 'var(--font-arabic)' }}>{parts.map((item) => item.letter).join('')}</span>}
+        {ar && <span className="eldokan-outline pointer-events-none absolute inset-x-0 top-0 text-center tracking-[-4px] text-[24vw] font-bold leading-[1.05] lg:text-[200px]" style={{ fontFamily: 'var(--font-logo-arabic)' }}>{parts.map((item) => item.letter).join('')}</span>}
         {parts.map((item, index) => (
           <button key={index} type="button" tabIndex={-1} onMouseEnter={() => setActive(index)} onClick={() => { setOpen(true); setActive(active === index ? null : index) }}
             style={{ '--i': index } as React.CSSProperties} data-active={active === index || undefined}
-            className={`eldokan-letter relative flex flex-col items-center ${ar ? 'px-0' : 'px-[0.5vw] lg:px-2'}`}>
-            <span className={`eldokan-glyph ${ar ? 'text-[24vw] font-black leading-[1.15] lg:text-[230px]' : 'font-serif text-[15vw] leading-[0.9] lg:text-[170px]'}`} style={ar ? { fontFamily: 'var(--font-arabic)' } : undefined}>{item.glyph}</span>
+            className={`eldokan-letter relative flex flex-col items-center ${ar ? '-mx-[2px] px-0' : 'px-[0.5vw] lg:px-2'}`}>
+            <span className={`eldokan-glyph ${ar ? 'text-[24vw] font-bold leading-[1.05] lg:text-[200px]' : 'font-serif text-[15vw] leading-[0.9] lg:text-[170px]'}`} style={ar ? { fontFamily: 'var(--font-logo-arabic)' } : undefined}>{item.glyph}</span>
             {/* Joined Arabic letters keep their width, so only the active letter shows its word, as a pill placed below
                 the lowest letter (the ن bowl) so it never sits on a glyph. */}
-            <span className={`eldokan-word whitespace-nowrap text-[9px] font-bold uppercase tracking-[0.18em] sm:text-xs ${ar ? 'absolute top-full mt-[6vw] rounded-full bg-white px-2.5 py-0.5 tracking-normal text-black sm:text-sm lg:mt-12 lg:px-3.5 lg:py-1 lg:text-base' : 'mt-1 text-white'}`}>{item.word}</span>
+            <span className={`eldokan-word whitespace-nowrap text-[9px] font-bold uppercase tracking-[0.18em] sm:text-xs ${ar ? 'absolute top-full mt-[2vw] rounded-full bg-white px-2.5 py-0.5 tracking-normal text-black sm:text-sm lg:mt-4 lg:px-3.5 lg:py-1 lg:text-base' : 'mt-1 text-white'}`}>{item.word}</span>
           </button>
         ))}
       </div>
-      <p aria-hidden="true" className={`min-h-6 text-center text-sm text-white/80 transition-opacity duration-300 sm:text-base ${ar ? 'mt-[11vw] lg:mt-20' : 'mt-4'} ${part ? 'opacity-100' : 'opacity-0'}`}>
+      <p aria-hidden="true" className={`min-h-6 pb-2 text-center text-sm text-white/80 transition-opacity duration-300 sm:text-base ${ar ? 'mt-[8vw] lg:mt-14' : 'mt-2'} ${part ? 'opacity-100' : 'opacity-0'}`}>
         {part && <><span className={`text-lg font-bold text-white ${ar ? '' : 'font-serif'}`}>{part.letter}</span> · <span className="font-bold text-white">{part.word}</span> — {part.line}</>}
       </p>
     </div>

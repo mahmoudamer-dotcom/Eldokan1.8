@@ -578,3 +578,5 @@
 .eldokan-wordmark[data-joined] .eldokan-letter[data-active] .eldokan-glyph { transform: translateY(-6%); }
 /* A solid grey, not transparency: where two joined pieces overlap, transparency would double up. */
 .eldokan-wordmark[data-joined][data-open]:has([data-active]) .eldokan-letter:not([data-active]) .eldokan-glyph { color: #4a4a4a; transition-delay: 0ms; }
+/* Joined pieces overlap at the joins, so any transparency would show there: keep them fully opaque. */
+.eldokan-wordmark[data-joined][data-open] .eldokan-letter .eldokan-glyph { opacity: 1; }
