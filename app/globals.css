@@ -574,7 +574,7 @@
 }
 /* Fade the outline only once the fill wave has covered every letter. */
 .eldokan-wordmark[data-open] .eldokan-outline { opacity: 0; transition-delay: 800ms; }
-/* Joined letters cannot lift apart: the letter in focus stays bright while the others dim. */
-.eldokan-wordmark[data-joined] .eldokan-letter[data-active] .eldokan-glyph { transform: none; }
+/* Joined letters: the letter in focus lifts a little (less than English, so joins stay close) and stays bright while the others dim. */
+.eldokan-wordmark[data-joined] .eldokan-letter[data-active] .eldokan-glyph { transform: translateY(-6%); }
 /* A solid grey, not transparency: where two joined pieces overlap, transparency would double up. */
 .eldokan-wordmark[data-joined][data-open]:has([data-active]) .eldokan-letter:not([data-active]) .eldokan-glyph { color: #4a4a4a; transition-delay: 0ms; }

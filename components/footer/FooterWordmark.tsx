@@ -54,12 +54,13 @@ export default function FooterWordmark({ locale }: { locale: Locale }) {
             style={{ '--i': index } as React.CSSProperties} data-active={active === index || undefined}
             className={`eldokan-letter relative flex flex-col items-center ${ar ? 'px-0' : 'px-[0.5vw] lg:px-2'}`}>
             <span className={`eldokan-glyph ${ar ? 'text-[24vw] font-black leading-[1.15] lg:text-[230px]' : 'font-serif text-[15vw] leading-[0.9] lg:text-[170px]'}`} style={ar ? { fontFamily: 'var(--font-arabic)' } : undefined}>{item.glyph}</span>
-            {/* Joined Arabic letters keep their width, so only the active letter shows its word. */}
-            <span className={`eldokan-word whitespace-nowrap text-[9px] font-bold uppercase tracking-[0.18em] text-white sm:text-xs ${ar ? 'absolute top-full mt-1 tracking-normal sm:text-sm lg:-mt-4' : 'mt-1'}`}>{item.word}</span>
+            {/* Joined Arabic letters keep their width, so only the active letter shows its word, as a pill placed below
+                the lowest letter (the ن bowl) so it never sits on a glyph. */}
+            <span className={`eldokan-word whitespace-nowrap text-[9px] font-bold uppercase tracking-[0.18em] sm:text-xs ${ar ? 'absolute top-full mt-[6vw] rounded-full bg-white px-2.5 py-0.5 tracking-normal text-black sm:text-sm lg:mt-12 lg:px-3.5 lg:py-1 lg:text-base' : 'mt-1 text-white'}`}>{item.word}</span>
           </button>
         ))}
       </div>
-      <p aria-hidden="true" className={`min-h-6 text-center text-sm text-white/80 transition-opacity duration-300 sm:text-base ${ar ? 'mt-8' : 'mt-4'} ${part ? 'opacity-100' : 'opacity-0'}`}>
+      <p aria-hidden="true" className={`min-h-6 text-center text-sm text-white/80 transition-opacity duration-300 sm:text-base ${ar ? 'mt-[11vw] lg:mt-20' : 'mt-4'} ${part ? 'opacity-100' : 'opacity-0'}`}>
         {part && <><span className={`text-lg font-bold text-white ${ar ? '' : 'font-serif'}`}>{part.letter}</span> · <span className="font-bold text-white">{part.word}</span> — {part.line}</>}
       </p>
     </div>
