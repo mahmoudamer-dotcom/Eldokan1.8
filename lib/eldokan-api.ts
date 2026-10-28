@@ -1,6 +1,7 @@
 import { createEldokanCustomerApiClient, type Language } from '@eldokan/customer-api-client'
 import { createCustomerApiTransport } from './customer-api-transport'
 import { withCatalogLanguage } from './catalog-language'
+import { localizingFetch } from './catalog-translations'
 
 const DEFAULT_API_BASE_URL = 'https://www.eldokan.com/wp-json/eldokan-customer/v1'
 
@@ -43,7 +44,15 @@ function createClient(
   return createEldokanCustomerApiClient({
     baseUrl,
     defaultLanguage,
-    ...(typeof window === 'undefined' ? { fetch: cachedCatalogFetch } : {}),
+    // The store answers in English; the server swaps in local Arabic names (see catalog-translations).
+    // Browser requests name the visitor's language so the same-origin proxy can do the same.
+    fetch: typeof window === 'undefined'
+      ? localizingFetch(cachedCatalogFetch, defaultLanguage)
+      : (input, init) => {
+          const headers = new Headers(init?.headers)
+          headers.set('x-eldokan-locale', defaultLanguage)
+          return fetch(input, { ...init, headers })
+        },
   })
 }
 
@@ -101,6 +110,6 @@ export function createEldokanApiForRequest(request: Request, language: Language 
   return createEldokanCustomerApiClient({
     baseUrl: process.env.ELDOKAN_API_BASE_URL?.trim() || DEFAULT_API_BASE_URL,
     defaultLanguage: language,
-    fetch: createCustomerApiTransport(request, onCookie),
+    fetch: localizingFetch(createCustomerApiTransport(request, onCookie), language),
   })
 }

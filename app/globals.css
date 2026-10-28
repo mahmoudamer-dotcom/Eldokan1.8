@@ -531,3 +531,11 @@
 .category-ribbon span { color: var(--department-muted); }
 .category-ribbon svg { margin-inline-start: auto; flex-shrink: 0; color: var(--department-accent); }
 .category-ribbon:hover { border-color: var(--department-accent); }
+
+/* Phones: the assistant button sits above the bottom tab bar and the product buy bar. */
+@media (max-width: 767px) {
+  .shopping-chat-launcher { bottom: calc(4.75rem + env(safe-area-inset-bottom)) !important; }
+}
+@keyframes sheet-up { from { transform: translateY(16px); opacity: 0; } to { transform: none; opacity: 1; } }
+.cart-added-panel, .product-buy-bar { animation: sheet-up 180ms ease-out; }
+@media (prefers-reduced-motion: reduce) { .cart-added-panel, .product-buy-bar { animation: none; } }

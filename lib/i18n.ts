@@ -25,6 +25,10 @@ const catalogArabicNames: Record<string, string> = {
   'Tools & Home Improvement': 'الأدوات وتحسين المنزل',
 }
 
+export function catalogArabicName(name: string): string | undefined {
+  return catalogArabicNames[name]
+}
+
 export function translateCatalogName(name: string, locale: Locale): string {
   return locale === 'ar' ? catalogArabicNames[name] ?? name : name
 }

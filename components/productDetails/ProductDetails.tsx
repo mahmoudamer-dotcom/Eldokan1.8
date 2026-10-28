@@ -63,6 +63,7 @@ export default async function ProductDetails({ data }: { data: ProductDetailData
       {data.id && <ProductPurchaseActions
         productId={String(data.id)} productType={data.type ?? 'simple'} attributes={data.attributes} variations={data.variations} name={data.name} imageUrl={data.images[0]?.url}
         unitPrice={data.pricing.on_sale ? salePrice.amount : regularPrice.amount}
+        displayPrice={data.pricing.on_sale ? salePrice : regularPrice}
         available={data.stock?.status !== 'out_of_stock'} stockQuantity={data.stock?.quantity}
       />}
 

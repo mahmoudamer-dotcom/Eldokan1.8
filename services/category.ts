@@ -37,7 +37,7 @@ const loadCategoryTree = unstable_cache(async () => {
   }
 
   return { data: categories }
-}, ['category-tree-v4'], { revalidate: 60, tags: ['category-tree'] })
+}, ['category-tree-v4'], { revalidate: 300, tags: ['category-tree'] })
 
 const fetchCategoryTree = cache(() => loadCategoryTree())
 

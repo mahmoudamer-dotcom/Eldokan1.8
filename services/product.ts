@@ -3,6 +3,7 @@ import { getLocale } from '@/lib/server-locale'
 import { adaptProductList } from '@/lib/catalog-adapters'
 import { mapLimited } from '@/lib/map-limited'
 import { retryApiRead } from '@/lib/retry-api-read'
+import { englishCatalogText } from '@/lib/catalog-translations'
 
 type ProductOptions = {
   page?: number
@@ -31,7 +32,8 @@ export async function SearchProducts(search: string, locale?: 'ar' | 'en') {
   try {
     const language = locale ?? await getLocale()
     const api = createEldokanApi(language)
-    const response = await retryApiRead(() => api.products.list({ search: search.trim(), perPage: 48 }))
+    // An Arabic store name searches for its English original (the catalog is stored in English).
+    const response = await retryApiRead(() => api.products.list({ search: englishCatalogText(search), perPage: 48 }))
     return { ...adaptProductList(response), resolvedSearch: (response.meta as typeof response.meta & { resolved_search?: string | null }).resolved_search ?? null, unavailable: false }
   } catch {
     return { data: [], resolvedSearch: null, unavailable: true }

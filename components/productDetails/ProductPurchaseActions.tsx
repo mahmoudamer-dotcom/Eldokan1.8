@@ -1,7 +1,8 @@
 'use client'
 import Money from '@/components/i18n/Money'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import type { DisplayMoney } from '@/lib/format-money'
 import type { Attribute, Variation } from '@eldokan/customer-api-client'
 import AddToCartButton from '@/components/cart/AddToCartButton'
 import BuyNowButton from '@/components/productDetails/BuyNowButton'
@@ -17,10 +18,22 @@ type Props = {
   unitPrice: number
   available: boolean
   stockQuantity?: number | null
+  /** Price shown in the phone buy bar. */
+  displayPrice?: DisplayMoney
 }
 
-export default function ProductPurchaseActions({ productId, productType, attributes, variations, name, imageUrl, unitPrice, available, stockQuantity }: Props) {
-  const { t } = useLocale()
+export default function ProductPurchaseActions({ productId, productType, attributes, variations, name, imageUrl, unitPrice, available, stockQuantity, displayPrice }: Props) {
+  const { t, locale } = useLocale()
+  const actionsRef = useRef<HTMLDivElement>(null)
+  const [showBar, setShowBar] = useState(false)
+  // Phones: whenever the buttons are off screen (not reached yet, or scrolled past), keep price and add-to-cart in a bottom bar.
+  useEffect(() => {
+    const node = actionsRef.current
+    if (!node) return
+    const observer = new IntersectionObserver(([entry]) => setShowBar(!entry.isIntersecting))
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [])
   const variableAttributes = attributes.filter((attribute) => attribute.variation)
   const [selections, setSelections] = useState<Record<string, string>>({})
   const [quantity, setQuantity] = useState(1)
@@ -47,7 +60,7 @@ export default function ProductPurchaseActions({ productId, productType, attribu
     if (Number.isFinite(value)) setQuantity(Math.max(1, Math.min(maxQuantity, Math.floor(value))))
   }
 
-  return <div className="mt-6 space-y-4">
+  return <div ref={actionsRef} className="mt-6 space-y-4">
     {productType === 'variable' && <div className="space-y-3 rounded-xl bg-background p-4">
       {variableAttributes.length ? variableAttributes.map((attribute) => <label key={attributeKey(attribute)} className="block text-sm font-semibold text-foreground">
         {t(attribute.name)}
@@ -75,5 +88,14 @@ export default function ProductPurchaseActions({ productId, productType, attribu
       <BuyNowButton productId={productId} variationId={selectedVariation?.id} name={name} imageUrl={selectedImage} stockQuantity={maxQuantity} quantity={Math.min(quantity, maxQuantity)} className={`flex h-12 items-center justify-center rounded-full bg-[#f5b400] font-semibold text-primary-foreground transition hover:bg-[#e4a600] disabled:pointer-events-none disabled:opacity-50 ${!canPurchase ? 'pointer-events-none opacity-50' : ''}`} />
       <AddToCartButton product={{ id: productId, type: productType, variationId: selectedVariation?.id, name, imageUrl: selectedImage, unitPrice: selectedMoney?.amount ?? unitPrice, available: canPurchase, quantity: Math.min(quantity, maxQuantity), stockQuantity: maxQuantity }} />
     </div>
+    {showBar && <div className="product-buy-bar fixed inset-x-0 bottom-0 z-50 flex items-center gap-3 border-t border-border bg-card/95 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-4px_16px_rgba(0,0,0,0.08)] backdrop-blur md:hidden print:hidden">
+      <div className="min-w-0 flex-1">
+        <p className="line-clamp-1 text-xs text-muted-foreground">{name}</p>
+        <p className="text-base font-extrabold">{selectedMoney ? <Money value={selectedMoney} /> : displayPrice ? <Money value={displayPrice} /> : null}</p>
+      </div>
+      {canPurchase
+        ? <div className="w-44 shrink-0"><AddToCartButton product={{ id: productId, type: productType, variationId: selectedVariation?.id, name, imageUrl: selectedImage, unitPrice: selectedMoney?.amount ?? unitPrice, available: canPurchase, quantity: Math.min(quantity, maxQuantity), stockQuantity: maxQuantity }} /></div>
+        : <button type="button" onClick={() => actionsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })} className="h-11 shrink-0 rounded-full bg-[#f5b400] px-5 text-sm font-bold text-primary-foreground">{productType === 'variable' ? (locale === 'ar' ? 'اختار المواصفات' : 'Choose options') : (locale === 'ar' ? 'التفاصيل' : 'Details')}</button>}
+    </div>}
   </div>
 }

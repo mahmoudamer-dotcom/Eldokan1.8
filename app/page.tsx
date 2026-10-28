@@ -15,9 +15,10 @@ import Slider from '@/components/slider/Slider'
 import { Brands } from '@/services/brand'
 import { HomeApi } from '@/services/home'
 import { fetchStoreStories } from '@/services/stories'
-import { fetchCategoriesWithChildren, fetchUsers } from '@/services/category'
+import { fetchUsers } from '@/services/category'
 import { Products, UsedLikeNewProducts } from '@/services/product'
 import HomeUsedLikeNew from '@/components/home/HomeUsedLikeNew'
+import HomeCartReminder from '@/components/home/HomeCartReminder'
 import { getLocale } from '@/lib/server-locale'
 import type { HomeBrand, HomeCategory, HomeHeroSlide, HomeProduct, HomePromoBanner, HomeSection } from '@/types/home'
 import { mapLimited } from '@/lib/map-limited'
@@ -55,17 +56,26 @@ export default async function Home() {
   const homeProducts = [
     ...sections.filter(isProductSection).flatMap((section) => (section.items as HomeProduct[]).filter(isInStock)),
   ]
-  const categoryProductGroups = mapLimited(homeCategories, 4, loadCategoryProducts)
+  // The home answer already carries each category's products; ask per category only if it does not.
+  const categoryProductGroups: Promise<HomeCategoryProductGroup[]> = response.data.categoryShelves
+    ? Promise.resolve(homeCategories.map((category) => ({
+        category,
+        products: (response.data.categoryShelves!.find((group) => group.category.slug === category.slug)?.products ?? []).filter(isInStock),
+      })))
+    : mapLimited(homeCategories, 4, loadCategoryProducts)
+  // Home shows only departments with something to buy; the navbar keeps every department.
+  const availableCategories = categoryProductGroups.then((groups) => groups.filter((group) => group.products.length > 0).map((group) => group.category))
   const catalogProducts = categoryProductGroups.then(groups => [...new Map([...homeProducts, ...groups.flatMap(group => group.products)].map(product => [String(product.id), product])).values()])
   return (
     <div className="flex min-h-screen w-full flex-col">
       <main className="container mx-auto w-full flex-1 space-y-10 px-4 pb-14 pt-5 sm:space-y-12 sm:pt-7">
         <Suspense fallback={<div className="h-24 animate-pulse rounded-2xl bg-muted" aria-hidden="true" />}><CatalogStories products={catalogProducts} managedStories={managedStories} /></Suspense>
+        <HomeCartReminder />
         {heroSections.length > 0
           ? heroSections.map((section) => <Slider key={section.id} slides={section.items as HomeHeroSlide[]} />)
           : <Slider />}
 
-        <Suspense fallback={null}><CategoryTiles /></Suspense>
+        <Suspense fallback={null}><CategoryTiles categories={availableCategories} /></Suspense>
 
         <Suspense fallback={<ShelfPlaceholder />}><CatalogOffers sections={dealSections} products={catalogProducts} /></Suspense>
 
@@ -113,9 +123,8 @@ async function BrandShelf({ fallbackBrands, title }: { fallbackBrands: HomeBrand
   const response = await Brands()
   return <HomeBrandSection brands={Array.isArray(response) && response.length ? response as HomeBrand[] : fallbackBrands} title={title} />
 }
-async function CategoryTiles() {
-  const tree = await fetchCategoriesWithChildren()
-  return <HomeCategoryShortcuts categories={tree.data} />
+async function CategoryTiles({ categories }: { categories: Promise<HomeCategory[]> }) {
+  return <HomeCategoryShortcuts categories={await categories} />
 }
 async function FallbackShelves() {
   const response = await fetchUsers()

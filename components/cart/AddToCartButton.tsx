@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import T from '@/components/i18n/T'
 import { useLocale } from '@/components/i18n/LocaleProvider'
 import { useCart } from './CartProvider'
+import { announceCartAdd } from '@/lib/cart-events'
 
 type AddToCartButtonProps = {
   compact?: boolean
@@ -39,6 +40,7 @@ export default function AddToCartButton({ product, compact = false }: AddToCartB
     try {
       await addItem({ id: String(product.id), variationId: product.variationId, imageUrl: product.imageUrl, name: product.name, quantity: product.quantity, stockQuantity: product.stockQuantity })
       setAdded(true)
+      announceCartAdd({ name: product.name, imageUrl: product.imageUrl, quantity: product.quantity ?? 1 })
     } catch {
       setAdded(false)
       setFailed(true)

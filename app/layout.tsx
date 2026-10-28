@@ -14,6 +14,8 @@ import { ComparisonProvider } from '@/components/productDetails/ComparisonProvid
 import Footer from '@/components/footer/Footer'
 import { ShoppingChatProvider } from '@/components/discovery/ShoppingChatProvider'
 import SiteChrome from '@/components/checkout/CheckoutChrome'
+import MobileTabBar from '@/components/navbar/MobileTabBar'
+import CartAddedPanel from '@/components/cart/CartAddedPanel'
 
 
 const OpenSans = localFont({
@@ -68,6 +70,8 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
                 <Footer />
               </Suspense>
               </SiteChrome>
+              <MobileTabBar />
+              <CartAddedPanel />
               </ShoppingChatProvider>
               </ComparisonProvider>
             </WishlistProvider>

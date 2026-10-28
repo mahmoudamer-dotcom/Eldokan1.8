@@ -4,6 +4,7 @@ import type { NextRequest } from 'next/server'
 import { appendCustomerApiCookies, createCustomerApiTransport } from '@/lib/customer-api-transport'
 import { isSameOriginRequest } from '@/lib/request-origin'
 import { CATALOG_LANGUAGE } from '@/lib/catalog-language'
+import { englishCatalogText, localizingFetch } from '@/lib/catalog-translations'
 
 const DEFAULT_API_BASE_URL = 'https://www.eldokan.com/wp-json/eldokan-customer/v1'
 export const runtime = 'nodejs'
@@ -60,11 +61,20 @@ async function handleRequest(request: NextRequest, context: RouteContext, cookie
     return Response.json({ success: false, error: { code: 'invalid_origin', message: 'Request origin is not allowed.' }, meta: { request_id: null } }, { status: 403 })
   }
 
+  // A visitor without the WordPress sign-in cookie is a guest: answer "signed out" here instead
+  // of waiting on the store for the same answer on every page.
+  // (Any cookie named like "*logged_in*" counts, in case the site renames the WordPress cookie.)
+  if (endpoint === 'auth/session' && method === 'GET' && !/(?:^|;\s*)[^=;]*logged_in[^=;]*=/.test(request.headers.get('cookie') ?? '')) {
+    return Response.json({ success: false, error: { code: 'authentication_required', message: 'Customer authentication is required.' }, meta: { request_id: null } }, { status: 401, headers: { 'Cache-Control': 'no-store' } })
+  }
+
   const transport = createCustomerApiTransport(request, (cookie) => cookies.push(cookie))
+  // The store is read in English; names are shown in the visitor's language from local translations.
+  const displayLocale: Language = request.headers.get('x-eldokan-locale') === 'ar' || request.nextUrl.searchParams.get('lang') === 'ar' ? 'ar' : 'en'
   const api = createEldokanCustomerApiClient({
     baseUrl: process.env.ELDOKAN_API_BASE_URL?.trim() || DEFAULT_API_BASE_URL,
     defaultLanguage: CATALOG_LANGUAGE,
-    fetch: transport,
+    fetch: localizingFetch(transport, displayLocale),
   })
 
   const langValue = request.nextUrl.searchParams.get('lang')
@@ -154,7 +164,7 @@ async function handleRequest(request: NextRequest, context: RouteContext, cookie
       result = await api.sellers.get(decodeURIComponent(endpoint.slice('sellers/'.length)) as SellerId, { lang })
     } else if (endpoint === 'search/suggestions' && method === 'GET') {
       const limit = request.nextUrl.searchParams.has('limit') ? Number(request.nextUrl.searchParams.get('limit')) : undefined
-      result = await api.search.suggestions(request.nextUrl.searchParams.get('q') ?? '', { limit, lang })
+      result = await api.search.suggestions(englishCatalogText(request.nextUrl.searchParams.get('q') ?? ''), { limit, lang })
     } else if (endpoint === 'products/lookup' && method === 'GET') {
       result = await api.products.lookupBySlug(request.nextUrl.searchParams.get('slug') ?? '', { lang })
     } else if (endpoint === 'products' && method === 'GET') {
@@ -167,7 +177,7 @@ async function handleRequest(request: NextRequest, context: RouteContext, cookie
       const query: ProductListParams = {
         page: optionalNumber('page'),
         perPage: optionalNumber('per_page'),
-        search: params.get('search') ?? undefined,
+        search: params.has('search') ? englishCatalogText(params.get('search')!) : undefined,
         category: params.get('category') ?? undefined,
         brand: params.get('brand') ?? undefined,
         tag: params.get('tag') ?? undefined,

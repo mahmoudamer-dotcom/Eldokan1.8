@@ -1,4 +1,4 @@
-import { ArrowUpRight, CreditCard, Headphones, Mail, MessageCircle, Phone, Store } from 'lucide-react'
+import { ArrowUpRight, Banknote, ChevronDown, CreditCard, Headphones, Mail, MessageCircle, Phone, RotateCcw, Store, Truck } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { fetchCategoriesWithChildren } from '@/services/category'
@@ -6,8 +6,9 @@ import { PopularBrands } from '@/services/brand'
 import { getLocale } from '@/lib/server-locale'
 import { translateCatalogName } from '@/lib/i18n'
 import { BUSINESS, POLICIES } from '@/lib/legal-policies'
+import BackToTop from './BackToTop'
 
-type FooterCategory = { id?: string | number; name: string; slug?: string; parent_id?: string | number | null; children?: FooterCategory[]; subcategories?: FooterCategory[] }
+type FooterCategory = { id?: string | number; name: string; slug?: string; parent_id?: string | number | null }
 function categoryHref(category: FooterCategory) { return `/category/${category.slug || encodeURIComponent(category.name)}` }
 
 export default async function Footer() {
@@ -17,43 +18,108 @@ export default async function Footer() {
   const [response, brandData] = await Promise.all([fetchCategoriesWithChildren(), PopularBrands()])
   const categories: FooterCategory[] = Array.isArray(response?.data) ? response.data : []
   const roots = categories.filter(category => !category.parent_id || !categories.some(parent => String(parent.id) === String(category.parent_id)))
-  const categoryGroups = roots.map(category => {
-    const children = new Map<string, FooterCategory>()
-    for (const child of [...(category.children ?? []), ...(category.subcategories ?? []), ...categories.filter(child => child.parent_id && String(child.parent_id) === String(category.id))]) {
-      children.set(String(child.id ?? child.slug ?? child.name), child)
-    }
-    return { category, children: [...children.values()] }
-  }).sort((a, b) => Number(b.children.length > 0) - Number(a.children.length > 0))
-  const linkStyle = 'inline-block rounded-sm text-sm leading-6 text-muted-foreground transition-colors hover:text-white hover:underline focus-visible:outline-white'
-  const groups = [
-    { title: text('Customer care', 'خدمة العملاء'), links: [
-      { href: '/help', label: text('Help & contact', 'المساعدة والتواصل') }, { href: '/orders', label: text('My orders', 'طلباتي') }, { href: '/used-like-new', label: text('Used like new', 'مستعمل كالجديد') },
-      ...POLICIES.filter(p => ['shipping', 'returns', 'buyer-terms'].includes(p.slug)).map(p => ({ href: `/policies/${p.slug}`, label: p.title[locale] })),
+  const policy = (slug: string) => POLICIES.find(p => p.slug === slug)
+  const policyLink = (slug: string) => ({ href: `/policies/${slug}`, label: policy(slug)?.title[locale] ?? slug })
+  const phone = BUSINESS.phone.replace(/^\+20/, '0')
+
+  const columns = [
+    { title: text('Shop', 'تسوّق'), links: [
+      { href: '/used-like-new', label: text('Used like new', 'مستعمل كالجديد') },
+      { href: '/wishlist', label: text('Favorites', 'المفضلة') },
+      { href: '/compare', label: text('Compare products', 'مقارنة المنتجات') },
+      { href: '/cart', label: text('Shopping cart', 'سلة التسوق') },
     ] },
-    { title: text('About your account', 'الشروط والخصوصية'), links: [...POLICIES.filter(p => ['terms', 'privacy', 'cookies'].includes(p.slug)).map(p => ({ href: `/policies/${p.slug}`, label: p.title[locale] })), { href: '/policies', label: text('All policies', 'كل السياسات') }] },
-    { title: text('Grow with Eldokan', 'بيع مع الدكان'), links: POLICIES.filter(p => p.audience === 'seller').map(p => ({ href: `/policies/${p.slug}`, label: p.title[locale] })) },
+    { title: text('Customer care', 'خدمة العملاء'), links: [
+      { href: '/help', label: text('Help center', 'مركز المساعدة') },
+      { href: '/orders', label: text('Track my orders', 'تابع طلباتي') },
+      policyLink('shipping'), policyLink('returns'), policyLink('buyer-terms'),
+    ] },
+    { title: text('Policies', 'السياسات'), links: [policyLink('terms'), policyLink('privacy'), policyLink('cookies'), { href: '/policies', label: text('All policies', 'كل السياسات') }] },
+    { title: text('Sell on Eldokan', 'بيع مع الدكان'), links: POLICIES.filter(p => p.audience === 'seller').map(p => policyLink(p.slug)), sell: true },
   ]
-  return <footer dir={ar ? 'rtl' : 'ltr'} className="mt-auto w-full shrink-0 border-t border-border bg-card text-foreground">
-    <section aria-label={text('Customer support', 'دعم العملاء')} className="border-b border-border bg-muted">
-      <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-7 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
-        <div><h2 className="text-xl font-bold">{text("We're here to help", 'إحنا هنا علشان نساعدك')}</h2><p className="mt-1.5 text-sm text-muted-foreground">{text('Get help with your shopping, delivery and orders.', 'تواصل معانا لأي استفسار عن المنتجات، التوصيل أو طلباتك.')}</p></div>
-        <div className="grid gap-5 sm:grid-cols-3 sm:gap-8">
-          <Link href="/help" className="group flex items-center gap-3"><span className="grid size-11 shrink-0 place-items-center rounded-full border border-border bg-card"><Headphones aria-hidden="true" className="size-5" /></span><span><span className="block text-xs text-muted-foreground">{text('Need assistance?', 'محتاج مساعدة؟')}</span><span className="mt-1 block text-sm font-semibold group-hover:underline">{text('Help center', 'مركز المساعدة')}</span></span></Link>
-          <a href={`https://wa.me/${BUSINESS.phone.replace('+', '')}`} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-3"><span className="grid size-11 shrink-0 place-items-center rounded-full border border-border bg-card"><MessageCircle aria-hidden="true" className="size-5" /></span><span><span className="block text-xs text-muted-foreground">{text('WhatsApp support', 'الدعم على واتساب')}</span><span dir="ltr" className="mt-1 block text-sm font-semibold group-hover:underline">01006806022</span></span></a>
-          <a href={`mailto:${BUSINESS.email}`} className="group flex min-w-0 items-center gap-3"><span className="grid size-11 shrink-0 place-items-center rounded-full border border-border bg-card"><Mail aria-hidden="true" className="size-5" /></span><span className="min-w-0"><span className="block text-xs text-muted-foreground">{text('Email us', 'راسلنا')}</span><span dir="ltr" className="mt-1 block break-all text-sm font-semibold group-hover:underline">{BUSINESS.email}</span></span></a>
+  // Only promises the policies make: returns within 14 days, and the delivery and payment options checkout offers.
+  const perks = [
+    { icon: Truck, title: text('Door delivery', 'توصيل لباب البيت'), body: text('Or pick up from a branch', 'أو استلم من أقرب فرع') },
+    { icon: Banknote, title: text('Cash on delivery', 'الدفع عند الاستلام'), body: text('Pay when your order arrives', 'ادفع لما طلبك يوصل') },
+    { icon: CreditCard, title: text('Cards & installments', 'كارت وتقسيط'), body: text('Secure payment through Paymob', 'دفع آمن عن طريق Paymob') },
+    { icon: RotateCcw, title: text('14-day returns', 'إرجاع خلال 14 يوم'), body: text('See the returns policy', 'اعرف سياسة الإرجاع'), href: '/policies/returns' },
+  ]
+  const contact = [
+    { href: '/help', icon: Headphones, label: text('Help center', 'مركز المساعدة'), value: text('Answers and support', 'إجابات ودعم'), external: false },
+    { href: `https://wa.me/${BUSINESS.phone.replace('+', '')}`, icon: MessageCircle, label: text('WhatsApp', 'واتساب'), value: phone, external: true },
+    { href: `tel:${BUSINESS.phone}`, icon: Phone, label: text('Call us', 'اتصل بينا'), value: phone, external: false },
+    { href: `mailto:${BUSINESS.email}`, icon: Mail, label: text('Email', 'البريد'), value: BUSINESS.email, external: false },
+  ]
+  const link = 'inline-block py-1 text-sm text-white/75 transition-colors hover:text-[#f5b400] focus-visible:outline-white'
+
+  return <footer dir={ar ? 'rtl' : 'ltr'} className="mt-auto w-full shrink-0 text-foreground">
+    <section aria-label={text('Why shop with us', 'ليه تتسوق معانا')} className="border-t border-border bg-card">
+      <ul className="mx-auto grid max-w-7xl grid-cols-2 gap-px bg-border px-0 lg:grid-cols-4">
+        {perks.map(({ icon: Icon, title, body, href }) => {
+          const content = <><span className="grid size-11 shrink-0 place-items-center rounded-full bg-shop-soft text-shop-accent"><Icon aria-hidden="true" className="size-5" /></span><span className="min-w-0"><span className="block text-sm font-bold">{title}</span><span className="mt-0.5 block text-xs text-muted-foreground">{body}</span></span></>
+          return <li key={title} className="bg-card">{href
+            ? <Link href={href} className="flex h-full items-center gap-3 px-4 py-5 transition hover:bg-muted sm:px-6">{content}</Link>
+            : <div className="flex h-full items-center gap-3 px-4 py-5 sm:px-6">{content}</div>}</li>
+        })}
+      </ul>
+    </section>
+
+    <div className="bg-[#16181b] text-white">
+      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[1.25fr_2.75fr] lg:gap-12 lg:px-8 lg:py-14">
+        <section aria-label={text('Contact Eldokan', 'تواصل مع الدكان')}>
+          <Link href="/" aria-label={text('Eldokan home', 'الصفحة الرئيسية للدكان')} className="brand-logo-canvas inline-flex rounded-xl px-3 py-2"><Image src="/image/Eldokan-logo.webp" width={120} height={60} className="h-12 w-auto object-contain" alt={BUSINESS.name[locale]} /></Link>
+          <p className="mt-4 max-w-sm text-sm leading-7 text-white/70">{text('Everyday essentials and new finds, delivered to your door.', 'احتياجاتك اليومية وحاجات جديدة تكتشفها، لحد باب البيت.')}</p>
+          <ul className="mt-5 grid grid-cols-2 gap-2.5">
+            {contact.map(({ href, icon: Icon, label, value, external }) => <li key={label}>
+              <a href={href} {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})} className="flex h-full items-center gap-2.5 rounded-xl bg-white/[0.06] p-3 ring-1 ring-white/10 transition hover:bg-white/[0.12]">
+                <Icon aria-hidden="true" className="size-5 shrink-0 text-[#f5b400]" />
+                <span className="min-w-0"><span className="block text-[11px] text-white/60">{label}</span><span dir={href === '/help' ? undefined : 'ltr'} className="block truncate text-sm font-semibold">{value}</span></span>
+              </a>
+            </li>)}
+          </ul>
+        </section>
+
+        <div className="grid gap-x-8 sm:grid-cols-2 lg:grid-cols-4">
+          {columns.map((column) => {
+            const list = <>
+              <ul className="pb-4 sm:pb-0">
+                {column.links.map(item => <li key={item.href}><Link href={item.href} className={link}>{item.label}</Link></li>)}
+              </ul>
+              {column.sell && <a href="https://sell.eldokan.com/login" target="_blank" rel="noopener noreferrer" className="mb-5 mt-2 inline-flex min-h-10 items-center gap-2 rounded-full bg-[#f5b400] px-4 text-sm font-bold text-[#222] transition hover:bg-[#ffc933]"><Store aria-hidden="true" className="size-4" />{text('Start selling', 'ابدأ البيع')}<ArrowUpRight aria-hidden="true" className="size-4 rtl:-rotate-90" /></a>}
+            </>
+            return <div key={column.title}>
+              {/* Phones: a collapsed list that opens on tap, so the footer stays short. */}
+              <details className="group border-b border-white/10 sm:hidden">
+                <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between text-sm font-bold [&::-webkit-details-marker]:hidden">
+                  {column.title}<ChevronDown aria-hidden="true" className="size-4 transition group-open:rotate-180" />
+                </summary>
+                {list}
+              </details>
+              <nav aria-label={column.title} className="hidden sm:block"><h2 className="mb-3 text-sm font-bold">{column.title}</h2>{list}</nav>
+            </div>
+          })}
         </div>
       </div>
-    </section>
-    <div className="bg-[#191919] text-white"><div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div className="grid gap-x-8 gap-y-9 py-10 sm:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
-        <section className="sm:col-span-2 lg:col-span-1"><Link href="/" aria-label={text('Eldokan home', 'الصفحة الرئيسية للدكان')} className="brand-logo-canvas inline-flex rounded-lg px-3 py-2"><Image src="/image/Eldokan-logo.webp" width={120} height={60} className="h-14 w-auto object-contain" alt={BUSINESS.name[locale]} /></Link><p className="mt-4 max-w-xs text-sm leading-7 text-muted-foreground">{text('Shop everyday essentials and discover something new at Eldokan.', 'تسوّق احتياجاتك اليومية واكتشف منتجات جديدة مع الدكان.')}</p><a href={`tel:${BUSINESS.phone}`} className="mt-4 inline-flex items-center gap-2 text-sm font-semibold hover:underline"><Phone aria-hidden="true" className="size-4" /><span dir="ltr">01006806022</span></a></section>
-        {groups.map((group, index) => <nav key={group.title} aria-label={group.title}><h2 className="mb-5 text-sm font-bold">{group.title}</h2><ul className="space-y-3">{group.links.map(item => <li key={item.href}><Link href={item.href} className={linkStyle}>{item.label}</Link></li>)}</ul>{index === 2 && <a href="https://sell.eldokan.com/login" target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-md border border-white bg-card px-4 text-sm font-semibold text-foreground transition hover:bg-muted focus-visible:outline-white"><Store aria-hidden="true" className="size-4" />{text('Start selling', 'ابدأ البيع')}<ArrowUpRight aria-hidden="true" className="size-4" /></a>}</nav>)}
+
+      {(roots.length > 0 || brandData.brands.length > 0) && <div className="mx-auto max-w-7xl space-y-4 border-t border-white/10 px-4 py-6 sm:px-6 lg:px-8">
+        {roots.length > 0 && <nav aria-label={text('Departments', 'الأقسام')} className="flex flex-wrap items-center gap-2"><h2 className="me-2 text-sm font-bold">{text('Departments', 'الأقسام')}</h2>
+          {roots.map(category => <Link key={category.id ?? category.slug ?? category.name} href={categoryHref(category)} className="rounded-full bg-white/[0.06] px-3 py-1.5 text-xs font-medium text-white/80 ring-1 ring-white/10 transition hover:bg-white/[0.14] hover:text-white">{translateCatalogName(category.name, locale)}</Link>)}
+        </nav>}
+        {brandData.brands.length > 0 && <nav aria-label={text('Brands', 'العلامات التجارية')} className="flex flex-wrap items-center gap-2"><h2 className="me-2 text-sm font-bold">{brandData.source === 'best-sellers' ? text('Popular brands', 'علامات رائجة') : text('Featured brands', 'علامات مميزة')}</h2>
+          {brandData.brands.map(brand => <Link key={brand.id} href={`/brand/${encodeURIComponent(brand.slug || brand.id)}`} className="rounded-full bg-white/[0.06] px-3 py-1.5 text-xs font-medium text-white/80 ring-1 ring-white/10 transition hover:bg-white/[0.14] hover:text-white">{brand.name}</Link>)}
+        </nav>}
+      </div>}
+
+      <div className="border-t border-white/10">
+        {/* Bottom room: the floating "Ask Eldokan" button sits over this corner. */}
+        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 pb-24 pt-5 text-xs text-white/60 sm:px-6 md:pb-5 lg:flex-row lg:items-center lg:justify-between lg:pe-52 lg:ps-8">
+          <p>© {new Date().getFullYear()} {BUSINESS.name[locale]}. {text('All rights reserved.', 'جميع الحقوق محفوظة.')}</p>
+          <ul aria-label={text('Payment methods', 'وسائل الدفع')} className="flex flex-wrap items-center gap-2">
+            {[text('Cash', 'كاش'), 'Visa', 'Mastercard', text('Meeza', 'ميزة'), text('Installments', 'تقسيط')].map(method => <li key={method} className="rounded-md bg-white px-2 py-1 text-[11px] font-bold text-[#16181b]">{method}</li>)}
+          </ul>
+          <BackToTop label={text('Back to top', 'لأعلى الصفحة')} />
+        </div>
       </div>
-      {roots.length > 0 && <nav aria-label={text('Shop categories', 'تسوق حسب القسم')} className="border-t border-white/15 py-7"><h2 className="mb-5 text-sm font-bold">{text('Shop categories', 'تسوق حسب القسم')}</h2><div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">{categoryGroups.map(({ category, children }) => (
-        <div key={category.id ?? category.slug ?? category.name}><Link href={categoryHref(category)} className="text-sm font-semibold hover:underline">{translateCatalogName(category.name, locale)}</Link>{children.length > 0 && <ul className="mt-2 space-y-1.5">{children.slice(0, 6).map(child => <li key={child.id ?? child.slug ?? child.name}><Link href={categoryHref(child)} className={linkStyle}>{translateCatalogName(child.name, locale)}</Link></li>)}</ul>}</div>
-      ))}</div></nav>}
-      {brandData.brands.length > 0 && <nav aria-label={text('Brands', 'العلامات التجارية')} className="flex flex-col gap-3 border-t border-white/15 py-6 sm:flex-row sm:gap-6"><h2 className="shrink-0 text-sm font-bold">{brandData.source === 'best-sellers' ? text('Popular brands', 'علامات تجارية رائجة') : text('Featured brands', 'علامات تجارية مميزة')}</h2><ul className="flex flex-wrap gap-x-6 gap-y-2">{brandData.brands.map(brand => <li key={brand.id}><Link href={`/brand/${encodeURIComponent(brand.slug || brand.id)}`} className={linkStyle}>{brand.name}</Link></li>)}</ul></nav>}
-    </div></div>
-    <div className="border-t border-border bg-muted"><div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-5 text-xs leading-6 text-muted-foreground sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8"><p>© {new Date().getFullYear()} {BUSINESS.name[locale]}. {text('All rights reserved.', 'جميع الحقوق محفوظة.')}</p><p className="flex items-start gap-2"><CreditCard aria-hidden="true" className="mt-1 size-4 shrink-0" />{text('Available payment methods are shown at checkout.', 'وسائل الدفع المتاحة تظهر عند إتمام الشراء.')}</p><div className="flex flex-wrap gap-x-5 gap-y-2"><Link href="/policies/privacy" className="hover:text-foreground hover:underline">{text('Privacy', 'الخصوصية')}</Link><Link href="/policies/terms" className="hover:text-foreground hover:underline">{text('Terms of use', 'شروط الاستخدام')}</Link></div></div></div>
+    </div>
   </footer>
 }

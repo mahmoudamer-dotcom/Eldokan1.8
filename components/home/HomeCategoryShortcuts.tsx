@@ -5,7 +5,7 @@ import { translateCatalogName } from '@/lib/i18n'
 import { getLocale } from '@/lib/server-locale'
 import { categoryIcon, categoryWorldOf } from '@/lib/category-experience'
 
-type ShortcutCategory = { id: string | number; name: string; slug?: string; image?: string | { url?: string } | null }
+type ShortcutCategory = { id: string | number; name: string; slug?: string; image?: string | { url?: string | null } | null }
 
 export default async function HomeCategoryShortcuts({ categories }: { categories: ShortcutCategory[] }) {
   const locale = await getLocale()
@@ -21,7 +21,7 @@ export default async function HomeCategoryShortcuts({ categories }: { categories
       <div className="category-circles -mx-4 flex snap-x gap-5 overflow-x-auto px-4 pb-2 pt-1 sm:gap-10 lg:mx-0 lg:grid lg:grid-flow-col lg:auto-cols-fr lg:justify-items-center lg:gap-x-6 lg:overflow-visible lg:px-0">
         {categories.slice(0, 12).map((category) => {
           const world = categoryWorldOf(category.slug, category.name)
-          const storeImage = typeof category.image === 'string' ? category.image : category.image?.url
+          const storeImage = (typeof category.image === 'string' ? category.image : category.image?.url) || undefined
 
           return (
             <Link
