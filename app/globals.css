@@ -555,7 +555,7 @@
   transition-delay: calc(var(--i) * 70ms + 120ms);
 }
 .eldokan-wordmark[data-open] .eldokan-glyph { color: #fff; -webkit-text-stroke-color: #fff; }
-.eldokan-wordmark[data-open] .eldokan-word { opacity: 0.75; transform: none; }
+.eldokan-wordmark[data-open]:not([data-joined]) .eldokan-word { opacity: 0.75; transform: none; }
 .eldokan-letter[data-active] .eldokan-glyph { transform: translateY(-10%) scale(1.06); text-shadow: 0 0 40px rgba(255, 255, 255, 0.45); transition-delay: 0ms; }
 .eldokan-letter[data-active] .eldokan-word { opacity: 1; transition-delay: 0ms; }
 .eldokan-wordmark[data-open] .eldokan-letter:not([data-active]) .eldokan-glyph { opacity: 0.9; }
