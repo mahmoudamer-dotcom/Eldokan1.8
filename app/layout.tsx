@@ -13,7 +13,6 @@ import { getStorefrontUrl } from '@/lib/site-url'
 import { ComparisonProvider } from '@/components/productDetails/ComparisonProvider'
 import Footer from '@/components/footer/Footer'
 import { ShoppingChatProvider } from '@/components/discovery/ShoppingChatProvider'
-import WhatsAppButton from '@/components/support/WhatsAppButton'
 import SiteChrome from '@/components/checkout/CheckoutChrome'
 
 
@@ -69,7 +68,6 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
                 <Footer />
               </Suspense>
               </SiteChrome>
-              <WhatsAppButton />
               </ShoppingChatProvider>
               </ComparisonProvider>
             </WishlistProvider>

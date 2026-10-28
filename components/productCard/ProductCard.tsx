@@ -1,5 +1,5 @@
 import Money from '@/components/i18n/Money'
-import { Star } from 'lucide-react'
+import { BadgeCheck, Star } from 'lucide-react'
 import Link from 'next/link'
 import ProductImageCarousel from './ProductImageCarousel'
 import T from '@/components/i18n/T'
@@ -27,7 +27,8 @@ export type StoreProduct = {
   }
 }
 
-export default function ProductCard({ product, swipeImages = true }: { product: StoreProduct; swipeImages?: boolean }) {
+/** `likeNew` marks a pre-owned item in like-new condition (the used-like-new shelf and page). */
+export default function ProductCard({ product, swipeImages = true, likeNew = false }: { product: StoreProduct; swipeImages?: boolean; likeNew?: boolean }) {
   const name = product.name ?? product.title ?? 'Product'
   const images = [product.image, ...(product.images ?? [])]
     .map((image) => typeof image === 'string' ? { url: image } : image)
@@ -47,7 +48,7 @@ export default function ProductCard({ product, swipeImages = true }: { product: 
 
   const card = (
     <article className="group flex h-full min-w-0 flex-col overflow-hidden rounded-xl border border-border bg-card transition duration-200 hover:-translate-y-0.5 hover:border-input hover:shadow-lg">
-      <div className="relative aspect-square overflow-hidden rounded-xl bg-background p-0">
+      <div className="relative aspect-square overflow-hidden rounded-xl bg-white p-0 dark:bg-background">
         <ProductImageCarousel productId={product.id} productName={name} initialImages={images} swipeImages={swipeImages} />
         <WishlistButton productId={product.id} className="absolute end-3 top-3 z-10" />
         <AddToCartButton compact product={product.id ? {
@@ -64,6 +65,11 @@ export default function ProductCard({ product, swipeImages = true }: { product: 
         {discount !== null && (
           <span className="absolute start-3 top-3 rounded-md bg-[#f5b400] px-2 py-1 text-xs font-bold text-primary-foreground">
             -{discount}%
+          </span>
+        )}
+        {likeNew && (
+          <span className="absolute bottom-3 start-3 z-10 flex items-center gap-1 rounded-md bg-emerald-600 px-2 py-1 text-[11px] font-bold text-white shadow-sm">
+            <BadgeCheck className="size-3.5" aria-hidden="true" /><T text="Like new" />
           </span>
         )}
       </div>

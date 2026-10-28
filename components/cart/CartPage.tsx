@@ -73,6 +73,6 @@ function CartItemImage({ src, alt }: { src?: string; alt: string }) {
   const [failedSrc, setFailedSrc] = useState('')
   const normalizedSrc = src?.replace(/^https?:\/\/(www\.)?eldokan\.com\//i, 'https://www.eldokan.com/')
   return normalizedSrc && failedSrc !== normalizedSrc
-    ? <Image src={normalizedSrc} alt={alt} width={80} height={80} onError={() => setFailedSrc(normalizedSrc)} className="size-16 shrink-0 rounded-2xl bg-background object-contain sm:size-20" />
+    ? <Image src={normalizedSrc} alt={alt} width={80} height={80} onError={() => setFailedSrc(normalizedSrc)} className="size-16 shrink-0 rounded-2xl bg-white dark:bg-background object-contain sm:size-20" />
     : <div className="size-16 shrink-0 rounded-2xl bg-muted sm:size-20" role="img" aria-label={alt} />
 }

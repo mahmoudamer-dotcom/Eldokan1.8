@@ -9,7 +9,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   if (!url || process.env.STOREFRONT_ALLOW_INDEXING !== 'true') return []
   const api = createEldokanApi('en')
   const categories = await api.commerce.sitemap(1).then((catalog) => Object.values(catalog.data.categories ?? {}), () => [])
-  const paths = ['/', '/help', '/policies', ...POLICIES.map(policy => `/policies/${policy.slug}`)]
+  const paths = ['/', '/help', '/used-like-new', '/policies', ...POLICIES.map(policy => `/policies/${policy.slug}`)]
   categories.forEach(category => paths.push(`/category/${encodeURIComponent(category.slug)}`))
   return [...new Set(paths)].map((path) => ({ url: new URL(path, url).toString() }))
 }

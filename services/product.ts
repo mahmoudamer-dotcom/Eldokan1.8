@@ -9,6 +9,8 @@ type ProductOptions = {
   perPage?: number
   search?: string
   brand?: string
+  /** Product tag slug. */
+  tag?: string
   minPrice?: number
   maxPrice?: number
   stockStatus?: 'in_stock' | 'out_of_stock' | 'on_backorder'
@@ -48,5 +50,16 @@ async function getAllProducts(options: Omit<ProductOptions, 'page' | 'perPage'> 
 
 export function ProductsByBrand(brand: string) {
   return getAllProducts({ brand })
+}
+
+/**
+ * Pre-owned items in like-new condition: products carrying this WordPress product tag.
+ * The tag keeps each product in its real category as well.
+ */
+export const USED_LIKE_NEW_TAG = 'used-like-new'
+
+export async function UsedLikeNewProducts(perPage = 48) {
+  const response = await Products(undefined, { tag: USED_LIKE_NEW_TAG, perPage, sort: 'newest' })
+  return { products: response.data.filter((product) => product.stock?.status === 'in_stock'), unavailable: response.unavailable }
 }
 

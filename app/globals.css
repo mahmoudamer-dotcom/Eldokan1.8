@@ -26,6 +26,19 @@
   scrollbar-width: none;
 }
 
+/* Story progress: the bar fills from the reading start edge, then the viewer moves on. */
+@keyframes story-progress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+.story-progress {
+  animation-name: story-progress;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+  transform-origin: left;
+}
+[dir="rtl"] .story-progress { transform-origin: right; }
+
 .category-scrollbar-hidden::-webkit-scrollbar {
   display: none;
 }
@@ -98,13 +111,14 @@
 
 :root {
   color-scheme: light;
-  --shop-soft: #fff8e7;
-  --shop-accent: #805400;
+  /* Clearer palette: a light warm page behind white cards, darker secondary text and visible borders. */
+  --shop-soft: #fff3d1;
+  --shop-accent: #7a4b00;
   --danger-soft: #fff1f2;
   --danger-foreground: #b91c1c;
   --success-soft: #ecfdf5;
   --success-foreground: #047857;
-  --background: oklch(1 0 0);
+  --background: #f6f5f2;
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
@@ -114,14 +128,14 @@
   --primary-foreground: #222222;
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
+  --muted: oklch(0.955 0.004 85);
+  --muted-foreground: oklch(0.44 0 0);
+  --accent: oklch(0.955 0.004 85);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --border: oklch(0.87 0.004 85);
+  --input: oklch(0.84 0.004 85);
+  --ring: #c48a00;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -157,12 +171,12 @@
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: #282b31;
-  --muted-foreground: #b0b7c3;
+  --muted-foreground: #c6ccd6;
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: #393d45;
-  --input: #4b515c;
+  --border: #474c56;
+  --input: #59606c;
   --ring: oklch(0.556 0 0);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);

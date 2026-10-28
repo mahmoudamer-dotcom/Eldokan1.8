@@ -27,7 +27,7 @@ export default async function Footer() {
   const linkStyle = 'inline-block rounded-sm text-sm leading-6 text-muted-foreground transition-colors hover:text-white hover:underline focus-visible:outline-white'
   const groups = [
     { title: text('Customer care', 'خدمة العملاء'), links: [
-      { href: '/help', label: text('Help & contact', 'المساعدة والتواصل') }, { href: '/orders', label: text('My orders', 'طلباتي') },
+      { href: '/help', label: text('Help & contact', 'المساعدة والتواصل') }, { href: '/orders', label: text('My orders', 'طلباتي') }, { href: '/used-like-new', label: text('Used like new', 'مستعمل كالجديد') },
       ...POLICIES.filter(p => ['shipping', 'returns', 'buyer-terms'].includes(p.slug)).map(p => ({ href: `/policies/${p.slug}`, label: p.title[locale] })),
     ] },
     { title: text('About your account', 'الشروط والخصوصية'), links: [...POLICIES.filter(p => ['terms', 'privacy', 'cookies'].includes(p.slug)).map(p => ({ href: `/policies/${p.slug}`, label: p.title[locale] })), { href: '/policies', label: text('All policies', 'كل السياسات') }] },

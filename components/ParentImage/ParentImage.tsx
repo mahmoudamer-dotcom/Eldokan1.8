@@ -10,7 +10,7 @@ export default function ParentImage({ data }: { data: { images: ProductImageData
 
   if (!data.images?.length) {
     return (
-      <div className="flex aspect-square items-center justify-center rounded-xl bg-background text-sm text-muted-foreground">
+      <div className="flex aspect-square items-center justify-center rounded-xl bg-white text-sm dark:bg-background text-muted-foreground">
         <T text="Product images unavailable" />
       </div>
     );

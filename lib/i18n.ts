@@ -115,6 +115,8 @@ const arabicTranslations: Record<string, string> = {
   'Recently viewed': 'شوهدت مؤخرًا',
   'Products and offers from our sellers': 'منتجات وعروض البائعين',
   'Seller stories': 'قصص البائعين',
+  'Like new': 'كالجديد',
+  'Used like new': 'مستعمل كالجديد',
   'ON SALE': 'عرض خاص',
   'View product for price': 'اعرض المنتج لمعرفة السعر',
   'View product': 'عرض المنتج',

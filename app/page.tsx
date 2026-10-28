@@ -16,7 +16,9 @@ import { Brands } from '@/services/brand'
 import { HomeApi } from '@/services/home'
 import { fetchStoreStories } from '@/services/stories'
 import { fetchCategoriesWithChildren, fetchUsers } from '@/services/category'
-import { Products } from '@/services/product'
+import { Products, UsedLikeNewProducts } from '@/services/product'
+import HomeUsedLikeNew from '@/components/home/HomeUsedLikeNew'
+import { getLocale } from '@/lib/server-locale'
 import type { HomeBrand, HomeCategory, HomeHeroSlide, HomeProduct, HomePromoBanner, HomeSection } from '@/types/home'
 import { mapLimited } from '@/lib/map-limited'
 
@@ -66,6 +68,8 @@ export default async function Home() {
         <Suspense fallback={null}><CategoryTiles /></Suspense>
 
         <Suspense fallback={<ShelfPlaceholder />}><CatalogOffers sections={dealSections} products={catalogProducts} /></Suspense>
+
+        <Suspense fallback={null}><UsedLikeNewShelf /></Suspense>
 
        
 
@@ -135,6 +139,10 @@ async function CatalogStories({ products, managedStories }: { products: Promise<
 }
 async function CatalogOffers({ products, sections }: { products: Promise<HomeProduct[]>; sections: HomeSection[] }) {
   return <HomeDailyOffers sections={sections} products={await products} />
+}
+async function UsedLikeNewShelf() {
+  const [{ products }, locale] = await Promise.all([UsedLikeNewProducts(10), getLocale()])
+  return <HomeUsedLikeNew products={products} locale={locale} />
 }
 async function CatalogSellers({ products }: { products: Promise<HomeProduct[]> }) {
   return <HomeSellerSpotlight products={await products} />
