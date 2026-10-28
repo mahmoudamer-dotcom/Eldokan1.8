@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
   const cookieLocale = request.cookies.get('eldokan_locale')?.value
   const locale: Locale = requestedLocale === 'ar' || requestedLocale === 'en'
     ? requestedLocale
-    : cookieLocale === 'ar' ? 'ar' : 'en'
+    : cookieLocale === 'en' ? 'en' : 'ar'
 
   if (query.length < 2) {
     return Response.json({ data: [] }, { headers: { 'Cache-Control': 'no-store' } })

@@ -1,5 +1,6 @@
 import type { Locale } from './i18n'
 import { catalogArabicName } from './i18n'
+import { arabicDescription } from './catalog-descriptions-ar'
 
 /**
  * Arabic for store data the API sends in English (the catalog is always read in English).
@@ -24,6 +25,9 @@ const catalogArabic: Record<string, string> = {
   'Best Sellers': 'الأكثر مبيعًا',
   'New Arrivals': 'وصل حديثًا',
   'Featured Brands': 'علامات تجارية مميزة',
+  // Product attributes
+  Brands: 'الماركة',
+  Brand: 'الماركة',
   // Checkout
   'Pickup From Branches': 'الاستلام من الفروع',
   'Door Delivery': 'التوصيل للباب',
@@ -50,8 +54,8 @@ const TRANSLATED_KEYS = new Set(['name', 'title', 'description'])
 
 /**
  * Returns a copy of an API payload with known catalog names in Arabic. Only display
- * text under `name`, `title` and short `description` fields changes; IDs, slugs, prices
- * and anything else stay exactly as the store sent them.
+ * text under `name`, `title` and short `description` fields (and the product descriptions
+ * from catalog-descriptions-ar) changes; IDs, slugs, prices and anything else stay as sent.
  */
 export function localizeCatalogData<T>(value: T, locale: Locale): T {
   if (locale !== 'ar') return value
@@ -62,6 +66,9 @@ export function localizeCatalogData<T>(value: T, locale: Locale): T {
     for (const [key, child] of Object.entries(node)) {
       copy[key] = typeof child === 'string' && TRANSLATED_KEYS.has(key) && child.length < 300 ? translateCatalogText(child, locale) : walk(child)
     }
+    // A product with a local Arabic description shows it instead of the store's English one.
+    const arabic = typeof copy.id === 'string' && 'description_html' in copy ? arabicDescription(copy.id) : null
+    if (arabic) { copy.description_html = arabic.full; copy.short_description_html = arabic.short }
     return copy
   }
   return walk(value) as T
