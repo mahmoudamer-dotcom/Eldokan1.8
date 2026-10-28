@@ -48,7 +48,7 @@ export default function ProductCard({ product, swipeImages = true, likeNew = fal
 
   const card = (
     <article className="group flex h-full min-w-0 flex-col overflow-hidden rounded-xl border border-border bg-card transition duration-200 hover:-translate-y-0.5 hover:border-input hover:shadow-lg">
-      <div className="relative aspect-square overflow-hidden rounded-xl bg-white p-0 dark:bg-background">
+      <div className="relative aspect-square overflow-hidden rounded-xl bg-white p-0">
         <ProductImageCarousel productId={product.id} productName={name} initialImages={images} swipeImages={swipeImages} />
         <WishlistButton productId={product.id} className="absolute end-3 top-3 z-10" />
         <AddToCartButton compact product={product.id ? {

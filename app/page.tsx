@@ -15,7 +15,7 @@ import Slider from '@/components/slider/Slider'
 import { Brands } from '@/services/brand'
 import { HomeApi } from '@/services/home'
 import { fetchStoreStories } from '@/services/stories'
-import { fetchUsers } from '@/services/category'
+import { fetchCategoriesWithChildren, fetchUsers } from '@/services/category'
 import { Products, UsedLikeNewProducts } from '@/services/product'
 import HomeUsedLikeNew from '@/components/home/HomeUsedLikeNew'
 import HomeCartReminder from '@/components/home/HomeCartReminder'
@@ -63,8 +63,6 @@ export default async function Home() {
         products: (response.data.categoryShelves!.find((group) => group.category.slug === category.slug)?.products ?? []).filter(isInStock),
       })))
     : mapLimited(homeCategories, 4, loadCategoryProducts)
-  // Home shows only departments with something to buy; the navbar keeps every department.
-  const availableCategories = categoryProductGroups.then((groups) => groups.filter((group) => group.products.length > 0).map((group) => group.category))
   const catalogProducts = categoryProductGroups.then(groups => [...new Map([...homeProducts, ...groups.flatMap(group => group.products)].map(product => [String(product.id), product])).values()])
   return (
     <div className="flex min-h-screen w-full flex-col">
@@ -75,7 +73,7 @@ export default async function Home() {
           ? heroSections.map((section) => <Slider key={section.id} slides={section.items as HomeHeroSlide[]} />)
           : <Slider />}
 
-        <Suspense fallback={null}><CategoryTiles categories={availableCategories} /></Suspense>
+        <Suspense fallback={null}><CategoryTiles /></Suspense>
 
         <Suspense fallback={<ShelfPlaceholder />}><CatalogOffers sections={dealSections} products={catalogProducts} /></Suspense>
 
@@ -123,8 +121,10 @@ async function BrandShelf({ fallbackBrands, title }: { fallbackBrands: HomeBrand
   const response = await Brands()
   return <HomeBrandSection brands={Array.isArray(response) && response.length ? response as HomeBrand[] : fallbackBrands} title={title} />
 }
-async function CategoryTiles({ categories }: { categories: Promise<HomeCategory[]> }) {
-  return <HomeCategoryShortcuts categories={await categories} />
+// Every department, the same list as the navbar (shared cached tree); product shelves below show only stocked ones.
+async function CategoryTiles() {
+  const tree = await fetchCategoriesWithChildren()
+  return <HomeCategoryShortcuts categories={tree.data} />
 }
 async function FallbackShelves() {
   const response = await fetchUsers()

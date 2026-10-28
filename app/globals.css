@@ -154,30 +154,31 @@
 
 .dark {
   color-scheme: dark;
-  --shop-soft: #30291b;
+  /* Deep black: near-black page, slightly lifted cards, gold accents. */
+  --shop-soft: #2a2210;
   --shop-accent: #f5ce70;
   --danger-soft: #381e24;
   --danger-foreground: #fda4af;
   --success-soft: #16332c;
   --success-foreground: #6ee7b7;
-  --background: #17191d;
+  --background: #0a0a0b;
   --foreground: oklch(0.985 0 0);
-  --card: #202124;
+  --card: #141416;
   --card-foreground: oklch(0.985 0 0);
-  --popover: #202124;
+  --popover: #141416;
   --popover-foreground: oklch(0.985 0 0);
   --primary: #f5b400;
   --primary-foreground: #222222;
-  --secondary: oklch(0.269 0 0);
+  --secondary: #1c1d20;
   --secondary-foreground: oklch(0.985 0 0);
-  --muted: #282b31;
-  --muted-foreground: #c6ccd6;
-  --accent: oklch(0.269 0 0);
+  --muted: #1c1d20;
+  --muted-foreground: #b9bfc9;
+  --accent: #1c1d20;
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: #474c56;
-  --input: #59606c;
-  --ring: oklch(0.556 0 0);
+  --border: #2c2e33;
+  --input: #3a3d44;
+  --ring: #f5b400;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);

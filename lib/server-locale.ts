@@ -8,5 +8,6 @@ export async function getLocale(): Promise<Locale> {
 
 export async function getTheme(): Promise<'light' | 'dark'> {
   const value = (await cookies()).get('eldokan_theme')?.value
-  return value === 'dark' ? 'dark' : 'light'
+  // Dark (deep black) is the store's look; a visitor who picks light keeps it.
+  return value === 'light' ? 'light' : 'dark'
 }

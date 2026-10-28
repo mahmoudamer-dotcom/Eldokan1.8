@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { Heart } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { EldokanClientError, type ProductId } from '@eldokan/customer-api-client'
@@ -12,7 +13,10 @@ export default function WishlistButton({ productId, className = '' }: { productI
   const { productIds, ready, signedIn, toggle } = useWishlist()
   const id = String(productId ?? '')
   const validId = /^prd_[1-9][0-9]*$/.test(id)
-  const active = productIds.has(id)
+  // First render matches the server (cards can stream in after favourites load), then shows the live state.
+  const [hydrated, setHydrated] = useState(false)
+  useEffect(() => { queueMicrotask(() => setHydrated(true)) }, [])
+  const active = hydrated && productIds.has(id)
 
   async function handleClick() {
     if (!validId) return
@@ -27,7 +31,7 @@ export default function WishlistButton({ productId, className = '' }: { productI
     }
   }
 
-  return <button type="button" onClick={handleClick} disabled={!validId || !ready}
+  return <button type="button" onClick={handleClick} disabled={!validId || !ready || !hydrated}
     aria-label={t(active ? 'Remove from favorites' : 'Add to favorites')}
     aria-pressed={active}
     title={t(active ? 'Remove from favorites' : 'Add to favorites')}
