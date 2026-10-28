@@ -10,7 +10,7 @@ const ZWJ = '‍'
 /** ELDOKAN: each letter carries one part of the Eldokan story. */
 const ENGLISH: Part[] = [
   { glyph: 'E', letter: 'E', word: 'Everyday', line: 'Your daily essentials, in one place.' },
-  { glyph: 'L', letter: 'L', word: 'Local', line: 'Sellers and makers from close to home.' },
+  { glyph: 'L', letter: 'L', word: 'Limitless', line: 'Products from sellers in Egypt and around the world.' },
   { glyph: 'D', letter: 'D', word: 'Delivered', line: 'Brought to your door, or picked up nearby.' },
   { glyph: 'O', letter: 'O', word: 'Offers', line: 'Deals worth coming back for, every day.' },
   { glyph: 'K', letter: 'K', word: 'Kept promises', line: 'Fourteen days to change your mind.' },
@@ -28,7 +28,7 @@ const ARABIC: Part[] = [
   { glyph: `${ZWJ}د`, letter: 'د', word: 'دايمًا عروض', line: 'عروض تستاهل ترجع لها كل يوم.' },
   { glyph: `ك${ZWJ}`, letter: 'ك', word: 'كلمتنا وعد', line: '14 يوم ترجّع فيهم لو غيّرت رأيك.' },
   { glyph: `${ZWJ}ا`, letter: 'ا', word: 'اسألنا', line: 'مساعدة حقيقية وقت ما تحتاجها.' },
-  { glyph: 'ن', letter: 'ن', word: 'ناس بلدنا', line: 'بائعين وصنّاع من بلدنا.' },
+  { glyph: 'ن', letter: 'ن', word: 'نجمعلك', line: 'بنجمعلك منتجات من كل مكان، من مصر وبرّه مصر.' },
 ]
 
 /**
