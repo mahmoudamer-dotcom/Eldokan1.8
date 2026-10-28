@@ -562,3 +562,19 @@
 @media (prefers-reduced-motion: reduce) {
   .eldokan-glyph, .eldokan-word { transition-duration: 0ms; transition-delay: 0ms; }
 }
+/* Arabic wordmark. Cairo builds joined letters from overlapping shapes, so a text stroke would trace
+   every overlap as a cut. Instead: one joined run filled with the footer black and outlined by thin
+   shadows, which only show around the outer edge. The letter pieces above only fill, never stroke. */
+.eldokan-wordmark[data-joined] .eldokan-glyph { -webkit-text-stroke-width: 0; }
+.eldokan-outline {
+  color: #000;
+  --o: rgba(255, 255, 255, 0.24);
+  text-shadow: 1px 0 var(--o), -1px 0 var(--o), 0 1px var(--o), 0 -1px var(--o), 1px 1px var(--o), -1px -1px var(--o), 1px -1px var(--o), -1px 1px var(--o);
+  transition: opacity 300ms ease;
+}
+/* Fade the outline only once the fill wave has covered every letter. */
+.eldokan-wordmark[data-open] .eldokan-outline { opacity: 0; transition-delay: 800ms; }
+/* Joined letters cannot lift apart: the letter in focus stays bright while the others dim. */
+.eldokan-wordmark[data-joined] .eldokan-letter[data-active] .eldokan-glyph { transform: none; }
+/* A solid grey, not transparency: where two joined pieces overlap, transparency would double up. */
+.eldokan-wordmark[data-joined][data-open]:has([data-active]) .eldokan-letter:not([data-active]) .eldokan-glyph { color: #4a4a4a; transition-delay: 0ms; }
