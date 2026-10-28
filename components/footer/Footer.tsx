@@ -67,23 +67,24 @@ export default async function Footer() {
       {/* One band of shopping promises, divided rather than boxed. */}
       <ul aria-label={text('Why shop with us', 'ليه تتسوق معانا')} className="mt-10 grid grid-cols-2 overflow-hidden rounded-3xl border border-white/15 lg:grid-cols-4">
         {perks.map(({ icon: Icon, title, body, href }, index) => {
-          const content = <><span className="grid size-10 shrink-0 place-items-center rounded-full border border-white/25 sm:size-12"><Icon aria-hidden="true" className="size-5" /></span><span className="min-w-0"><span className="block text-sm font-bold sm:text-[15px]">{title}</span><span className="mt-0.5 hidden text-xs leading-5 text-white/50 sm:block">{body}</span></span></>
-          const cell = `flex h-full items-center gap-3 p-4 sm:p-6 ${index % 2 ? 'border-s border-white/15' : ''} ${index > 1 ? 'border-t border-white/15 lg:border-t-0' : ''} ${index === 2 ? 'lg:border-s' : ''}`
+          const content = <><span className="grid size-9 shrink-0 place-items-center rounded-full border border-white/25 sm:size-12"><Icon aria-hidden="true" className="size-4.5 sm:size-5" /></span><span className="min-w-0"><span className="block text-[13px] font-bold leading-5 sm:text-[15px]">{title}</span><span className="mt-0.5 hidden text-xs leading-5 text-white/50 sm:block">{body}</span></span></>
+          const cell = `flex h-full items-center gap-2.5 p-3 sm:gap-3 sm:p-6 ${index % 2 ? 'border-s border-white/15' : ''} ${index > 1 ? 'border-t border-white/15 lg:border-t-0' : ''} ${index === 2 ? 'lg:border-s' : ''}`
           return <li key={title}>{href ? <Link href={href} className={`${cell} transition hover:bg-white/[0.06]`}>{content}</Link> : <div className={cell}>{content}</div>}</li>
         })}
       </ul>
 
-      <div className="grid gap-10 py-12 lg:grid-cols-12 lg:gap-12 lg:py-16">
-        <section aria-label={text('Contact Eldokan', 'تواصل مع الدكان')} className="lg:col-span-4">
+      <div className="grid gap-8 py-8 sm:gap-10 sm:py-12 lg:grid-cols-12 lg:gap-12 lg:py-16">
+        <section aria-label={text('Contact Eldokan', 'تواصل مع الدكان')} className="text-center sm:text-start lg:col-span-4">
           {/* Inverted logo: its white ground turns black and blends into the footer. */}
-          <Link href="/" aria-label={text('Eldokan home', 'الصفحة الرئيسية للدكان')} className="inline-flex"><Image src="/image/Eldokan-logo.webp" width={180} height={106} className="h-20 w-auto object-contain invert mix-blend-lighten" alt={BUSINESS.name[locale]} /></Link>
-          <p className="mt-4 max-w-sm text-[15px] leading-7 text-white/65">{text('Everyday essentials and new finds, delivered to your door.', 'احتياجاتك اليومية وحاجات جديدة تكتشفها، لحد باب البيت.')}</p>
-          <ul className="mt-6 divide-y divide-white/10 rounded-2xl border border-white/15">
+          <Link href="/" aria-label={text('Eldokan home', 'الصفحة الرئيسية للدكان')} className="inline-flex"><Image src="/image/Eldokan-logo.webp" width={180} height={106} className="h-16 w-auto object-contain invert mix-blend-lighten sm:h-20" alt={BUSINESS.name[locale]} /></Link>
+          <p className="mx-auto mt-3 max-w-sm text-sm leading-7 text-white/65 sm:mx-0 sm:mt-4 sm:text-[15px]">{text('Everyday essentials and new finds, delivered to your door.', 'احتياجاتك اليومية وحاجات جديدة تكتشفها، لحد باب البيت.')}</p>
+          {/* Phones: a 2 x 2 grid of contact tiles. Larger screens: one bordered list. */}
+          <ul className="mt-5 grid grid-cols-2 gap-2 text-start sm:mt-6 sm:block sm:divide-y sm:divide-white/10 sm:rounded-2xl sm:border sm:border-white/15">
             {contact.map(({ href, icon: Icon, label, value, external, local }) => <li key={label}>
-              <a href={href} {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})} className="group flex items-center gap-3 px-4 py-3 transition hover:bg-white/[0.06]">
+              <a href={href} {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})} className="group flex h-full min-w-0 items-center gap-2.5 rounded-2xl border border-white/15 p-3 transition hover:bg-white/[0.06] sm:gap-3 sm:rounded-none sm:border-0 sm:px-4">
                 <span className="grid size-9 shrink-0 place-items-center rounded-full border border-white/25 transition group-hover:bg-white group-hover:text-black"><Icon aria-hidden="true" className="size-4" /></span>
-                <span className="min-w-0 flex-1"><span className="block text-[11px] text-white/45">{label}</span><span dir={local ? undefined : 'ltr'} className={`block truncate text-sm font-semibold ${ar && !local ? 'text-end' : ''}`}>{value}</span></span>
-                <ArrowUpRight aria-hidden="true" className="size-4 shrink-0 text-white/30 transition group-hover:text-white rtl:-rotate-90" />
+                <span className="min-w-0 flex-1"><span className="block text-[11px] text-white/45">{label}</span><span dir={local ? undefined : 'ltr'} className={`block text-xs font-semibold wrap-anywhere sm:truncate sm:text-sm ${ar && !local ? 'text-end' : ''}`}>{value}</span></span>
+                <ArrowUpRight aria-hidden="true" className="hidden size-4 shrink-0 text-white/30 transition group-hover:text-white sm:block rtl:-rotate-90" />
               </a>
             </li>)}
           </ul>
@@ -104,7 +105,7 @@ export default async function Footer() {
             })}
           </div>
 
-          <section aria-label={text('Sell on Eldokan', 'بيع مع الدكان')} className="mt-10 flex flex-col gap-5 rounded-3xl bg-white p-6 text-black sm:flex-row sm:items-center sm:justify-between">
+          <section aria-label={text('Sell on Eldokan', 'بيع مع الدكان')} className="mt-8 flex flex-col gap-4 rounded-3xl bg-white p-5 text-black sm:mt-10 sm:gap-5 sm:p-6 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-start gap-4">
               <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-black text-white"><Store aria-hidden="true" className="size-6" /></span>
               <div>
@@ -117,10 +118,26 @@ export default async function Footer() {
         </div>
       </div>
 
-      {roots.length > 0 && <nav aria-label={text('Departments', 'الأقسام')} className="border-t border-white/15 py-10">
-        <h2 className="mb-6 text-sm font-bold">{heading(text('Departments', 'الأقسام'), LayoutGrid)}</h2>
-        {/* Balanced columns: each department keeps its subcategories together. */}
-        <div className="columns-2 gap-x-8 sm:columns-3 lg:columns-4">
+      {roots.length > 0 && <nav aria-label={text('Departments', 'الأقسام')} className="border-t border-white/15 py-8 sm:py-10">
+        <h2 className="mb-3 text-sm font-bold sm:mb-6">{heading(text('Departments', 'الأقسام'), LayoutGrid)}</h2>
+        {/* Phones: one collapsed row per department; tapping it shows its subcategories. */}
+        <div className="sm:hidden">
+          {withSubs.map(category => {
+            const children = category.children ?? []
+            return <details key={category.id ?? category.slug ?? category.name} className="group border-b border-white/10">
+              <summary className="flex min-h-12 cursor-pointer list-none items-center gap-2.5 text-sm font-bold [&::-webkit-details-marker]:hidden"><CategoryBadge icon={categoryIconFor(category)} /><span className="min-w-0 flex-1">{name(category)}</span><span className="text-[11px] font-medium text-white/40">{children.length}</span><ChevronDown aria-hidden="true" className="size-4 text-white/50 transition group-open:rotate-180" /></summary>
+              <ul className="grid grid-cols-2 gap-x-3 gap-y-1 pb-4 ps-9">
+                {children.map(child => <li key={child.id ?? child.slug ?? child.name} className="min-w-0"><SubLink href={categoryHref(child)} icon={categoryIconFor(child)} label={name(child)} /></li>)}
+                <li className="col-span-2 pt-1"><Link href={categoryHref(category)} className="inline-flex items-center gap-1 text-[13px] font-semibold text-white underline underline-offset-4">{text(`All of ${name(category)}`, `كل ${name(category)}`)}<ArrowUpRight aria-hidden="true" className="size-3.5 rtl:-rotate-90" /></Link></li>
+              </ul>
+            </details>
+          })}
+          {withoutSubs.length > 0 && <div className="flex flex-wrap gap-2 pt-4">
+            {withoutSubs.map(category => <Link key={category.id ?? category.slug ?? category.name} href={categoryHref(category)} className="inline-flex items-center gap-1.5 rounded-full border border-white/20 px-3 py-1.5 text-xs font-medium text-white/75 transition hover:bg-white hover:text-black"><PolicyIcon icon={categoryIconFor(category)} />{name(category)}</Link>)}
+          </div>}
+        </div>
+        {/* Larger screens: balanced columns, each department keeps its subcategories together. */}
+        <div className="hidden gap-x-8 sm:block sm:columns-3 lg:columns-4">
           {withSubs.map(category => {
             const children = category.children ?? []
             return <div key={category.id ?? category.slug ?? category.name} className="mb-8 break-inside-avoid">
@@ -138,7 +155,7 @@ export default async function Footer() {
             </ul>
           </div>}
         </div>
-        {brandData.brands.length > 0 && <div className="mt-2 flex flex-wrap items-center gap-2 border-t border-white/15 pt-6"><h2 className="me-2 inline-flex items-center gap-2 text-sm font-bold"><Tags aria-hidden="true" className="size-4" />{brandData.source === 'best-sellers' ? text('Popular brands', 'علامات رائجة') : text('Featured brands', 'علامات مميزة')}</h2>
+        {brandData.brands.length > 0 && <div className="mt-6 flex flex-wrap items-center gap-2 border-t border-white/15 pt-6 sm:mt-2"><h2 className="me-2 inline-flex items-center gap-2 text-sm font-bold"><Tags aria-hidden="true" className="size-4" />{brandData.source === 'best-sellers' ? text('Popular brands', 'علامات رائجة') : text('Featured brands', 'علامات مميزة')}</h2>
           {brandData.brands.map(brand => <Link key={brand.id} href={`/brand/${encodeURIComponent(brand.slug || brand.id)}`} className="rounded-full border border-white/20 px-3.5 py-1.5 text-xs font-medium text-white/75 transition hover:bg-white hover:text-black">{brand.name}</Link>)}
         </div>}
       </nav>}
@@ -148,9 +165,9 @@ export default async function Footer() {
 
     <div className="relative border-t border-white/15">
       {/* Bottom room: the floating "Ask Eldokan" button sits over this corner. */}
-      <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 pb-24 pt-5 text-xs text-white/50 sm:px-6 md:pb-5 lg:flex-row lg:items-center lg:justify-between lg:pe-52 lg:ps-8">
+      <div className="mx-auto flex max-w-7xl flex-col items-center gap-4 px-4 pb-40 pt-5 text-xs text-white/50 sm:px-6 md:pb-5 lg:flex-row lg:items-center lg:justify-between lg:pe-52 lg:ps-8">
         <p className="inline-flex items-center gap-1.5"><Copyright aria-hidden="true" className="size-3.5" />{new Date().getFullYear()} {BUSINESS.name[locale]}. {text('All rights reserved.', 'جميع الحقوق محفوظة.')}</p>
-        <ul aria-label={text('Payment methods', 'وسائل الدفع')} className="flex flex-wrap items-center gap-2">
+        <ul aria-label={text('Payment methods', 'وسائل الدفع')} className="flex flex-wrap items-center justify-center gap-2">
           {[{ label: text('Cash', 'كاش'), icon: Banknote }, { label: 'Visa', icon: CreditCard }, { label: 'Mastercard', icon: CreditCard }, { label: text('Meeza', 'ميزة'), icon: CreditCard }, { label: text('Installments', 'تقسيط'), icon: Wallet }].map(({ label, icon: Icon }) => <li key={label} className="inline-flex items-center gap-1.5 rounded-md border border-white/20 px-2.5 py-1 text-[11px] font-bold text-white/80"><Icon aria-hidden="true" className="size-3.5" />{label}</li>)}
         </ul>
         <BackToTop label={text('Back to top', 'لأعلى الصفحة')} />
