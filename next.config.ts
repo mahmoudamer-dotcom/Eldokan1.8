@@ -14,7 +14,7 @@ const nextConfig: NextConfig = {
     // Production serves product photos straight from WordPress (allowed for *.eldokan.com
     // by its Cloudflare hotlink protection). Local development keeps Next's image proxy,
     // because Cloudflare refuses images requested from localhost.
-    unoptimized: process.env.NODE_ENV === 'production',
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
