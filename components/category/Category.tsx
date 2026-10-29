@@ -19,7 +19,7 @@ export default async function Category() {
       {/* Phones and tablets: one swipeable row of department chips, like an app's tabs. */}
       <nav aria-label={translate('Shop by category', locale)} className="category-scrollbar-hidden flex gap-2 overflow-x-auto overscroll-x-contain px-3 py-2 sm:px-6 lg:hidden">
         {data.map((item, index) => <Link key={item.slug || item.name || index} href={`/category/${encodeURIComponent(item.slug || item.name)}`} className="inline-flex h-10 shrink-0 items-center gap-2 whitespace-nowrap rounded-full border border-border bg-background py-1 ps-1 pe-4 text-[13px] font-semibold shadow-[0_1px_2px_rgb(0_0_0/0.04)] transition hover:border-foreground/30 active:scale-95">
-          <CategoryArtIcon slug={item.slug} name={item.name} className="size-8" />{translateCatalogName(item.name, locale)}
+          <CategoryArtIcon slug={item.slug} name={item.name} />{translateCatalogName(item.name, locale)}
         </Link>)}
       </nav>
       <nav aria-label={translate('Shop by category', locale)} className="relative z-20 mx-auto hidden max-w-7xl flex-wrap items-center gap-1 px-8 py-2 lg:flex">

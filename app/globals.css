@@ -609,3 +609,10 @@ img { -webkit-user-drag: none; }
   .eldokan-wordmark[data-open]:not([data-joined]) .eldokan-word { opacity: 0; }
   .eldokan-wordmark[data-open]:not([data-joined]) .eldokan-letter[data-active] .eldokan-word { opacity: 1; }
 }
+/* The Eldokan doorway: the arched door from the logo frames every department icon,
+   in the logo's black and white (yellow on hover, the store accent). */
+.dokan-arch { border-radius: 999px 999px 0.375rem 0.375rem; }
+.category-circle-art { width: 5.75rem; height: 6.75rem; border-radius: 999px 999px 1rem 1rem; background: var(--foreground); border-color: var(--background); }
+.category-circle-icon { color: var(--background); transition: color 200ms ease; }
+.category-circle:hover .category-circle-icon, .category-circle:focus-visible .category-circle-icon { color: #f5b400; }
+@media (min-width: 640px) { .category-circle-art { width: 7.5rem; height: 8.75rem; border-radius: 999px 999px 1.25rem 1.25rem; } }

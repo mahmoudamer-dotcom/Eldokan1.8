@@ -34,7 +34,7 @@ export default async function HomeCategoryShortcuts({ categories }: { categories
               <span className="category-circle-art">
                 {storeImage
                   ? <Image src={storeImage} alt="" fill sizes="112px" />
-                  : <span className="grid size-full place-items-center text-[var(--department-accent)]"><Icon aria-hidden="true" className="size-10 sm:size-12" strokeWidth={1.75} /></span>}
+                  : <span className="category-circle-icon grid size-full place-items-center pt-2"><Icon aria-hidden="true" className="size-10 sm:size-12" strokeWidth={1.5} /></span>}
               </span>
               <span className="category-circle-label">{translateCatalogName(category.name, locale)}</span>
             </Link>
