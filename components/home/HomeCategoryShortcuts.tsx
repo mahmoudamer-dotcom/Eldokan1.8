@@ -3,8 +3,7 @@ import Link from 'next/link'
 import T from '@/components/i18n/T'
 import { translateCatalogName } from '@/lib/i18n'
 import { getLocale } from '@/lib/server-locale'
-import { categoryWorldOf } from '@/lib/category-experience'
-import { categoryIconFor } from '@/lib/category-icons'
+import { categoryIcon, categoryWorldOf } from '@/lib/category-experience'
 
 type ShortcutCategory = { id: string | number; name: string; slug?: string; image?: string | { url?: string | null } | null }
 
@@ -22,7 +21,6 @@ export default async function HomeCategoryShortcuts({ categories }: { categories
       <div className="category-circles -mx-4 flex snap-x gap-5 overflow-x-auto px-4 pb-2 pt-1 sm:gap-10 lg:mx-0 lg:grid lg:grid-flow-col lg:auto-cols-fr lg:justify-items-center lg:gap-x-6 lg:overflow-visible lg:px-0">
         {categories.slice(0, 12).map((category) => {
           const world = categoryWorldOf(category.slug, category.name)
-          const Icon = categoryIconFor(category)
           const storeImage = (typeof category.image === 'string' ? category.image : category.image?.url) || undefined
 
           return (
@@ -34,7 +32,7 @@ export default async function HomeCategoryShortcuts({ categories }: { categories
               <span className="category-circle-art">
                 {storeImage
                   ? <Image src={storeImage} alt="" fill sizes="112px" />
-                  : <span className="category-circle-icon grid size-full place-items-center pt-2"><Icon aria-hidden="true" className="size-10 sm:size-12" strokeWidth={1.5} /></span>}
+                  : <Image src={categoryIcon(world)} alt="" width={200} height={200} unoptimized />}
               </span>
               <span className="category-circle-label">{translateCatalogName(category.name, locale)}</span>
             </Link>

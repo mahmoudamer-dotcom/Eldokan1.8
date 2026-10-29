@@ -127,7 +127,7 @@ export default async function Footer() {
           {withSubs.map(category => {
             const children = category.children ?? []
             return <details key={category.id ?? category.slug ?? category.name} className="group border-b border-white/10">
-              <summary className="flex min-h-12 cursor-pointer list-none items-center gap-2.5 text-sm font-bold [&::-webkit-details-marker]:hidden"><CategoryArtIcon slug={category.slug} name={category.name} tone="paper" /><span className="min-w-0 flex-1">{name(category)}</span><span className="text-[11px] font-medium text-white/40">{children.length}</span><ChevronDown aria-hidden="true" className="size-4 text-white/50 transition group-open:rotate-180" /></summary>
+              <summary className="flex min-h-12 cursor-pointer list-none items-center gap-2.5 text-sm font-bold [&::-webkit-details-marker]:hidden"><CategoryArtIcon slug={category.slug} name={category.name} /><span className="min-w-0 flex-1">{name(category)}</span><span className="text-[11px] font-medium text-white/40">{children.length}</span><ChevronDown aria-hidden="true" className="size-4 text-white/50 transition group-open:rotate-180" /></summary>
               <ul className="grid grid-cols-2 gap-x-3 gap-y-1 pb-4 ps-9">
                 {children.map(child => <li key={child.id ?? child.slug ?? child.name} className="min-w-0"><SubLink href={categoryHref(child)} icon={categoryIconFor(child)} label={name(child)} /></li>)}
                 <li className="col-span-2 pt-1"><Link href={categoryHref(category)} className="inline-flex items-center gap-1 text-[13px] font-semibold text-white underline underline-offset-4">{text(`All of ${name(category)}`, `كل ${name(category)}`)}<ArrowUpRight aria-hidden="true" className="size-3.5 rtl:-rotate-90" /></Link></li>
@@ -135,7 +135,7 @@ export default async function Footer() {
             </details>
           })}
           {withoutSubs.length > 0 && <div className="flex flex-wrap gap-2 pt-4">
-            {withoutSubs.map(category => <Link key={category.id ?? category.slug ?? category.name} href={categoryHref(category)} className="inline-flex items-center gap-2 rounded-full border border-white/20 py-1 ps-1 pe-3.5 text-xs font-medium text-white/80 transition hover:bg-white hover:text-black"><CategoryArtIcon slug={category.slug} name={category.name} tone="paper" className="h-6 w-5" iconClassName="size-3.5" />{name(category)}</Link>)}
+            {withoutSubs.map(category => <Link key={category.id ?? category.slug ?? category.name} href={categoryHref(category)} className="inline-flex items-center gap-2 rounded-full border border-white/20 py-1 ps-1 pe-3.5 text-xs font-medium text-white/80 transition hover:bg-white hover:text-black"><CategoryArtIcon slug={category.slug} name={category.name} className="size-6" iconClassName="size-3.5" />{name(category)}</Link>)}
           </div>}
         </div>
         {/* Larger screens: balanced columns, each department keeps its subcategories together. */}
@@ -143,7 +143,7 @@ export default async function Footer() {
           {withSubs.map(category => {
             const children = category.children ?? []
             return <div key={category.id ?? category.slug ?? category.name} className="mb-8 break-inside-avoid">
-              <Link href={categoryHref(category)} className="group/link inline-flex items-center gap-2 text-[15px] font-bold transition hover:underline hover:underline-offset-4"><CategoryArtIcon slug={category.slug} name={category.name} tone="paper" />{name(category)}</Link>
+              <Link href={categoryHref(category)} className="group/link inline-flex items-center gap-2 text-[15px] font-bold transition hover:underline hover:underline-offset-4"><CategoryArtIcon slug={category.slug} name={category.name} />{name(category)}</Link>
               <ul className="mt-2.5 space-y-1.5 border-s border-white/15 ps-3">
                 {children.slice(0, 6).map(child => <li key={child.id ?? child.slug ?? child.name}><SubLink href={categoryHref(child)} icon={categoryIconFor(child)} label={name(child)} /></li>)}
                 {children.length > 6 && <li><Link href={categoryHref(category)} className="text-[13px] font-semibold text-white underline underline-offset-4">{text('View all', 'عرض الكل')}</Link></li>}

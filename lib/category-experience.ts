@@ -29,6 +29,11 @@ export function categoryArt(world: CategoryWorld, size: 'large' | 'small' = 'lar
   return `/image/categories/photo/${world}${size === 'small' ? '-sm' : ''}.jpg`
 }
 
+/** Square, centered artwork for round category badges. */
+export function categoryIcon(world: CategoryWorld) {
+  return `/image/categories/circle/${world}.svg`
+}
+
 export const categoryWorldCopy: Record<CategoryWorld, { eyebrow: [string, string]; heading: [string, string]; description: [string, string]; guide: [string, string] }> = {
   technology: {
     eyebrow: ['Built around your next upgrade', 'اختيارات تواكب احتياجك'],
