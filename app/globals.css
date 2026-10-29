@@ -602,3 +602,8 @@ img { -webkit-user-drag: none; }
 @media (hover: none) { article.group:active, .category-circle:active, .mobile-tab-bar a:active, .mobile-tab-bar button:active { transform: scale(0.97); transition: transform 80ms ease; } }
 /* Phones: a narrower picture so the department name fits on its one line. */
 @media (max-width: 639px) { .category-shelf-head img { width: 4.5rem; height: 3.75rem; } .category-shelf-head h2 { font-size: 0.9375rem; } .category-shelf-head a { font-size: 0.8125rem; } }
+/* Phones, English: only the active letter shows its word (a pill below), so the row keeps its width. */
+@media (max-width: 639px) {
+  .eldokan-wordmark[data-open]:not([data-joined]) .eldokan-word { opacity: 0; }
+  .eldokan-wordmark[data-open]:not([data-joined]) .eldokan-letter[data-active] .eldokan-word { opacity: 1; }
+}

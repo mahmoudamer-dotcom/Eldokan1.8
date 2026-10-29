@@ -53,14 +53,14 @@ export default function FooterWordmark({ locale }: { locale: Locale }) {
           <button key={index} type="button" tabIndex={-1} onMouseEnter={() => setActive(index)} onClick={() => { setOpen(true); setActive(active === index ? null : index) }}
             style={{ '--i': index } as React.CSSProperties} data-active={active === index || undefined}
             className={`eldokan-letter relative flex flex-col items-center ${ar ? '-mx-[2px] px-0' : 'px-[0.5vw] lg:px-2'}`}>
-            <span className={`eldokan-glyph ${ar ? 'text-[28vw] font-bold leading-[1.05] lg:text-[250px]' : 'font-serif text-[15vw] leading-[0.9] lg:text-[170px]'}`} style={ar ? { fontFamily: 'var(--font-arabic)' } : undefined}>{item.glyph}</span>
+            <span className={`eldokan-glyph ${ar ? 'text-[28vw] font-bold leading-[1.05] lg:text-[250px]' : 'font-serif text-[13vw] leading-[0.9] sm:text-[15vw] lg:text-[170px]'}`} style={ar ? { fontFamily: 'var(--font-arabic)' } : undefined}>{item.glyph}</span>
             {/* Joined Arabic letters keep their width, so only the active letter shows its word, as a pill placed below
                 the lowest letter (the ن bowl) so it never sits on a glyph. */}
-            <span className={`eldokan-word whitespace-nowrap text-[9px] font-bold uppercase tracking-[0.18em] sm:text-xs ${ar ? 'absolute top-full mt-[2vw] rounded-full bg-white px-2.5 py-0.5 tracking-normal text-black sm:text-sm lg:mt-4 lg:px-3.5 lg:py-1 lg:text-base' : 'mt-1 text-white'}`}>{item.word}</span>
+            <span className={`eldokan-word whitespace-nowrap text-[9px] font-bold uppercase tracking-[0.18em] sm:text-xs ${ar ? 'absolute top-full mt-[2vw] rounded-full bg-white px-2.5 py-0.5 tracking-normal text-black sm:text-sm lg:mt-4 lg:px-3.5 lg:py-1 lg:text-base' : 'mt-1 text-white max-sm:absolute max-sm:top-full max-sm:mt-[2vw] max-sm:rounded-full max-sm:bg-white max-sm:px-2.5 max-sm:py-0.5 max-sm:tracking-normal max-sm:text-black'}`}>{item.word}</span>
           </button>
         ))}
       </div>
-      <p aria-hidden="true" className={`min-h-6 pb-2 text-center text-sm text-white/80 transition-opacity duration-300 sm:text-base ${ar ? 'mt-[8vw] lg:mt-14' : 'mt-2'} ${part ? 'opacity-100' : 'opacity-0'}`}>
+      <p aria-hidden="true" className={`min-h-6 pb-2 text-center text-sm text-white/80 transition-opacity duration-300 sm:text-base ${ar ? 'mt-[8vw] lg:mt-14' : 'mt-[8vw] sm:mt-2'} ${part ? 'opacity-100' : 'opacity-0'}`}>
         {part && <><span className={`text-lg font-bold text-white ${ar ? '' : 'font-serif'}`}>{part.letter}</span> · <span className="font-bold text-white">{part.word}</span> — {part.line}</>}
       </p>
     </div>
