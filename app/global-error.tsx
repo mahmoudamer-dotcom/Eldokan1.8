@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { CircleQuestionMark, ShoppingBag } from 'lucide-react'
 
 // Replaces the root layout when it fails, so it renders its own document and
 // cannot rely on the locale provider or global styles: the store sign, styled inline.
@@ -21,13 +22,10 @@ export default function GlobalError({ error, retry }: { error: Error & { digest?
             </div>
             {error.digest && <p dir="ltr" style={{ fontSize: '.75rem', color: '#6b675e' }}>Error reference: {error.digest}</p>}
           </div>
-          <svg aria-hidden="true" viewBox="0 0 380 420" style={{ width: '14rem', maxWidth: '60vw' }}>
-            <path d="M120 120 C120 60 150 30 190 30 C230 30 260 60 260 120" fill="none" stroke="#1d1d1b" strokeWidth="14" strokeLinecap="round" />
-            <rect x="40" y="110" width="300" height="290" rx="36" fill="#f5b400" />
-            <circle cx="120" cy="150" r="9" fill="#1d1d1b" />
-            <circle cx="260" cy="150" r="9" fill="#1d1d1b" />
-            <text x="190" y="350" textAnchor="middle" fontSize="200" fontWeight="900" fill="#1d1d1b">؟</text>
-          </svg>
+          <div aria-hidden="true" style={{ position: 'relative', display: 'grid', placeItems: 'center', width: '12rem', height: '12rem', borderRadius: '999px', background: '#f5b400' }}>
+            <ShoppingBag size={96} color="#1d1d1b" strokeWidth={1.5} />
+            <span style={{ position: 'absolute', bottom: '8%', insetInlineEnd: '8%', display: 'grid', placeItems: 'center', width: '3.5rem', height: '3.5rem', borderRadius: '999px', background: '#1d1d1b', color: '#fff', boxShadow: '0 0 0 6px #f6f3ec' }}><CircleQuestionMark size={36} strokeWidth={1.75} /></span>
+          </div>
         </main>
       </body>
     </html>

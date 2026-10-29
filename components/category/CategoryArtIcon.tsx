@@ -1,10 +1,11 @@
-import Image from 'next/image'
-import { categoryIcon, categoryWorldOf } from '@/lib/category-experience'
+import { createElement } from 'react'
+import { categoryWorldOf } from '@/lib/category-experience'
+import { categoryIconFor } from '@/lib/category-icons'
 
-/** A department's illustrated icon (the same art as the home circles) in a small round tile of its colour. */
-export default function CategoryArtIcon({ slug, name, className = 'size-7' }: { slug?: string; name?: string; className?: string }) {
+/** A department's Lucide icon in a small round tile of the department's colours. */
+export default function CategoryArtIcon({ slug, name, className = 'size-7', iconClassName = 'size-4' }: { slug?: string; name?: string; className?: string; iconClassName?: string }) {
   const world = categoryWorldOf(slug, name)
-  return <span aria-hidden="true" className={`category-world category-world--${world} relative block shrink-0 overflow-hidden rounded-full bg-[var(--department-surface)] ring-1 ring-black/5 ${className}`}>
-    <Image src={categoryIcon(world)} alt="" fill sizes="32px" unoptimized className="object-cover" />
+  return <span aria-hidden="true" className={`category-world category-world--${world} grid shrink-0 place-items-center rounded-full bg-[var(--department-surface)] text-[var(--department-accent)] ring-1 ring-black/5 ${className}`}>
+    {createElement(categoryIconFor({ slug, name }), { className: iconClassName, strokeWidth: 2 })}
   </span>
 }

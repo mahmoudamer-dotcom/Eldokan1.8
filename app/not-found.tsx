@@ -28,6 +28,6 @@ export default async function NotFound() {
         <Link href="/" className="inline-flex min-h-12 items-center justify-center rounded-full border border-foreground px-7 font-bold transition hover:bg-foreground hover:text-background">{text('Back to home', 'ارجع للرئيسية')}</Link>
       </div>
     </div>
-    <StoreSignBag mark={ar ? '؟' : '?'} />
+    <StoreSignBag />
   </main>
 }

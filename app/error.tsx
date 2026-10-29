@@ -22,6 +22,6 @@ export default function ErrorPage({ error, retry }: { error: Error & { digest?: 
       </div>
       {error.digest && <p className="text-xs text-muted-foreground">{text('Error reference', 'مرجع الخطأ')}: <span dir="ltr">{error.digest}</span></p>}
     </div>
-    <StoreSignBag mark={ar ? '؟' : '?'} />
+    <StoreSignBag />
   </main>
 }
