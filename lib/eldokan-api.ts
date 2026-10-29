@@ -17,6 +17,7 @@ export function getBrowserEldokanApiBaseUrl() {
 // re-checks stock on the server, so a briefly older listing cannot be bought wrong.
 const CATALOG_REVALIDATE_SECONDS = 300
 const SEARCH_REVALIDATE_SECONDS = 120
+const HOME_REVALIDATE_SECONDS = 30
 
 /**
  * Anonymous server-side catalog reads are shared for a short time so every page
@@ -28,9 +29,14 @@ const cachedCatalogFetch: typeof fetch = (input, init) => {
   const url = withCatalogLanguage(input)
   const method = init?.method ?? 'GET'
   if (method !== 'GET') return fetch(url, init)
-  // Home sections (hero slides, banners, shelves) are edited in WordPress and must show at
-  // once; the plugin keeps its own cache and clears it on save, so this read stays fast.
-  if (url.pathname.endsWith('/home')) return fetch(url, { ...init, cache: 'no-store' })
+  // Home sections (hero slides, banners, shelves) are edited in WordPress. One shared read every
+  // 30 seconds keeps an edit visible within half a minute, instead of one store call per visitor:
+  // under a rush (1,000 shoppers a minute) the store would otherwise answer the same page 1,000 times.
+  if (url.pathname.endsWith('/home')) {
+    const { cache: _homeCache, ...homeInit } = init ?? {}
+    void _homeCache
+    return fetch(url, { ...homeInit, next: { revalidate: HOME_REVALIDATE_SECONDS, tags: ['home'] } })
+  }
   const search = url.pathname.includes('/search') || url.searchParams.has('search')
   const { cache: _cache, ...rest } = init ?? {}
   void _cache

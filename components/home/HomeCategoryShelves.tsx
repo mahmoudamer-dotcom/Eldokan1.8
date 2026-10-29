@@ -2,13 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { categoryArt, categoryWorldOf } from '@/lib/category-experience'
 import ProductCard from '@/components/productCard/ProductCard'
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from '@/components/ui/carousel'
+import ProductShelf from '@/components/ui/ProductShelf'
 import type { HomeCategory, HomeProduct } from '@/types/home'
 import T from '@/components/i18n/T'
 import { translateCatalogName } from '@/lib/i18n'
@@ -40,16 +34,9 @@ export default async function HomeCategoryShelves({ groups }: { groups: HomeCate
               <T text="View all" />
             </Link>
           </div>
-          <Carousel opts={{ align: 'start' }} className="w-full">
-            <CarouselContent className="-ms-3">
-              {products.map((product, index) => (
-                <CarouselItem key={product.id ?? index} className="basis-[46%] ps-3 sm:basis-[31%] md:basis-[27%] lg:basis-[22%] xl:basis-[18%]">
-                  <ProductCard product={product} swipeImages={false} />
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            {products.length > 5 && <><CarouselPrevious className="max-md:hidden" /><CarouselNext className="max-md:hidden" /></>}
-          </Carousel>
+          <ProductShelf>
+            {products.map((product, index) => <ProductCard key={product.id ?? index} product={product} swipeImages={false} />)}
+          </ProductShelf>
         </section>
         )
       })}

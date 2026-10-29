@@ -1,11 +1,5 @@
 import ProductCard from '@/components/productCard/ProductCard'
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from '@/components/ui/carousel'
+import ProductShelf from '@/components/ui/ProductShelf'
 import type { HomeProduct, HomeSection } from '@/types/home'
 import T from '@/components/i18n/T'
 
@@ -35,16 +29,9 @@ export default function HomeProductCarousel({
         </div>
         {products.length > 5 && <span className="hidden text-sm text-muted-foreground sm:inline"><T text="Scroll to explore" /></span>}
       </div>
-      <Carousel opts={{ align: 'start' }} className="w-full">
-        <CarouselContent className="-ms-3">
-          {products.map((product, index) => (
-            <CarouselItem key={product.id ?? index} className="basis-[46%] ps-3 sm:basis-[31%] md:basis-[27%] lg:basis-[22%] xl:basis-[18%]">
-              <ProductCard product={product} swipeImages={false} />
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        {products.length > 5 && <><CarouselPrevious className="max-md:hidden" /><CarouselNext className="max-md:hidden" /></>}
-      </Carousel>
+      <ProductShelf>
+            {products.map((product, index) => <ProductCard key={product.id ?? index} product={product} swipeImages={false} />)}
+          </ProductShelf>
     </section>
   )
 }

@@ -583,3 +583,8 @@
 @keyframes toast-in { from { transform: translateY(-12px); opacity: 0; } to { transform: none; opacity: 1; } }
 .eldokan-toast { animation: toast-in 180ms ease-out; }
 @media (prefers-reduced-motion: reduce) { .eldokan-toast { animation: none; } }
+/* Native swipe rows (product shelves): no visible scrollbar, cards snap clear of the page gutter. */
+.shelf-track { scrollbar-width: none; scroll-padding-inline: 1rem; -webkit-overflow-scrolling: touch; }
+.shelf-track::-webkit-scrollbar { display: none; }
+@media (min-width: 640px) { .shelf-track { scroll-padding-inline: 0; } }
+@media (prefers-reduced-motion: reduce) { .shelf-track { scroll-behavior: auto; } }

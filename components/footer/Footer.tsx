@@ -55,8 +55,8 @@ export default async function Footer() {
   const contact = [
     { href: `https://wa.me/${BUSINESS.phone.replace('+', '')}`, icon: MessageCircle, label: text('WhatsApp', 'واتساب'), value: phone, external: true },
     { href: `tel:${BUSINESS.phone}`, icon: Phone, label: text('Call us', 'اتصل بينا'), value: phone },
-    { href: `mailto:${BUSINESS.email}`, icon: Mail, label: text('Email', 'البريد الإلكتروني'), value: BUSINESS.email },
     { href: '/help', icon: Headphones, label: text('Help center', 'مركز المساعدة'), value: text('Answers to common questions', 'إجابات أشهر الأسئلة'), local: true },
+    { href: `mailto:${BUSINESS.email}`, icon: Mail, label: text('Email', 'البريد الإلكتروني'), value: BUSINESS.email, wide: true },
   ]
   const link = 'group/link inline-flex items-center gap-2.5 py-1.5 text-sm text-white/60 transition-colors hover:text-white focus-visible:outline-white'
   const linkIcon = 'size-4 shrink-0 text-white/35 transition group-hover/link:text-white'
@@ -80,7 +80,7 @@ export default async function Footer() {
           <p className="mx-auto mt-3 max-w-sm text-sm leading-7 text-white/65 sm:mx-0 sm:mt-4 sm:text-[15px]">{text('Everyday essentials and new finds, delivered to your door.', 'احتياجاتك اليومية وحاجات جديدة تكتشفها، لحد باب البيت.')}</p>
           {/* Phones: a 2 x 2 grid of contact tiles. Larger screens: one bordered list. */}
           <ul className="mt-5 grid grid-cols-2 gap-2 text-start sm:mt-6 sm:block sm:divide-y sm:divide-white/10 sm:rounded-2xl sm:border sm:border-white/15">
-            {contact.map(({ href, icon: Icon, label, value, external, local }) => <li key={label}>
+            {contact.map(({ href, icon: Icon, label, value, external, local, wide }) => <li key={label} className={wide ? 'col-span-2' : undefined}>
               <a href={href} {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})} className="group flex h-full min-w-0 items-center gap-2.5 rounded-2xl border border-white/15 p-3 transition hover:bg-white/[0.06] sm:gap-3 sm:rounded-none sm:border-0 sm:px-4">
                 <span className="grid size-9 shrink-0 place-items-center rounded-full border border-white/25 transition group-hover:bg-white group-hover:text-black"><Icon aria-hidden="true" className="size-4" /></span>
                 <span className="min-w-0 flex-1"><span className="block text-[11px] text-white/45">{label}</span><span dir={local ? undefined : 'ltr'} className={`block text-xs font-semibold wrap-anywhere sm:truncate sm:text-sm ${ar && !local ? 'text-end' : ''}`}>{value}</span></span>
