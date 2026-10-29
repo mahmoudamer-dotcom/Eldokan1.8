@@ -40,7 +40,7 @@ export function ShoppingChatProvider({ children }: { children: React.ReactNode }
   }, [])
   const hidden = pathname.startsWith('/checkout')
   return <Context.Provider value={show}>{children}
-    {!hidden && !open && <button type="button" onClick={() => show()} aria-haspopup="dialog" aria-expanded={false} aria-controls="eldokan-shopping-chat" className="shopping-chat-launcher fixed bottom-[max(1rem,env(safe-area-inset-bottom))] end-4 z-50 inline-flex min-h-14 items-center gap-2 rounded-full bg-[#202124] px-5 text-sm font-bold text-white shadow-xl transition hover:bg-black focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary print:hidden"><MessageCircle aria-hidden="true" className="size-5 text-[#ffd45b]" /><span>{locale === 'ar' ? 'اسأل الدكان' : 'Ask Eldokan'}</span></button>}
+    {!hidden && !open && <button type="button" onClick={() => show()} aria-haspopup="dialog" aria-expanded={false} aria-controls="eldokan-shopping-chat" className="shopping-chat-launcher fixed bottom-[max(1rem,env(safe-area-inset-bottom))] end-4 z-50 inline-flex min-h-14 items-center gap-2 rounded-full bg-[#202124] px-5 text-sm max-md:size-13 max-md:min-h-0 max-md:justify-center max-md:px-0 font-bold text-white shadow-xl transition hover:bg-black focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary print:hidden"><MessageCircle aria-hidden="true" className="size-5 text-[#ffd45b]" /><span className="max-md:sr-only">{locale === 'ar' ? 'اسأل الدكان' : 'Ask Eldokan'}</span></button>}
     {started && <Chat key={`${locale}:${config.id}`} locale={locale} options={config.options} open={open && !hidden} close={close} />}
   </Context.Provider>
 }

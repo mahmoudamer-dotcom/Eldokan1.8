@@ -38,12 +38,12 @@ export default function HomeProductCarousel({
       <Carousel opts={{ align: 'start' }} className="w-full">
         <CarouselContent className="-ms-3">
           {products.map((product, index) => (
-            <CarouselItem key={product.id ?? index} className="basis-[68%] ps-3 sm:basis-[42%] md:basis-[30%] lg:basis-[22%] xl:basis-[18%]">
+            <CarouselItem key={product.id ?? index} className="basis-[46%] ps-3 sm:basis-[31%] md:basis-[27%] lg:basis-[22%] xl:basis-[18%]">
               <ProductCard product={product} swipeImages={false} />
             </CarouselItem>
           ))}
         </CarouselContent>
-        {products.length > 5 && <><CarouselPrevious /><CarouselNext /></>}
+        {products.length > 5 && <><CarouselPrevious className="max-md:hidden" /><CarouselNext className="max-md:hidden" /></>}
       </Carousel>
     </section>
   )

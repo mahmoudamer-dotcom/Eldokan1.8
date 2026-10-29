@@ -74,11 +74,11 @@ export default async function ProductPage({
           <ArrowUpRight aria-hidden="true" className="size-5 rtl:-rotate-90" />
         </Link>}
         <ReturnToJourney />
-        <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(20rem,0.95fr)] lg:gap-8">
+        <div className="grid items-start gap-6 md:grid-cols-2 md:gap-5 lg:grid-cols-[minmax(0,1.05fr)_minmax(20rem,0.95fr)] lg:gap-8">
           <div className="min-w-0 rounded-2xl border border-border bg-card p-3 sm:p-5">
             <ParentImage data={product} />
           </div>
-          <div><ProductDetails data={product} /></div>
+          <div className="min-w-0"><ProductDetails data={product} /></div>
         </div>
 <DescriptionProduct data={product} />
         <ProductReviews key={String(product.id)} productId={String(product.id)} />

@@ -26,16 +26,6 @@ const OpenSans = localFont({
   variable: '--font-openSans',
 });
 
-// Maghrebi (Andalusian-style) display face for the الدكان wordmark: Harmattan Bold, Arabic subset, SIL OFL.
-// Not preloaded; the browser fetches it only where the wordmark appears.
-const logoArabic = localFont({
-  src: '../public/fonts/Harmattan-Arabic-Bold.woff2',
-  display: 'swap',
-  variable: '--font-logo-arabic',
-  weight: '700',
-  preload: false,
-});
-
 const cairo = localFont({
   // woff2 subset (Arabic + Latin), loaded only when Arabic text is shown.
   src: '../public/fonts/Cairo-Variable.woff2',
@@ -60,7 +50,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang={locale}
       dir={locale === 'ar' ? 'rtl' : 'ltr'}
-      className={`${OpenSans.variable} ${cairo.variable} ${logoArabic.variable} h-full antialiased${theme === 'dark' ? ' dark' : ''}`}
+      className={`${OpenSans.variable} ${cairo.variable} h-full antialiased${theme === 'dark' ? ' dark' : ''}`}
     >
       <body className="flex min-h-screen flex-col overflow-x-clip bg-background text-foreground">
         <LocaleProvider initialLocale={locale} initialTheme={theme}>

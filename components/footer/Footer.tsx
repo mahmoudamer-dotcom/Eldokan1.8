@@ -168,7 +168,14 @@ export default async function Footer() {
       <div className="mx-auto flex max-w-7xl flex-col items-center gap-4 px-4 pb-40 pt-5 text-xs text-white/50 sm:px-6 md:pb-5 lg:flex-row lg:items-center lg:justify-between lg:pe-52 lg:ps-8">
         <p className="inline-flex items-center gap-1.5"><Copyright aria-hidden="true" className="size-3.5" />{new Date().getFullYear()} {BUSINESS.name[locale]}. {text('All rights reserved.', 'جميع الحقوق محفوظة.')}</p>
         <ul aria-label={text('Payment methods', 'وسائل الدفع')} className="flex flex-wrap items-center justify-center gap-2">
-          {[{ label: text('Cash', 'كاش'), icon: Banknote }, { label: 'Visa', icon: CreditCard }, { label: 'Mastercard', icon: CreditCard }, { label: text('Meeza', 'ميزة'), icon: CreditCard }, { label: text('Installments', 'تقسيط'), icon: Wallet }].map(({ label, icon: Icon }) => <li key={label} className="inline-flex items-center gap-1.5 rounded-md border border-white/20 px-2.5 py-1 text-[11px] font-bold text-white/80"><Icon aria-hidden="true" className="size-3.5" />{label}</li>)}
+          {/* White chips so each payment brand keeps its own colours on the black footer. */}
+          {[
+            { label: text('Cash', 'كاش'), mark: <Banknote aria-hidden="true" className="size-4 text-emerald-600" />, named: true },
+            { label: 'Visa', mark: <VisaMark /> },
+            { label: 'Mastercard', mark: <MastercardMark /> },
+            { label: text('Meeza', 'ميزة'), mark: <MeezaMark /> },
+            { label: text('Installments', 'تقسيط'), mark: <Wallet aria-hidden="true" className="size-4 text-amber-500" />, named: true },
+          ].map(({ label, mark, named }) => <li key={label} title={label} className="inline-flex h-8 items-center gap-1.5 rounded-md bg-white px-2.5 text-[11px] font-bold text-black">{mark}{named ? label : <span className="sr-only">{label}</span>}</li>)}
         </ul>
         <BackToTop label={text('Back to top', 'لأعلى الصفحة')} />
       </div>
@@ -182,6 +189,23 @@ function CategoryBadge({ icon: Icon }: { icon: LucideIcon }) {
 
 function SubLink({ href, icon: Icon, label }: { href: string; icon: LucideIcon; label: string }) {
   return <Link href={href} className="group/link inline-flex items-center gap-2 text-[13px] leading-5 text-white/55 transition hover:text-white"><Icon aria-hidden="true" className="size-3.5 shrink-0 text-white/35 group-hover/link:text-white" />{label}</Link>
+}
+
+function VisaMark() {
+  return <svg aria-hidden="true" viewBox="0 0 48 16" className="h-3.5 w-auto"><text x="24" y="13.5" textAnchor="middle" fontFamily="Arial, Helvetica, sans-serif" fontSize="16" fontStyle="italic" fontWeight="900" fill="#1434CB" letterSpacing="-0.5">VISA</text></svg>
+}
+
+function MastercardMark() {
+  return <svg aria-hidden="true" viewBox="0 0 32 20" className="h-5 w-auto">
+    <circle cx="12" cy="10" r="8" fill="#EB001B" />
+    <circle cx="20" cy="10" r="8" fill="#F79E1B" />
+    <path d="M16 3.07a8 8 0 0 1 0 13.86a8 8 0 0 1 0-13.86z" fill="#FF5F00" />
+  </svg>
+}
+
+function MeezaMark() {
+  // Meeza's purple wordmark with its orange underline.
+  return <svg aria-hidden="true" viewBox="0 0 52 20" className="h-4.5 w-auto"><text x="26" y="12.5" textAnchor="middle" fontFamily="Arial, Helvetica, sans-serif" fontSize="14" fontWeight="800" fill="#5B2C8F" letterSpacing="-0.3">meeza</text><rect x="27" y="15.5" width="21" height="3" rx="1.5" fill="#F26A21" /></svg>
 }
 
 function PolicyIcon({ icon: Icon }: { icon: LucideIcon }) {
