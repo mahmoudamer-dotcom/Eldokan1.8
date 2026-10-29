@@ -167,7 +167,7 @@ export default async function Footer() {
 
     <div className="relative border-t border-white/15">
       {/* Bottom room: the floating "Ask Eldokan" button sits over this corner. */}
-      <div className="mx-auto flex max-w-7xl flex-col items-center gap-4 px-4 pb-40 pt-5 text-xs text-white/50 sm:px-6 md:pb-5 lg:flex-row lg:items-center lg:justify-between lg:pe-52 lg:ps-8">
+      <div className="mx-auto flex max-w-7xl flex-col items-center gap-4 px-4 pb-40 pt-5 text-xs text-white/50 sm:px-6 lg:pb-5 lg:flex-row lg:items-center lg:justify-between lg:pe-52 lg:ps-8">
         <p className="inline-flex items-center gap-1.5"><Copyright aria-hidden="true" className="size-3.5" />{new Date().getFullYear()} {BUSINESS.name[locale]}. {text('All rights reserved.', 'جميع الحقوق محفوظة.')}</p>
         <ul aria-label={text('Payment methods', 'وسائل الدفع')} className="flex flex-wrap items-center justify-center gap-2">
           {/* White chips so each payment brand keeps its own colours on the black footer. */}

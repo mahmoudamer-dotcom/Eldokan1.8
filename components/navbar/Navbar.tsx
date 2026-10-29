@@ -5,7 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { GitCompareArrows, Heart, Languages, Moon, ShoppingCart, Sun } from 'lucide-react'
+import { GitCompareArrows, Heart, Languages, Moon, Search, ShoppingCart, Sun } from 'lucide-react'
 import { EldokanClientError, type CustomerAccount } from '@eldokan/customer-api-client'
 import { useLocale } from '@/components/i18n/LocaleProvider'
 import { useWishlist } from '@/components/wishlist/WishlistProvider'
@@ -51,6 +51,9 @@ export default function Navbar() {
   const showShoppingChat = useShoppingChat()
   const wishlistCount = hydrated ? wishlistIds.size : 0
   const visibleCartItemCount = hydrated ? cartItemCount : 0
+  // Below desktop the bottom tab bar holds favourites, cart and account on every page but checkout.
+  const tabBarShown = !pathname.startsWith('/checkout')
+  const inTabBar = tabBarShown ? 'max-lg:hidden' : ''
 
   useEffect(() => {
     queueMicrotask(() => setHydrated(true))
@@ -155,8 +158,8 @@ export default function Navbar() {
 
   return (
     <div className="bg-card">
-      {/* Phones: no ticker, so the header stays app-compact. */}
-      <div className="max-md:hidden"><AnnouncementTopBar
+      {/* Phones and tablets: no ticker, so the header stays app-compact. */}
+      <div className="max-lg:hidden"><AnnouncementTopBar
         announcements={[
           { text: t('Welcome to Eldokan') },
           { text: t('Great deals on your favorite products') },
@@ -164,27 +167,30 @@ export default function Navbar() {
         ]}
       /></div>
       <div className="border-b border-border shadow-sm">
-          <nav aria-label={t('Main navigation')} className="mx-auto grid max-w-7xl grid-cols-[auto_minmax(0,1fr)] items-center gap-x-2 gap-y-3 px-3 py-2.5 sm:gap-x-4 sm:px-6 sm:py-3 lg:grid-cols-[auto_minmax(16rem,1fr)_auto] lg:gap-10 lg:px-8">
+          <nav aria-label={t('Main navigation')} className="relative mx-auto grid max-w-7xl grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-2 px-3 py-2 sm:gap-x-4 sm:px-6 sm:py-3 lg:grid-cols-[auto_minmax(16rem,1fr)_auto] lg:gap-10 lg:px-8">
           <Link href="/" className="flex w-fit items-center" aria-label={t('Eldokan home')}>
-            <Image src="/image/Eldokan-logo.webp" alt="Eldokan" width={132} height={72} priority className="h-10 w-14 object-contain min-[360px]:w-auto sm:h-14 dark:mix-blend-screen dark:invert" />
+            <Image src="/image/Eldokan-logo.webp" alt="Eldokan" width={132} height={72} priority className="h-9 w-auto object-contain sm:h-12 lg:h-14 dark:mix-blend-screen dark:invert" />
           </Link>
 
-          <form onSubmit={handleSearchSubmit} className="relative col-span-2 row-start-2 w-full lg:col-span-1 lg:row-start-auto">
+          <form onSubmit={handleSearchSubmit} className="w-full min-w-0 lg:relative">
             <label htmlFor="navbar-product-search" className="sr-only">{t('Search products')}</label>
+            {/* The field and its button share a box; below desktop the suggestions span the whole bar, not just this field. */}
+            <div className="relative">
             <input
               id="navbar-product-search"
               type="search"
               placeholder={t('Search for products...')}
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              className="h-11 w-full min-w-0 rounded-full border border-input bg-background py-2 ps-4 pe-24 text-sm outline-none transition focus:border-[#C58A36] focus:bg-card focus:ring-2 focus:ring-[#C58A36]/20"
+              className="h-10 w-full min-w-0 rounded-full border border-input bg-background py-2 ps-4 pe-12 text-sm outline-none lg:h-11 lg:pe-24 transition focus:border-[#C58A36] focus:bg-card focus:ring-2 focus:ring-[#C58A36]/20"
             />
-            <button type="submit" className="absolute end-1 top-1 h-9 rounded-full bg-[#222222] px-5 text-sm font-medium text-white transition hover:bg-[#3b3b3b] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C58A36]">
-              {t('Search')}
+            <button type="submit" aria-label={t('Search')} className="absolute end-1 top-1 grid size-8 place-items-center rounded-full bg-[#222222] text-sm font-medium text-white transition lg:h-9 lg:w-auto lg:px-5 hover:bg-[#3b3b3b] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C58A36]">
+              <Search aria-hidden="true" className="size-4 lg:hidden" /><span className="max-lg:hidden">{t('Search')}</span>
             </button>
+            </div>
 
             {query.trim() !== '' && pathname !== '/search' && !isNavigatingToSearch && (
-              <div className="absolute z-50 mt-2 max-h-[70vh] w-full overflow-y-auto rounded-2xl border border-border bg-card shadow-xl">
+              <div className="absolute z-50 mt-2 max-h-[70vh] w-full overflow-y-auto max-lg:inset-x-3 max-lg:top-full max-lg:mt-0 max-lg:w-auto rounded-2xl border border-border bg-card shadow-xl">
               {query.trim().length < 2 ? (
                 <p className="p-3 text-sm text-muted-foreground">{t('Type at least 2 characters to search.')}</p>
               ) : isSearching ? (
@@ -225,24 +231,24 @@ export default function Navbar() {
             )}
           </form>
 
-          <div className="category-scrollbar-hidden col-start-2 row-start-1 flex min-w-0 max-w-full flex-wrap items-center justify-end gap-0 min-[360px]:gap-0.5 sm:gap-2 lg:col-start-auto lg:row-start-auto lg:flex-nowrap">
+          <div className="flex shrink-0 items-center justify-end gap-0.5 sm:gap-2">
             <button type="button" onClick={handleLanguageChange} aria-label={t('Change language')} title={t(locale === 'en' ? 'Switch to Arabic' : 'Switch to English')} className="flex h-9 shrink-0 items-center justify-center gap-1 rounded-full px-1.5 text-xs font-semibold text-foreground transition hover:bg-muted sm:h-10 sm:px-2 sm:text-sm">
               <Languages aria-hidden="true" className="size-[1em]" strokeWidth={1.5} /><span>{locale === 'en' ? 'عربي' : 'EN'}</span>
             </button>
             <button type="button" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} aria-label={t(theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode')} title={t(theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode')} className="flex size-8 shrink-0 min-[360px]:size-9 items-center justify-center rounded-full text-foreground transition hover:bg-muted sm:size-10">
               {theme === 'dark' ? <Sun className="size-5" /> : <Moon className="size-5" />}
             </button>
-            <Link href="/wishlist" aria-label={`${t('Favorites')}${wishlistCount ? ` (${wishlistCount})` : ''}`} title={t('Favorites')} className="flex size-8 shrink-0 min-[360px]:size-9 items-center justify-center rounded-full text-2xl text-foreground transition hover:bg-muted hover:text-[#C58A36] sm:size-10">
+            <Link href="/wishlist" aria-label={`${t('Favorites')}${wishlistCount ? ` (${wishlistCount})` : ''}`} title={t('Favorites')} className="max-lg:hidden flex size-8 shrink-0 min-[360px]:size-9 items-center justify-center rounded-full text-2xl text-foreground transition hover:bg-muted hover:text-[#C58A36] sm:size-10">
               <span className="relative"><Heart aria-hidden="true" className="size-[1em]" strokeWidth={1.5} /><CountBadge count={wishlistCount} /></span>
             </Link>
-            <button type="button" onClick={() => showComparison()} aria-haspopup="dialog" aria-label={`${locale === 'ar' ? 'مقارنة المنتجات' : 'Compare products'}${comparisonIds.length ? ` (${comparisonIds.length})` : ''}`} className="flex h-8 min-w-8 shrink-0 items-center justify-center gap-2 rounded-full px-1 text-foreground transition hover:bg-muted hover:text-[#C58A36] min-[360px]:h-9 min-[360px]:min-w-9 sm:h-10 sm:min-w-10 sm:px-2">
+            <button type="button" onClick={() => showComparison()} aria-haspopup="dialog" aria-label={`${locale === 'ar' ? 'مقارنة المنتجات' : 'Compare products'}${comparisonIds.length ? ` (${comparisonIds.length})` : ''}`} className={`${comparisonIds.length ? '' : 'max-lg:hidden'} flex h-8 min-w-8 shrink-0 items-center justify-center gap-2 rounded-full px-1 text-foreground transition hover:bg-muted hover:text-[#C58A36] min-[360px]:h-9 min-[360px]:min-w-9 sm:h-10 sm:min-w-10 sm:px-2`}>
               <span className="relative"><GitCompareArrows className="size-5" aria-hidden="true" /><CountBadge count={comparisonIds.length} /></span>
      
             </button>
-          <Link href="/cart" aria-label={`${t('Shopping cart')}${visibleCartItemCount ? ` (${visibleCartItemCount})` : ''}`} title={t('Shopping cart')} className="flex size-8 shrink-0 min-[360px]:size-9 items-center justify-center rounded-full text-2xl text-foreground transition hover:bg-muted hover:text-[#C58A36] sm:size-10">
+          <Link href="/cart" aria-label={`${t('Shopping cart')}${visibleCartItemCount ? ` (${visibleCartItemCount})` : ''}`} title={t('Shopping cart')} className={`${inTabBar} flex size-8 shrink-0 min-[360px]:size-9 items-center justify-center rounded-full text-2xl text-foreground transition hover:bg-muted hover:text-[#C58A36] sm:size-10`}>
               <span className="relative"><ShoppingCart aria-hidden="true" className="size-[1em]" strokeWidth={1.5} /><CountBadge count={visibleCartItemCount} /></span>
             </Link>
-            <AccountShortcuts customer={customer} />
+            <div className="max-lg:hidden"><AccountShortcuts customer={customer} /></div>
           </div>
         </nav>
       </div>

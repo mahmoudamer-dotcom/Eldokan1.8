@@ -88,7 +88,7 @@ export default function ProductPurchaseActions({ productId, productType, attribu
       <BuyNowButton productId={productId} variationId={selectedVariation?.id} name={name} imageUrl={selectedImage} stockQuantity={maxQuantity} quantity={Math.min(quantity, maxQuantity)} className={`flex h-12 items-center justify-center rounded-full bg-[#f5b400] font-semibold text-primary-foreground transition hover:bg-[#e4a600] disabled:pointer-events-none disabled:opacity-50 ${!canPurchase ? 'pointer-events-none opacity-50' : ''}`} />
       <AddToCartButton product={{ id: productId, type: productType, variationId: selectedVariation?.id, name, imageUrl: selectedImage, unitPrice: selectedMoney?.amount ?? unitPrice, available: canPurchase, quantity: Math.min(quantity, maxQuantity), stockQuantity: maxQuantity }} />
     </div>
-    {showBar && <div className="product-buy-bar fixed inset-x-0 bottom-0 z-50 flex items-center gap-3 border-t border-border bg-card/95 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-4px_16px_rgba(0,0,0,0.08)] backdrop-blur md:hidden print:hidden">
+    {showBar && <div className="product-buy-bar fixed inset-x-0 bottom-[calc(4rem+env(safe-area-inset-bottom))] z-40 flex items-center gap-3 border-t border-border bg-card/95 px-4 py-2.5 shadow-[0_-4px_16px_rgba(0,0,0,0.08)] backdrop-blur lg:hidden print:hidden">
       <div className="min-w-0 flex-1">
         <p className="line-clamp-1 text-xs text-muted-foreground">{name}</p>
         <p className="text-base font-extrabold">{selectedMoney ? <Money value={selectedMoney} /> : displayPrice ? <Money value={displayPrice} /> : null}</p>

@@ -10,7 +10,7 @@ import { useLocale } from '@/components/i18n/LocaleProvider'
 
 /**
  * App-style bottom bar on phones: home, search, favourites, cart and account are always one
- * tap away. Hidden where a page has its own bottom action (checkout, product buy bar).
+ * tap away, on every page except checkout.
  */
 export default function MobileTabBar() {
   const { locale } = useLocale()
@@ -21,7 +21,7 @@ export default function MobileTabBar() {
   const { productIds } = useWishlist()
   const [hydrated, setHydrated] = useState(false)
   useEffect(() => { queueMicrotask(() => setHydrated(true)) }, [])
-  if (pathname.startsWith('/checkout') || pathname.startsWith('/product/')) return null
+  if (pathname.startsWith('/checkout')) return null
 
   function openSearch() {
     const input = document.getElementById('navbar-product-search') as HTMLInputElement | null
@@ -40,9 +40,9 @@ export default function MobileTabBar() {
 
   return <>
     {/* Keeps the end of every page clear of the bar. */}
-    <div aria-hidden="true" className="h-[calc(4rem+env(safe-area-inset-bottom))] md:hidden" />
-    <nav aria-label={ar ? 'التنقل السريع' : 'Quick navigation'} className="mobile-tab-bar fixed inset-x-0 bottom-0 z-50 border-t border-border bg-card/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_16px_rgba(0,0,0,0.06)] backdrop-blur md:hidden print:hidden">
-      <ul className="grid h-16 grid-cols-5">
+    <div aria-hidden="true" className="h-[calc(4rem+env(safe-area-inset-bottom))] lg:hidden" />
+    <nav aria-label={ar ? 'التنقل السريع' : 'Quick navigation'} className="mobile-tab-bar fixed inset-x-0 bottom-0 z-50 border-t border-border bg-card/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_16px_rgba(0,0,0,0.06)] backdrop-blur lg:hidden print:hidden">
+      <ul className="mx-auto grid h-16 max-w-xl grid-cols-5">
         {tabs.map(({ href, label, icon: Icon, active, count, onClick }) => {
           const inner = <>
             <span className="relative">

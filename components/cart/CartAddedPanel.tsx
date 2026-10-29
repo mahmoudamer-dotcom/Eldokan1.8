@@ -44,7 +44,7 @@ export default function CartAddedPanel() {
 
   return (
     <div role="status" aria-live="polite" onMouseEnter={() => setHeld(true)} onMouseLeave={() => setHeld(false)} onFocus={() => setHeld(true)} onBlur={() => setHeld(false)}
-      className="cart-added-panel fixed inset-x-3 bottom-[calc(4.75rem+env(safe-area-inset-bottom))] z-[60] mx-auto max-w-md rounded-2xl border border-border bg-card p-4 text-foreground shadow-2xl md:inset-x-auto md:end-6 md:top-24 md:bottom-auto md:w-96">
+      className="cart-added-panel fixed inset-x-3 bottom-[calc(4.75rem+env(safe-area-inset-bottom))] z-[60] mx-auto max-w-md rounded-2xl border border-border bg-card p-4 text-foreground shadow-2xl lg:inset-x-auto lg:end-6 lg:top-24 lg:bottom-auto md:w-96">
       <div className="flex items-start gap-3">
         <span className="relative grid size-16 shrink-0 place-items-center overflow-hidden rounded-xl bg-white ring-1 ring-border">
           {added.imageUrl ? <Image src={added.imageUrl} alt="" fill sizes="64px" className="object-contain p-1" /> : <ShoppingBag className="size-6 text-shop-accent" aria-hidden="true" />}
