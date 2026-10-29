@@ -28,7 +28,7 @@ export default async function ProductDetails({ data }: { data: ProductDetailData
       <div className="flex items-start justify-between gap-3 [&>div]:min-w-0 [&>button]:shrink-0">
         <div>
           {data.brand?.name && <p className="text-sm font-semibold text-shop-accent"><T text={data.brand.name} /></p>}
-          <h1 dir="auto" className="mt-2 break-words text-2xl font-semibold leading-tight text-foreground sm:text-3xl">{data.name}</h1>
+          <h1 dir="auto" className="mt-2 break-words text-xl font-semibold leading-snug text-foreground lg:text-3xl">{data.name}</h1>
           {data.sku && <p className="mt-3 text-xs text-muted-foreground"><T text="SKU" />: <bdi>{data.sku}</bdi></p>}
         </div>
         <WishlistButton productId={data.id} className="p-2.5" />

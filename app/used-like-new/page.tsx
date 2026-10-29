@@ -29,11 +29,11 @@ export default async function UsedLikeNewPage() {
         <p className="inline-flex items-center gap-1.5 rounded-full bg-emerald-600 px-3 py-1 text-xs font-bold text-white"><BadgeCheck className="size-4" aria-hidden="true" />{text('Used like new', 'مستعمل كالجديد')}</p>
         <h1 className="mt-4 max-w-2xl text-3xl font-extrabold leading-tight text-foreground sm:text-4xl">{text('Like new. For less.', 'زي الجديد، بسعر أقل.')}</h1>
         <p className="mt-3 max-w-xl text-base leading-7 text-muted-foreground">{text('Hand-picked pre-owned products in excellent condition, ready to ship.', 'منتجات مستعملة مختارة بعناية وبحالة ممتازة، جاهزة للشحن.')}</p>
-        <ul className="mt-6 grid gap-3 sm:grid-cols-3">
+        <ul className="mt-6 grid gap-3 lg:grid-cols-3">
           {points.map(({ icon: Icon, title, body }) => (
-            <li key={title} className="flex gap-3 rounded-2xl bg-card/80 p-4 ring-1 ring-border">
+            <li key={title} className="flex items-center gap-3 rounded-2xl bg-card/80 p-4 ring-1 ring-border">
               <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-emerald-600/10 text-emerald-700 dark:text-emerald-300"><Icon className="size-5" aria-hidden="true" /></span>
-              <span><span className="block text-sm font-bold text-foreground">{title}</span><span className="mt-0.5 block text-sm text-muted-foreground">{body}</span></span>
+              <span className="min-w-0"><span className="block truncate text-sm font-bold text-foreground">{title}</span><span className="mt-0.5 block truncate text-[13px] text-muted-foreground" title={body}>{body}</span></span>
             </li>
           ))}
         </ul>

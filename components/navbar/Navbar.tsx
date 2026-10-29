@@ -155,13 +155,14 @@ export default function Navbar() {
 
   return (
     <div className="bg-card">
-      <AnnouncementTopBar
+      {/* Phones: no ticker, so the header stays app-compact. */}
+      <div className="max-md:hidden"><AnnouncementTopBar
         announcements={[
           { text: t('Welcome to Eldokan') },
           { text: t('Great deals on your favorite products') },
           { text: t('Shop with us today') },
         ]}
-      />
+      /></div>
       <div className="border-b border-border shadow-sm">
           <nav aria-label={t('Main navigation')} className="mx-auto grid max-w-7xl grid-cols-[auto_minmax(0,1fr)] items-center gap-x-2 gap-y-3 px-3 py-2.5 sm:gap-x-4 sm:px-6 sm:py-3 lg:grid-cols-[auto_minmax(16rem,1fr)_auto] lg:gap-10 lg:px-8">
           <Link href="/" className="flex w-fit items-center" aria-label={t('Eldokan home')}>

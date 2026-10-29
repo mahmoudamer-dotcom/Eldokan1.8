@@ -7,7 +7,7 @@ import { categoryArt, categoryWorldOf } from '@/lib/category-experience'
 import { getLocale } from '@/lib/server-locale'
 import { translate } from '@/lib/i18n'
 import { translateCatalogName } from '@/lib/i18n'
-import CloseOnNavigate from './CloseOnNavigate'
+import { categoryIconFor } from '@/lib/category-icons'
 
 export default async function Category() {
   const locale = await getLocale()
@@ -16,30 +16,15 @@ export default async function Category() {
 
   return (
     <div className="border-b border-border bg-card">
-      <details className="group mx-3 py-2 sm:mx-6 lg:hidden">
-        <CloseOnNavigate />
-        <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between rounded-xl bg-background px-4 text-sm font-semibold [&::-webkit-details-marker]:hidden">
-          {translate('Shop by category', locale)}
-          <ChevronDown className="size-4 transition-transform group-open:rotate-180" aria-hidden="true" />
-        </summary>
-        <nav aria-label={translate('Shop by category', locale)} className="mt-2 max-h-[50dvh] overflow-y-auto overscroll-contain rounded-xl border border-border p-2">
-          {data.map((item, index) => (
-            <div key={item.slug || item.name || index} className="border-b border-border p-2 last:border-0">
-              <Link href={`/category/${encodeURIComponent(item.slug || item.name)}`} className="flex min-h-11 items-center gap-3 rounded-lg px-2 text-sm font-bold hover:bg-shop-soft">
-                <Image src={categoryArt(categoryWorldOf(item.slug, item.name), 'small')} alt="" width={480} height={144} unoptimized className="h-9 w-16 shrink-0 rounded-lg object-cover" />
-                {translateCatalogName(item.name, locale)}
-              </Link>
-              {item.children.length > 0 && <ul className="grid gap-1 ps-3 sm:grid-cols-2">
-                {item.children.map((child) => <li key={child.slug || child.name}>
-                  <Link href={`/category/${encodeURIComponent(child.slug || child.name)}`} className="flex min-h-11 items-center rounded-lg px-2 text-sm text-muted-foreground hover:bg-shop-soft">
-                    {translateCatalogName(child.name, locale)}
-                  </Link>
-                </li>)}
-              </ul>}
-            </div>
-          ))}
-        </nav>
-      </details>
+      {/* Phones and tablets: one swipeable row of department chips, like an app's tabs. */}
+      <nav aria-label={translate('Shop by category', locale)} className="category-scrollbar-hidden flex gap-2 overflow-x-auto overscroll-x-contain px-3 py-2 sm:px-6 lg:hidden">
+        {data.map((item, index) => {
+          const Icon = categoryIconFor(item)
+          return <Link key={item.slug || item.name || index} href={`/category/${encodeURIComponent(item.slug || item.name)}`} className="inline-flex h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-border bg-background px-3.5 text-[13px] font-semibold transition hover:border-foreground/40 active:scale-95">
+            <Icon aria-hidden="true" className="size-4 shrink-0 text-shop-accent" />{translateCatalogName(item.name, locale)}
+          </Link>
+        })}
+      </nav>
       <nav aria-label={translate('Shop by category', locale)} className="relative z-20 mx-auto hidden max-w-7xl flex-wrap items-center gap-1 px-8 py-2 lg:flex">
         {data.map((item, index) => (
           <div className="group relative shrink-0" key={item.slug || item.name || index}>

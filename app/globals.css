@@ -588,3 +588,17 @@
 .shelf-track::-webkit-scrollbar { display: none; }
 @media (min-width: 640px) { .shelf-track { scroll-padding-inline: 0; } }
 @media (prefers-reduced-motion: reduce) { .shelf-track { scroll-behavior: auto; } }
+/* One line for every short label: circles grow to fit their name, headings and names end in "…". */
+.category-circle { width: auto; min-width: 5.75rem; }
+.category-circle-label { white-space: nowrap; }
+.category-shelf-head h2, .category-shelf-head p { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.category-circle-label { display: block; -webkit-line-clamp: unset; }
+@media (min-width: 640px) { .category-circle { min-width: 7.5rem; } }
+/* App feel on touch screens: no grey tap flash, no iPhone zoom when a field is focused (needs 16px),
+   images that don't drag like files, and a light press on cards and buttons. */
+html { -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+img { -webkit-user-drag: none; }
+@media (max-width: 767px) { input, select, textarea { font-size: 16px !important; } }
+@media (hover: none) { article.group:active, .category-circle:active, .mobile-tab-bar a:active, .mobile-tab-bar button:active { transform: scale(0.97); transition: transform 80ms ease; } }
+/* Phones: a narrower picture so the department name fits on its one line. */
+@media (max-width: 639px) { .category-shelf-head img { width: 4.5rem; height: 3.75rem; } .category-shelf-head h2 { font-size: 0.9375rem; } .category-shelf-head a { font-size: 0.8125rem; } }

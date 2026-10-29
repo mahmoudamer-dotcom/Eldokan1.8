@@ -53,10 +53,10 @@ export default async function Footer() {
     { icon: RotateCcw, title: text('14-day returns', 'إرجاع خلال 14 يوم'), body: text('See the returns policy', 'اعرف سياسة الإرجاع'), href: '/policies/returns' },
   ]
   const contact = [
-    { href: `https://wa.me/${BUSINESS.phone.replace('+', '')}`, icon: MessageCircle, label: text('WhatsApp', 'واتساب'), value: phone, external: true },
-    { href: `tel:${BUSINESS.phone}`, icon: Phone, label: text('Call us', 'اتصل بينا'), value: phone },
-    { href: '/help', icon: Headphones, label: text('Help center', 'مركز المساعدة'), value: text('Answers to common questions', 'إجابات أشهر الأسئلة'), local: true },
-    { href: `mailto:${BUSINESS.email}`, icon: Mail, label: text('Email', 'البريد الإلكتروني'), value: BUSINESS.email, wide: true },
+    { href: `https://wa.me/${BUSINESS.phone.replace('+', '')}`, icon: MessageCircle, label: text('WhatsApp', 'واتساب'), short: text('WhatsApp', 'واتساب'), value: phone, external: true },
+    { href: `tel:${BUSINESS.phone}`, icon: Phone, label: text('Call us', 'اتصل بينا'), short: text('Call', 'اتصال'), value: phone },
+    { href: '/help', icon: Headphones, label: text('Help center', 'مركز المساعدة'), short: text('Help', 'المساعدة'), value: text('Answers to common questions', 'إجابات أشهر الأسئلة'), local: true },
+    { href: `mailto:${BUSINESS.email}`, icon: Mail, label: text('Email', 'البريد الإلكتروني'), short: text('Email', 'البريد'), value: BUSINESS.email },
   ]
   const link = 'group/link inline-flex items-center gap-2.5 py-1.5 text-sm text-white/60 transition-colors hover:text-white focus-visible:outline-white'
   const linkIcon = 'size-4 shrink-0 text-white/35 transition group-hover/link:text-white'
@@ -67,8 +67,8 @@ export default async function Footer() {
       {/* One band of shopping promises, divided rather than boxed. */}
       <ul aria-label={text('Why shop with us', 'ليه تتسوق معانا')} className="mt-10 grid grid-cols-2 overflow-hidden rounded-3xl border border-white/15 lg:grid-cols-4">
         {perks.map(({ icon: Icon, title, body, href }, index) => {
-          const content = <><span className="grid size-9 shrink-0 place-items-center rounded-full border border-white/25 sm:size-12"><Icon aria-hidden="true" className="size-4.5 sm:size-5" /></span><span className="min-w-0"><span className="block text-[13px] font-bold leading-5 sm:text-[15px]">{title}</span><span className="mt-0.5 hidden text-xs leading-5 text-white/50 sm:block">{body}</span></span></>
-          const cell = `flex h-full items-center gap-2.5 p-3 sm:gap-3 sm:p-6 ${index % 2 ? 'border-s border-white/15' : ''} ${index > 1 ? 'border-t border-white/15 lg:border-t-0' : ''} ${index === 2 ? 'lg:border-s' : ''}`
+          const content = <><span className="grid size-9 shrink-0 place-items-center rounded-full border border-white/25 sm:size-12"><Icon aria-hidden="true" className="size-4.5 sm:size-5" /></span><span className="min-w-0"><span className="block whitespace-nowrap text-[13px] font-bold leading-5 sm:text-[15px]">{title}</span><span className="mt-0.5 hidden text-xs leading-5 text-white/50 sm:block">{body}</span></span></>
+          const cell = `flex h-full flex-col items-center gap-2 p-3 text-center sm:flex-row sm:gap-3 sm:p-6 sm:text-start ${index % 2 ? 'border-s border-white/15' : ''} ${index > 1 ? 'border-t border-white/15 lg:border-t-0' : ''} ${index === 2 ? 'lg:border-s' : ''}`
           return <li key={title}>{href ? <Link href={href} className={`${cell} transition hover:bg-white/[0.06]`}>{content}</Link> : <div className={cell}>{content}</div>}</li>
         })}
       </ul>
@@ -78,12 +78,13 @@ export default async function Footer() {
           {/* Inverted logo: its white ground turns black and blends into the footer. */}
           <Link href="/" aria-label={text('Eldokan home', 'الصفحة الرئيسية للدكان')} className="inline-flex"><Image src="/image/Eldokan-logo.webp" width={180} height={106} className="h-16 w-auto object-contain invert mix-blend-lighten sm:h-20" alt={BUSINESS.name[locale]} /></Link>
           <p className="mx-auto mt-3 max-w-sm text-sm leading-7 text-white/65 sm:mx-0 sm:mt-4 sm:text-[15px]">{text('Everyday essentials and new finds, delivered to your door.', 'احتياجاتك اليومية وحاجات جديدة تكتشفها، لحد باب البيت.')}</p>
-          {/* Phones: a 2 x 2 grid of contact tiles. Larger screens: one bordered list. */}
-          <ul className="mt-5 grid grid-cols-2 gap-2 text-start sm:mt-6 sm:block sm:divide-y sm:divide-white/10 sm:rounded-2xl sm:border sm:border-white/15">
-            {contact.map(({ href, icon: Icon, label, value, external, local, wide }) => <li key={label} className={wide ? 'col-span-2' : undefined}>
-              <a href={href} {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})} className="group flex h-full min-w-0 items-center gap-2.5 rounded-2xl border border-white/15 p-3 transition hover:bg-white/[0.06] sm:gap-3 sm:rounded-none sm:border-0 sm:px-4">
-                <span className="grid size-9 shrink-0 place-items-center rounded-full border border-white/25 transition group-hover:bg-white group-hover:text-black"><Icon aria-hidden="true" className="size-4" /></span>
-                <span className="min-w-0 flex-1"><span className="block text-[11px] text-white/45">{label}</span><span dir={local ? undefined : 'ltr'} className={`block text-xs font-semibold wrap-anywhere sm:truncate sm:text-sm ${ar && !local ? 'text-end' : ''}`}>{value}</span></span>
+          {/* Phones: one row of four round buttons, like an app. Larger screens: one bordered list. */}
+          <ul className="mt-5 grid grid-cols-4 gap-2 sm:mt-6 sm:block sm:divide-y sm:divide-white/10 sm:rounded-2xl sm:border sm:border-white/15">
+            {contact.map(({ href, icon: Icon, label, short, value, external, local }) => <li key={label}>
+              <a href={href} {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})} aria-label={`${label}: ${value}`} className="group flex h-full min-w-0 flex-col items-center gap-1.5 py-1 text-center transition hover:bg-white/[0.06] sm:flex-row sm:gap-3 sm:px-4 sm:py-3 sm:text-start">
+                <span className="grid size-12 shrink-0 place-items-center rounded-full border border-white/25 transition group-hover:bg-white group-hover:text-black group-active:scale-95 sm:size-9"><Icon aria-hidden="true" className="size-5 sm:size-4" /></span>
+                <span className="w-full truncate text-[11px] font-semibold text-white/80 sm:hidden">{short}</span>
+                <span className="hidden min-w-0 flex-1 sm:block"><span className="block truncate text-[11px] text-white/45">{label}</span><span dir={local ? undefined : 'ltr'} className={`block truncate text-xs font-semibold sm:text-sm ${ar && !local ? 'sm:text-end' : ''}`}>{value}</span></span>
                 <ArrowUpRight aria-hidden="true" className="hidden size-4 shrink-0 text-white/30 transition group-hover:text-white sm:block rtl:-rotate-90" />
               </a>
             </li>)}
@@ -188,7 +189,7 @@ function CategoryBadge({ icon: Icon }: { icon: LucideIcon }) {
 }
 
 function SubLink({ href, icon: Icon, label }: { href: string; icon: LucideIcon; label: string }) {
-  return <Link href={href} className="group/link inline-flex items-center gap-2 text-[13px] leading-5 text-white/55 transition hover:text-white"><Icon aria-hidden="true" className="size-3.5 shrink-0 text-white/35 group-hover/link:text-white" />{label}</Link>
+  return <Link href={href} title={label} className="group/link inline-flex max-w-full items-center gap-2 text-[13px] leading-5 text-white/55 transition hover:text-white"><Icon aria-hidden="true" className="size-3.5 shrink-0 text-white/35 group-hover/link:text-white" /><span className="truncate">{label}</span></Link>
 }
 
 function VisaMark() {

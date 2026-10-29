@@ -76,7 +76,7 @@ export default function ProductCard({ product, swipeImages = true, likeNew = fal
       <div className="flex min-w-0 flex-1 flex-col p-2.5 sm:p-4">
         {(product.brand?.name || product.seller?.name) && <p className="mb-1 truncate text-xs font-medium text-muted-foreground"><T text={product.brand?.name || product.seller?.name || ''} /></p>}
         {product.brand?.name && product.seller?.name && <p className="mb-1 truncate text-[11px] text-muted-foreground"><T text="Sold by" /> {product.seller.name}</p>}
-        <h2 className="line-clamp-2 min-h-10 text-sm leading-5 text-foreground sm:text-[15px]"><Link href={`/product/${product.id}`} className="transition hover:text-shop-accent"><T text={name} /></Link></h2>
+        <h2 title={name} className="truncate text-sm leading-6 text-foreground sm:text-[15px]"><Link href={`/product/${product.id}`} className="transition hover:text-shop-accent"><T text={name} /></Link></h2>
         {Boolean(product.average_rating && product.rating_count) && (
           <p className="mt-1.5 flex items-center gap-1 text-xs text-muted-foreground">
             <Star className="size-3.5 fill-amber-400 text-amber-400" aria-hidden="true" />
