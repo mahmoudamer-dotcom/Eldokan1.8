@@ -8,6 +8,18 @@ import type { SellerId } from '@eldokan/customer-api-client'
 import T from '@/components/i18n/T'
 import { getLocale } from '@/lib/server-locale'
 import { translate } from '@/lib/i18n'
+import { cache } from 'react'
+import type { Metadata } from 'next'
+
+// One seller lookup per request, shared by the title and the page.
+const sellerDetails = cache(SellerDetails)
+const SELLER_ID = /^sel_[1-9][0-9]*$/
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params
+  const seller = SELLER_ID.test(id) ? await sellerDetails(id) : null
+  return { title: seller?.name ?? ((await getLocale()) === 'ar' ? 'الصفحة مش موجودة' : 'Page not found') }
+}
 
 export default async function SellerPage({
   params,
@@ -19,9 +31,10 @@ export default async function SellerPage({
   const { id } = await params
   const query = await searchParams
   const page = /^\d+$/.test(query.page ?? '') ? Math.max(1, Math.min(10000, Number(query.page))) : 1
+  if (!SELLER_ID.test(id)) notFound()
   const locale = await getLocale()
   const [seller, sellerProducts] = await Promise.all([
-    SellerDetails(id),
+    sellerDetails(id),
     SellerProductPage(id, page),
   ])
 

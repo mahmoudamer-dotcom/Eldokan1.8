@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { EldokanClientError, type ProductId } from '@eldokan/customer-api-client'
 import { useLocale } from '@/components/i18n/LocaleProvider'
 import { useWishlist } from './WishlistProvider'
+import { toast } from '@/lib/toast'
 
 export default function WishlistButton({ productId, className = '' }: { productId?: string | number; className?: string }) {
   const router = useRouter()
@@ -26,8 +27,10 @@ export default function WishlistButton({ productId, className = '' }: { productI
     }
     try {
       await toggle(id as ProductId)
+      toast(t(active ? 'Removed from favorites' : 'Added to favorites'), active ? 'info' : 'success')
     } catch (cause) {
       if (cause instanceof EldokanClientError && cause.status === 401) router.push('/login')
+      else toast(t('Unable to update your favorites.'), 'error')
     }
   }
 

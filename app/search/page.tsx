@@ -3,6 +3,7 @@ import { SearchProducts } from '@/services/product'
 import { getLocale } from '@/lib/server-locale'
 import T from '@/components/i18n/T'
 import DiscoveryPrompt from '@/components/discovery/DiscoveryPrompt'
+import { titled } from '@/lib/page-title'
 
 type SearchProduct = {
   id?: string | number
@@ -14,6 +15,12 @@ type SearchProduct = {
     sale_price?: { formatted?: string } | null
     regular_price?: { formatted?: string } | null
   }
+}
+
+export async function generateMetadata({ searchParams }: { searchParams: Promise<{ q?: string | string[] }> }) {
+  const { q } = await searchParams
+  const term = (Array.isArray(q) ? q[0] : q)?.trim().slice(0, 60)
+  return titled(term ? `Search: ${term}` : 'Search', term ? `بحث: ${term}` : 'بحث', { robots: { index: false, follow: true } })
 }
 
 export default async function SearchPage({

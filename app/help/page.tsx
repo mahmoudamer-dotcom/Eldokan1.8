@@ -1,8 +1,8 @@
+import { titled } from '@/lib/page-title'
 import Link from 'next/link'
 import { getLocale } from '@/lib/server-locale'
-import type { Metadata } from 'next'
 
-export const metadata: Metadata = { title: 'Help & support | Eldokan', description: 'Help with shopping, delivery and order payment at Eldokan.' }
+export const generateMetadata = () => titled('Help & support', 'المساعدة والدعم', { description: 'Help with shopping, delivery and order payment at Eldokan.' })
 
 export default async function HelpPage() {
   const ar = await getLocale() === 'ar'

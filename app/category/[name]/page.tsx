@@ -7,14 +7,16 @@ import CategoryExperience from '@/components/category/CategoryExperience'
 import { categoryWorld } from '@/lib/category-experience'
 import { getLocale } from '@/lib/server-locale'
 import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 import { getStorefrontUrl } from '@/lib/site-url'
 
 export async function generateMetadata({ params }: { params: Promise<{ name: string }> }): Promise<Metadata> {
   const { name } = await params
   const [category, locale] = await Promise.all([fetchCategoryBySlug(decodeURIComponent(name)), getLocale()])
-  const title = category?.data.name ?? name
+  if (!category) return { title: locale === 'ar' ? 'الصفحة مش موجودة' : 'Page not found', robots: { index: false, follow: true } }
+  const title = category.data.name
   const origin = getStorefrontUrl()
-  return { title: `${title} | ${locale === 'ar' ? 'الدكان' : 'Eldokan'}`, description: locale === 'ar' ? `تسوق ${title} وقارن المنتجات والأسعار في الدكان.` : `Shop ${title} and compare products and prices at Eldokan.`, alternates: origin ? { canonical: new URL(`/category/${encodeURIComponent(name)}`, origin).toString() } : undefined }
+  return { title, description: locale === 'ar' ? `تسوق ${title} وقارن المنتجات والأسعار في الدكان.` : `Shop ${title} and compare products and prices at Eldokan.`, alternates: origin ? { canonical: new URL(`/category/${encodeURIComponent(name)}`, origin).toString() } : undefined }
 }
 
 export default async function CategoryPage({
@@ -32,6 +34,9 @@ export default async function CategoryPage({
     fetchCategoriesWithChildren(),
   ])
   if (response.unavailable) throw new Error('Category catalog temporarily unavailable')
+  // A slug the store doesn't know, with nothing in it, is a wrong link: the 404 page.
+  const inTree = (Array.isArray(treeResponse?.data) ? treeResponse.data : []).some((category: { slug?: string; children?: { slug?: string }[] }) => category.slug === categorySlug || category.children?.some(child => child.slug === categorySlug))
+  if (!categoryResponse && !inTree && !(Array.isArray(response?.data) && response.data.length)) notFound()
   const categoryName = categoryResponse?.data.name ?? categorySlug
   const products = Array.isArray(response?.data) ? response.data : []
   const availableProducts = products.filter((product: StoreProduct) => product.stock?.status === 'in_stock')

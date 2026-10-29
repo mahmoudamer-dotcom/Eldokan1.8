@@ -1,5 +1,8 @@
 import CartCheckout from '@/components/cart/CartCheckout'
 import CheckoutHeader from '@/components/checkout/CheckoutHeader'
+import { titled } from '@/lib/page-title'
+
+export const generateMetadata = () => titled('Checkout', 'إتمام الشراء', { robots: { index: false, follow: false } })
 
 export default function CartCheckoutPage() {
   return <>

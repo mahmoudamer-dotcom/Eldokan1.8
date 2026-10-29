@@ -16,6 +16,7 @@ import { ShoppingChatProvider } from '@/components/discovery/ShoppingChatProvide
 import SiteChrome from '@/components/checkout/CheckoutChrome'
 import MobileTabBar from '@/components/navbar/MobileTabBar'
 import CartAddedPanel from '@/components/cart/CartAddedPanel'
+import Toaster from '@/components/ui/Toaster'
 
 
 const OpenSans = localFont({
@@ -38,8 +39,8 @@ const cairo = localFont({
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale()
   const content = locale === 'ar'
-    ? { title: 'الدكان | تسوق عبر الإنترنت', description: 'اكتشف احتياجاتك اليومية وعروضًا رائعة في الدكان.' }
-    : { title: 'Eldokan | Shop Online', description: 'Discover everyday essentials and great deals at Eldokan.' }
+    ? { title: { default: 'الدكان | تسوق عبر الإنترنت', template: '%s | الدكان' }, description: 'اكتشف احتياجاتك اليومية وعروضًا رائعة في الدكان.' }
+    : { title: { default: 'Eldokan | Shop Online', template: '%s | Eldokan' }, description: 'Discover everyday essentials and great deals at Eldokan.' }
   return { ...content, metadataBase: getStorefrontUrl(), robots: { index: process.env.STOREFRONT_ALLOW_INDEXING === 'true' && Boolean(getStorefrontUrl()), follow: true } }
 }
 
@@ -72,6 +73,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
               </SiteChrome>
               <MobileTabBar />
               <CartAddedPanel />
+              <Toaster />
               </ShoppingChatProvider>
               </ComparisonProvider>
             </WishlistProvider>

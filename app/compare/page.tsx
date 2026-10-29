@@ -1,12 +1,12 @@
+import { titled } from '@/lib/page-title'
 import Link from 'next/link'
-import type { Metadata } from 'next'
 import { getLocale } from '@/lib/server-locale'
 import { normalizeComparisonIds } from '@/lib/product-comparison'
 import { createEldokanApi } from '@/lib/eldokan-api'
 import { retryApiRead } from '@/lib/retry-api-read'
 import ComparisonTable from '@/components/productDetails/ComparisonTable'
 
-export const metadata: Metadata = { title: 'Compare products | Eldokan', robots: { index: false, follow: false } }
+export const generateMetadata = () => titled('Compare products', 'مقارنة المنتجات', { robots: { index: false, follow: false } })
 
 export default async function ComparePage({ searchParams }: { searchParams: Promise<{ ids?: string | string[] }> }) {
   const query = await searchParams

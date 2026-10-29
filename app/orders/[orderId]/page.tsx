@@ -3,6 +3,9 @@ import OrderResult from '@/components/checkout/OrderResult'
 import { cookies } from 'next/headers'
 import { getLocale } from '@/lib/server-locale'
 import { GUEST_ORDER_HISTORY_COOKIE, readGuestOrderHistory } from '@/lib/guest-order-history'
+import { titled } from '@/lib/page-title'
+
+export const generateMetadata = () => titled('Order details', 'تفاصيل الطلب', { robots: { index: false, follow: false } })
 
 export default async function AccountOrderPage({ params }: { params: Promise<{ orderId: string }> }) {
   const [{ orderId }, locale, cookieStore] = await Promise.all([params, getLocale(), cookies()])

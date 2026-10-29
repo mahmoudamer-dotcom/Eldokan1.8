@@ -2,6 +2,14 @@ import ProductCard, { type StoreProduct } from '@/components/productCard/Product
 import { ProductsByBrand } from '@/services/product'
 import { Brands } from '@/services/brand'
 import T from '@/components/i18n/T'
+import { notFound } from 'next/navigation'
+import type { Metadata } from 'next'
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const brandSlug = decodeURIComponent((await params).slug)
+  const brand = (await Brands()).find((item) => item.slug === brandSlug)
+  return { title: brand?.name ?? brandSlug.replace(/[-_]+/g, ' '), ...(brand ? {} : { robots: { index: false, follow: true } }) }
+}
 
 export default async function BrandPage({
   params,
@@ -12,6 +20,8 @@ export default async function BrandPage({
   const brandSlug = decodeURIComponent(slug)
   const [response, allBrands] = await Promise.all([ProductsByBrand(brandSlug), Brands()])
   const products: StoreProduct[] = Array.isArray(response) ? response : []
+  // An unknown brand with nothing to show is a wrong link: the 404 page.
+  if (products.length === 0 && !allBrands.some((brand) => brand.slug === brandSlug)) notFound()
   const brandName = products.find((product) => product.brand?.name)?.brand?.name
     ?? allBrands.find((brand) => brand.slug === brandSlug)?.name
     ?? brandSlug.replace(/[-_]+/g, ' ')

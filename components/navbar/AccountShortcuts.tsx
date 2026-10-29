@@ -7,6 +7,7 @@ import { ChevronDown, Heart, LogOut, MapPin, PackageCheck, ShoppingBag, UserRoun
 import type { CustomerAccount } from '@eldokan/customer-api-client'
 import { useLocale } from '@/components/i18n/LocaleProvider'
 import { createEldokanApi } from '@/lib/eldokan-api'
+import { toast } from '@/lib/toast'
 
 export default function AccountShortcuts({ customer }: { customer: CustomerAccount | null }) {
   const { locale, t } = useLocale()
@@ -31,7 +32,7 @@ export default function AccountShortcuts({ customer }: { customer: CustomerAccou
     setOpen(false)
     window.dispatchEvent(new Event('eldokan:signed-out'))
     router.replace('/')
-    try { await request } catch { /* session-changed below restores the real state. */ }
+    try { await request; toast(locale === 'ar' ? 'سجّلت خروجك. نشوفك تاني!' : 'You are signed out. See you soon!', 'info') } catch { /* session-changed below restores the real state. */ }
     window.dispatchEvent(new Event('eldokan:session-changed'))
     router.refresh()
     setSigningOut(false)

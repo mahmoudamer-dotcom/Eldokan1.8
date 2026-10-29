@@ -27,9 +27,9 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const locale = await getLocale()
   const response = await ProductsDetails(id, locale)
   const product = response.data
-  if (!product) return { title: locale === 'ar' ? 'المنتج غير متاح | الدكان' : 'Product unavailable | Eldokan', robots: { index: false, follow: false } }
+  if (!product) return { title: locale === 'ar' ? 'المنتج غير متاح' : 'Product unavailable', robots: { index: false, follow: false } }
   const description = `${product.name} · ${product.pricing.on_sale ? product.pricing.sale_price.formatted : product.pricing.regular_price.formatted}`
-  return { title: `${product.name} | ${locale === 'ar' ? 'الدكان' : 'Eldokan'}`, description,
+  return { title: product.name, description,
     alternates: getStorefrontUrl() ? { canonical: new URL(`/product/${product.id}`, getStorefrontUrl()).toString() } : undefined,
     openGraph: { title: product.name, description, type: 'website', images: product.images.slice(0, 1).map((image) => ({ url: image.url, alt: product.name })) },
     twitter: { card: 'summary_large_image', title: product.name, description, images: product.images.slice(0, 1).map((image) => image.url) } }

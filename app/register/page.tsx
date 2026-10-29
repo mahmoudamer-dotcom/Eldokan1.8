@@ -1,6 +1,9 @@
 import AuthForm from '@/components/auth/AuthForm'
 import Link from 'next/link'
 import { getLocale } from '@/lib/server-locale'
+import { titled } from '@/lib/page-title'
+
+export const generateMetadata = () => titled('Create account', 'حساب جديد', { robots: { index: false, follow: false } })
 
 export default async function RegisterPage() {
   const ar = await getLocale() === 'ar'

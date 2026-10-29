@@ -1,9 +1,9 @@
+import { titled } from '@/lib/page-title'
 import Link from 'next/link'
-import type { Metadata } from 'next'
 import { getLocale } from '@/lib/server-locale'
 import { BUSINESS, POLICIES, POLICIES_UPDATED } from '@/lib/legal-policies'
 
-export const metadata: Metadata = { title: 'Policies | Eldokan', robots: { index: false, follow: true } }
+export const generateMetadata = () => titled('Policies', 'الشروط والسياسات', { robots: { index: false, follow: true } })
 
 export default async function PoliciesPage() {
   const locale = await getLocale()

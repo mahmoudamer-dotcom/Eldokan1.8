@@ -227,6 +227,8 @@ const additionalTranslations: Record<string, string> = {
   'Your favorites list is empty.': 'قائمة المفضلة فارغة.',
   'Unable to load your favorites.': 'تعذر تحميل المفضلة.',
   'Unable to update your favorites.': 'تعذر تحديث المفضلة.',
+  'Added to favorites': 'اتضاف للمفضلة',
+  'Removed from favorites': 'اتشال من المفضلة',
   'Sign in': 'تسجيل الدخول',
   'Price unavailable': 'السعر غير متاح',
   'Marketplace seller': 'بائع في السوق',

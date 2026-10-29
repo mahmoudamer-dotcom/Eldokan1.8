@@ -8,7 +8,7 @@ type Props = { params: Promise<{ slug: string }> }
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const policy = getPolicy((await params).slug)
   const locale = await getLocale()
-  return { title: policy ? `${policy.title[locale]} | ${BUSINESS.name[locale]}` : 'Eldokan', robots: { index: false, follow: true } }
+  return { title: policy ? policy.title[locale] : (locale === 'ar' ? 'السياسات' : 'Policies'), robots: { index: false, follow: true } }
 }
 export default async function PolicyPage({ params }: Props) {
   const policy = getPolicy((await params).slug)

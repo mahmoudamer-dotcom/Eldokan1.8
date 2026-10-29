@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import { titled } from '@/lib/page-title'
 import type { OrderDetail } from '@eldokan/customer-api-client'
 import Link from 'next/link'
 import SharedInvoice from '@/components/checkout/SharedInvoice'
@@ -7,7 +7,7 @@ import { getLocale } from '@/lib/server-locale'
 const DEFAULT_API_BASE_URL = 'https://www.eldokan.com/wp-json/eldokan-customer/v1'
 
 // Personal data behind a secret link: never indexed, never cached.
-export const metadata: Metadata = { title: 'Invoice', robots: { index: false, follow: false } }
+export const generateMetadata = () => titled('Invoice', 'الفاتورة', { robots: { index: false, follow: false } })
 export const dynamic = 'force-dynamic'
 
 /** Opened from the QR code on a printed invoice: no sign-in, the link key is the access. */

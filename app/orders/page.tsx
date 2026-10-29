@@ -1,5 +1,8 @@
 import OrderHistory from '@/components/checkout/OrderHistory'
 import { getLocale } from '@/lib/server-locale'
+import { titled } from '@/lib/page-title'
+
+export const generateMetadata = () => titled('My orders', 'طلباتي', { robots: { index: false, follow: false } })
 
 export default async function OrdersPage() {
   const locale = await getLocale()

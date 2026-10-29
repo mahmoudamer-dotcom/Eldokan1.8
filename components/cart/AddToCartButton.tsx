@@ -7,6 +7,7 @@ import T from '@/components/i18n/T'
 import { useLocale } from '@/components/i18n/LocaleProvider'
 import { useCart } from './CartProvider'
 import { announceCartAdd } from '@/lib/cart-events'
+import { toast } from '@/lib/toast'
 
 type AddToCartButtonProps = {
   compact?: boolean
@@ -25,7 +26,7 @@ type AddToCartButtonProps = {
 
 export default function AddToCartButton({ product, compact = false }: AddToCartButtonProps) {
   const { addItem, error } = useCart()
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   const [added, setAdded] = useState(false)
   const [failed, setFailed] = useState(false)
   const [adding, setAdding] = useState(false)
@@ -44,6 +45,7 @@ export default function AddToCartButton({ product, compact = false }: AddToCartB
     } catch {
       setAdded(false)
       setFailed(true)
+      toast(locale === 'ar' ? 'ما قدرناش نضيف المنتج للسلة. حاول مرة تانية.' : 'Could not add this to your cart. Please try again.', 'error')
     } finally { setAdding(false) }
   }
 

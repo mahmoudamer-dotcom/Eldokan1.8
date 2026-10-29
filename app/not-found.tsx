@@ -1,5 +1,9 @@
 import Link from 'next/link'
 import { getLocale } from '@/lib/server-locale'
+import StoreSignBag from '@/components/ui/StoreSignBag'
+import { titled } from '@/lib/page-title'
+
+export const generateMetadata = () => titled('Page not found', 'الصفحة مش موجودة', { robots: { index: false, follow: true } })
 
 /**
  * The store sign: a yellow shopping bag holding a question mark beside the message, a product search
@@ -24,14 +28,6 @@ export default async function NotFound() {
         <Link href="/" className="inline-flex min-h-12 items-center justify-center rounded-full border border-foreground px-7 font-bold transition hover:bg-foreground hover:text-background">{text('Back to home', 'ارجع للرئيسية')}</Link>
       </div>
     </div>
-    <div aria-hidden="true" className="relative grid w-44 shrink-0 place-items-center sm:w-56 md:w-80 lg:w-96">
-      <svg viewBox="0 0 380 420" className="w-full">
-        <path d="M120 120 C120 60 150 30 190 30 C230 30 260 60 260 120" fill="none" stroke="currentColor" strokeWidth="14" strokeLinecap="round" />
-        <rect x="40" y="110" width="300" height="290" rx="36" fill="#f5b400" />
-        <circle cx="120" cy="150" r="9" fill="#1d1d1b" />
-        <circle cx="260" cy="150" r="9" fill="#1d1d1b" />
-      </svg>
-      <span className="absolute inset-x-0 top-[38%] text-center text-[6.5rem] font-black leading-none text-[#1d1d1b] sm:text-[8rem] md:text-[11rem] lg:text-[13rem]">{ar ? '؟' : '?'}</span>
-    </div>
+    <StoreSignBag mark={ar ? '؟' : '?'} />
   </main>
 }

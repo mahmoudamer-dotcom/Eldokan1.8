@@ -19,7 +19,8 @@ export async function SellerDetails(id: string) {
     const result = await createEldokanApi(await getLocale()).sellers.get(id as `sel_${number}`)
     return result.data as SellerData
   } catch (cause) {
-    if (cause instanceof EldokanClientError && cause.status === 404) return null
+    // Unknown or malformed seller ids are a wrong link, not an outage.
+    if (cause instanceof EldokanClientError && (cause.status === 404 || cause.status === 400)) return null
     throw cause
   }
 }
